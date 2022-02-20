@@ -26,16 +26,26 @@ const style = {
   },
 };
 
-const WorkoutItem = ({ exercise }) => {
+const WorkoutItem = ({ exercise, updateExercise }) => {
   const { name, sets } = exercise;
   const [setsArr, setSetsArr] = useState(sets);
 
   const addSet = () => {
-    setSetsArr([...setsArr, { kg: "", reps: "" }]);
+    setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
   };
 
   const onChange = (e) => {
     const value = e.target.value;
+    const unit = e.target.name;
+    const id = e.target.parentElement.parentElement.getAttribute("data-id");
+    const test = setsArr.map((item) => {
+      if (id == item.id) {
+        item[unit] = value;
+      }
+      return item;
+    });
+    // setSetsArr(test);
+    updateExercise(test, name);
   };
 
   return (
@@ -55,6 +65,7 @@ const WorkoutItem = ({ exercise }) => {
             {setsArr &&
               setsArr.map((row, index) => (
                 <WorkoutSetRow
+                  id={index}
                   onChange={onChange}
                   key={index}
                   index={index}

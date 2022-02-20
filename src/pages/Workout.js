@@ -37,7 +37,7 @@ const style = {
 
 const Workout = () => {
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-  const [filteredExercised, setFilteredExercised] = useState([]);
+  const [filteredExercise, setFilteredExercise] = useState([]);
   const exercises = [
     "Bench press",
     "Bench press dumbbell",
@@ -59,32 +59,30 @@ const Workout = () => {
     setIsWorkoutModalOpen(false);
   };
   const addExercise = (exercise) => {
-    setFilteredExercised([
-      ...filteredExercised,
+    setFilteredExercise([
+      ...filteredExercise,
       {
         name: exercise,
         isChosed: true,
-        sets: [{ kg: "", reps: "" }],
+        sets: [{ id: 0, kg: "", reps: "" }],
       },
     ]);
   };
 
-  const addSet = (exercise) => {
-    filteredExercised.map((item) => {
-      if (item.name === exercise) {
-        for (var key in item) {
-          if (item.hasOwnProperty(key)) {
-            item.sets.concat({ tes: "test" });
-            console.log(item.sets);
-          }
-        }
+  const updateExercise = (sets, name) => {
+    const exercises = filteredExercise.map((item) => {
+      if (item.name === name) {
+        item.sets = sets;
       }
+      return item;
     });
+
+    setFilteredExercise(exercises);
   };
 
   return (
     <Container style={style.container} component="main" maxWidth="xs">
-      {filteredExercised.length === 0 && (
+      {filteredExercise.length === 0 && (
         <Button onClick={handleOpenWorkout}>Start an empty Workout</Button>
       )}
       <Modal
@@ -100,7 +98,7 @@ const Workout = () => {
                 return (
                   <Exercises
                     addExercise={addExercise}
-                    filteredExercised={filteredExercised}
+                    filteredExercise={filteredExercise}
                     key={index}
                     item={item}
                   />
@@ -108,34 +106,30 @@ const Workout = () => {
               })}
           </List>
 
-          {filteredExercised.length > 0 && (
+          {console.log("filtered: ", filteredExercise)}
+
+          {filteredExercise.length > 0 && (
             <Button onClick={createWorkoutExercises} style={style.add}>
               Add
             </Button>
           )}
         </Box>
       </Modal>
-      {filteredExercised.length > 0 &&
-        filteredExercised.map((item, index) => {
+      {filteredExercise.length > 0 &&
+        filteredExercise.map((item, index) => {
           if (item.isChosed) {
             return (
               <WorkoutItem
-                addSet={addSet}
                 key={index}
                 index={index + 1}
                 exercise={item}
+                updateExercise={updateExercise}
               />
             );
           }
         })}
-      {filteredExercised.length > 0 && (
-        <Button
-          onClick={() => {
-            console.log(filteredExercised);
-          }}
-        >
-          Finish workout
-        </Button>
+      {filteredExercise.length > 0 && (
+        <Button onClick={updateExercise}>Finish workout</Button>
       )}
     </Container>
   );

@@ -36,6 +36,7 @@ const WorkoutSetRow = ({ index, onChange }) => {
           variant="outlined"
           disabled
           name="previous"
+          data-id={index}
         />
       </TableCell>
       <TableCell>
@@ -45,6 +46,7 @@ const WorkoutSetRow = ({ index, onChange }) => {
           id="outlined-basic"
           variant="outlined"
           name="kg"
+          data-id={index}
         />
       </TableCell>
       <TableCell>
@@ -54,6 +56,7 @@ const WorkoutSetRow = ({ index, onChange }) => {
           id="outlined-basic"
           variant="outlined"
           name="reps"
+          data-id={index}
         />
       </TableCell>
     </TableRow>
