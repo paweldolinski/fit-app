@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import { List, Modal } from "@mui/material";
 import Exercises from "../components/Exercises";
 import WorkoutItem from "../components/WorkoutItem";
-import { UserContext } from "../context/userContext";
+import { WorkoutContext } from "../context/workoutContext";
 
 const style = {
   container: {
@@ -38,16 +38,8 @@ const style = {
 const Workout = () => {
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [filteredExercise, setFilteredExercise] = useState([]);
-  const exercises = [
-    "Bench press",
-    "Bench press dumbbell",
-    "Bicep Curl",
-    "Bicep Curl dumbbell",
-    "Squat",
-    "Chest fly",
-    "Deadlift",
-    "Lat Pulldown",
-  ];
+  const { exercises, workouts } = useContext(WorkoutContext);
+  const { addWorkout } = useContext(WorkoutContext);
 
   const handleOpenWorkout = () => {
     setIsWorkoutModalOpen(true);
@@ -63,7 +55,6 @@ const Workout = () => {
       ...filteredExercise,
       {
         name: exercise,
-        isChosed: true,
         sets: [{ id: 0, kg: "", reps: "" }],
       },
     ]);
@@ -80,11 +71,24 @@ const Workout = () => {
     setFilteredExercise(exercises);
   };
 
+  const updateGlobalWorkouts = () => {
+    addWorkout(filteredExercise);
+    setFilteredExercise([]);
+  };
+
+  const showLocal = () => {
+    console.log(
+      JSON.parse(window.localStorage.getItem("workoutsArr")),
+      "from local"
+    );
+  };
   return (
     <Container style={style.container} component="main" maxWidth="xs">
       {filteredExercise.length === 0 && (
         <Button onClick={handleOpenWorkout}>Start an empty Workout</Button>
       )}
+      {console.log("filtered: ", filteredExercise)}
+      {console.log("workouts from global: ", workouts)}
       <Modal
         style={style.modal}
         open={isWorkoutModalOpen}
@@ -105,9 +109,6 @@ const Workout = () => {
                 );
               })}
           </List>
-
-          {console.log("filtered: ", filteredExercise)}
-
           {filteredExercise.length > 0 && (
             <Button onClick={createWorkoutExercises} style={style.add}>
               Add
@@ -117,20 +118,19 @@ const Workout = () => {
       </Modal>
       {filteredExercise.length > 0 &&
         filteredExercise.map((item, index) => {
-          if (item.isChosed) {
-            return (
-              <WorkoutItem
-                key={index}
-                index={index + 1}
-                exercise={item}
-                updateExercise={updateExercise}
-              />
-            );
-          }
+          return (
+            <WorkoutItem
+              key={index}
+              index={index + 1}
+              exercise={item}
+              updateExercise={updateExercise}
+            />
+          );
         })}
       {filteredExercise.length > 0 && (
-        <Button onClick={updateExercise}>Finish workout</Button>
+        <Button onClick={updateGlobalWorkouts}>Finish workout</Button>
       )}
+      <Button onClick={showLocal}>Show local</Button>
     </Container>
   );
 };

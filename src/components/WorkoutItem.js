@@ -9,10 +9,11 @@ import {
   TableBody,
   Table,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import WorkoutSetRow from "./WorkoutSetRow";
 import { UserContext } from "../context/userContext";
+import { WorkoutContext } from "../context/workoutContext";
 
 const style = {
   header: {},
@@ -28,7 +29,9 @@ const style = {
 
 const WorkoutItem = ({ exercise, updateExercise }) => {
   const { name, sets } = exercise;
+  const { workouts } = useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
+  const [prevSets, setPrevSets] = useState([]);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
@@ -48,9 +51,34 @@ const WorkoutItem = ({ exercise, updateExercise }) => {
     updateExercise(test, name);
   };
 
+  const checkPrev = () => {
+    workouts.map((item) => {
+      if (item.name == name) {
+        setPrevSets(item.sets);
+      }
+    });
+  };
+
+  const getPrev = (index) => {
+    let previousSet;
+
+    prevSets.filter((prev) => {
+      if (prev.id == index) {
+        previousSet = `${prev.kg} x ${prev.reps}`;
+      }
+    });
+
+    return previousSet;
+  };
+
+  useEffect(() => {
+    checkPrev();
+  }, []);
+
   return (
     <div>
       <h3>{name}</h3>
+      {console.log("prevSets: ", prevSets)}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -70,6 +98,8 @@ const WorkoutItem = ({ exercise, updateExercise }) => {
                   key={index}
                   index={index}
                   row={row}
+                  name={name}
+                  prev={getPrev(index)}
                 />
               ))}
           </TableBody>

@@ -1,16 +1,7 @@
 import * as React from "react";
-import {
-  TextField,
-  TableRow,
-  TableCell,
-  TableContainer,
-  Paper,
-  TableHead,
-  TableBody,
-  Table,
-} from "@mui/material";
-import { useState } from "react";
-import Button from "@mui/material/Button";
+import { TextField, TableRow, TableCell } from "@mui/material";
+import { WorkoutContext } from "../context/workoutContext";
+import { useContext, useEffect, useState } from "react";
 
 const style = {
   div: {
@@ -23,21 +14,14 @@ const style = {
   },
 };
 
-const WorkoutSetRow = ({ index, onChange }) => {
+const WorkoutSetRow = ({ index, onChange, prev }) => {
+  const setDisabel = () => {};
   return (
     <TableRow>
+      {console.log(prev)}
       <TableCell>{index + 1}</TableCell>
       <TableCell>
-        <TextField
-          onChange={onChange}
-          style={style.textField}
-          id="outlined-basic"
-          label="-"
-          variant="outlined"
-          disabled
-          name="previous"
-          data-id={index}
-        />
+        <p>{prev ? prev : "-"}</p>
       </TableCell>
       <TableCell>
         <TextField

@@ -1,39 +1,40 @@
 import React, { useContext, useState, createContext } from "react";
+import testArr from "../mock/workout";
 
-export const UserContext = createContext();
+export const WorkoutContext = createContext();
 
-const UserProvider = (props) => {
-  const [userObj, setUserObj] = useState({
-    name: "Pawel",
-    email: "ocebeki@gmail.com",
-    password: "123123",
-    data: {
-      workouts: [
-        {
-          dataStamp: "11.12.2002",
-          title: "Upperbody workout",
-          id: 1,
-          workout: [],
-        },
-      ],
-    },
-  });
+const WorkoutProvider = (props) => {
+  const [exercises, setExercises] = useState([
+    "Bench press",
+    "Bench press dumbbell",
+    "Bicep Curl",
+    "Bicep Curl dumbbell",
+    "Squat",
+    "Chest fly",
+    "Deadlift",
+    "Lat Pulldown",
+  ]);
+  const [workouts, setWorkouts] = useState(testArr);
 
-  const createWorkout = (obj) => {
-    // setUserObj({ ...userObj.data.workouts, obj });
-    console.log(obj);
+  const addWorkout = (finishedWorkouts) => {
+    setWorkouts([...workouts, finishedWorkouts]);
+    window.localStorage.setItem(
+      "workoutsArr",
+      JSON.stringify(finishedWorkouts)
+    );
   };
 
   return (
-    <UserContext.Provider
+    <WorkoutContext.Provider
       value={{
-        userObj,
-        createWorkout: createWorkout,
+        exercises,
+        workouts,
+        addWorkout: addWorkout,
       }}
     >
       {props.children}
-    </UserContext.Provider>
+    </WorkoutContext.Provider>
   );
 };
 
-export default UserProvider;
+export default WorkoutProvider;

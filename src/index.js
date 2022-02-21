@@ -2,13 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./main.scss";
 import App from "./App";
-import UserContext from "./context/userContext";
+import WorkoutContext from "./context/workoutContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserContext>
+    <WorkoutContext>
       <App />
-    </UserContext>
+    </WorkoutContext>
   </React.StrictMode>,
   document.getElementById("root")
 );
