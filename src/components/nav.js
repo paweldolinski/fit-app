@@ -42,6 +42,7 @@ export default function Nav() {
       onKeyDown={toggleDrawer(false)}
     >
       <Link href="/search">Food search</Link>
+      <Link href="/workout-history">Workout history</Link>
       <Link href="/workout">Workout</Link>
       <Divider />
       <Link href="/">Home</Link>

@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  TextField,
   TableRow,
   TableCell,
   TableContainer,
@@ -8,30 +7,35 @@ import {
   TableHead,
   TableBody,
   Table,
+  IconButton,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import WorkoutSetRow from "./WorkoutSetRow";
-import { UserContext } from "../context/userContext";
 import { WorkoutContext } from "../context/workoutContext";
+import { MoreVert } from "@mui/icons-material";
+import SeeMoreDialog from "./SeeMoreDialog";
 
 const style = {
-  header: {},
+  wrapper: {
+    marginBottom: "20px",
+  },
   div: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   textField: {
     margin: "20px 10px 20px 0",
   },
 };
 
-const WorkoutItem = ({ exercise, updateExercise }) => {
+const WorkoutItem = ({ exercise }) => {
   const { name, sets } = exercise;
-  const { workouts } = useContext(WorkoutContext);
+  const { workouts, updateExercise } = useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
@@ -71,14 +75,32 @@ const WorkoutItem = ({ exercise, updateExercise }) => {
     return previousSet;
   };
 
+  const handleClickOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     checkPrev();
   }, []);
 
   return (
-    <div>
-      <h3>{name}</h3>
-      {console.log("prevSets: ", prevSets)}
+    <div style={style.wrapper}>
+      <div style={style.div}>
+        <h3>{name}</h3>
+        <IconButton onClick={handleClickOpen}>
+          <MoreVert />
+        </IconButton>
+        <SeeMoreDialog
+          handleClickOpen={handleClickOpen}
+          handleClose={handleClose}
+          isOpen={isOpen}
+          name={name}
+        />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -105,7 +127,9 @@ const WorkoutItem = ({ exercise, updateExercise }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button onClick={addSet}>Add Set</Button>
+      <Button variant="contained" onClick={addSet}>
+        Add Set
+      </Button>
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import * as React from "react";
 import { TextField, TableRow, TableCell } from "@mui/material";
-import { WorkoutContext } from "../context/workoutContext";
-import { useContext, useEffect, useState } from "react";
 
 const style = {
   div: {
@@ -15,16 +13,16 @@ const style = {
 };
 
 const WorkoutSetRow = ({ index, onChange, prev }) => {
-  const setDisabel = () => {};
   return (
     <TableRow>
-      {console.log(prev)}
       <TableCell>{index + 1}</TableCell>
       <TableCell>
         <p>{prev ? prev : "-"}</p>
       </TableCell>
       <TableCell>
         <TextField
+          inputProps={{ style: { padding: 5, border: "none" } }}
+          type="number"
           onChange={onChange}
           style={style.textField}
           id="outlined-basic"
@@ -35,6 +33,8 @@ const WorkoutSetRow = ({ index, onChange, prev }) => {
       </TableCell>
       <TableCell>
         <TextField
+          inputProps={{ style: { padding: 5, border: "none" } }}
+          type="number"
           onChange={onChange}
           style={style.textField}
           id="outlined-basic"
