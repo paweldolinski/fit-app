@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Nav from "./components/nav";
 import SearchFood from "./pages/SearchFood";
 import Workout from "./pages/Workout";
+import WorkoutHistory from "./pages/WorkoutHistory";
 import UserContext from "./context/userContext";
 
 const context = React.createContext(UserContext);
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" element={<SignUp />} />
         <Route path="/search" element={<SearchFood />} />
         <Route path="/workout" element={<Workout />} />
+        <Route path="/workout-history" element={<WorkoutHistory />} />
       </Routes>
     </BrowserRouter>
   );

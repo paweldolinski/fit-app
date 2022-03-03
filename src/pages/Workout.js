@@ -1,17 +1,17 @@
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { List, Modal } from "@mui/material";
+import { List, Modal, TextField } from "@mui/material";
 import Exercises from "../components/Exercises";
 import WorkoutItem from "../components/WorkoutItem";
 import { WorkoutContext } from "../context/workoutContext";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const style = {
   container: {
-    border: "solid black 2px",
+    paddingBottom: "20px",
   },
   modal: {
     display: "flex",
@@ -23,57 +23,61 @@ const style = {
     backgroundColor: "white",
     boxShadow: 24,
     padding: 40,
-    height: "80vh",
     minWidth: 300,
   },
-  stack: {},
   chip: {
     margin: 10,
+  },
+  list: {
+    maxHeight: "80vh",
+    overflow: "auto",
   },
   add: {
     marginLeft: "80%",
   },
+  button: {
+    margin: "5px 0",
+  },
+  cancel: {
+    margin: "15px 0",
+  },
 };
 
 const Workout = () => {
-  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-  const [filteredExercise, setFilteredExercise] = useState([]);
-  const { exercises, workouts } = useContext(WorkoutContext);
-  const { addWorkout } = useContext(WorkoutContext);
+  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const {
+    addExercise,
+    exercises,
+    setWorkouts,
+    filteredExercise,
+    updateGlobalWorkouts,
+    cancelWorkout,
+    isWorkoutModalOpen,
+    setIsWorkoutModalOpen,
+    setWorkoutTitle,
+    isConfirmDialogOpen,
+    isConfirmDialogOpen2,
+    setIsConfirmDialogOpen,
+    setIsConfirmDialogOpen2,
+  } = useContext(WorkoutContext);
 
   const handleOpenWorkout = () => {
+    setWorkouts([]);
     setIsWorkoutModalOpen(true);
   };
+
   const handleCloseWorkout = () => {
     setIsWorkoutModalOpen(false);
   };
+
   const createWorkoutExercises = () => {
     setIsWorkoutModalOpen(false);
   };
-  const addExercise = (exercise) => {
-    setFilteredExercise([
-      ...filteredExercise,
-      {
-        name: exercise,
-        sets: [{ id: 0, kg: "", reps: "" }],
-      },
-    ]);
-  };
 
-  const updateExercise = (sets, name) => {
-    const exercises = filteredExercise.map((item) => {
-      if (item.name === name) {
-        item.sets = sets;
-      }
-      return item;
-    });
-
-    setFilteredExercise(exercises);
-  };
-
-  const updateGlobalWorkouts = () => {
-    addWorkout(filteredExercise);
-    setFilteredExercise([]);
+  const checkWorkout = () => {
+    filteredExercise.length > 0
+      ? setIsWorkoutStarted(true)
+      : setIsWorkoutStarted(false);
   };
 
   const showLocal = () => {
@@ -82,55 +86,112 @@ const Workout = () => {
       "from local"
     );
   };
+
+  useEffect(() => {
+    checkWorkout();
+  });
+
   return (
     <Container style={style.container} component="main" maxWidth="xs">
       {filteredExercise.length === 0 && (
-        <Button onClick={handleOpenWorkout}>Start an empty Workout</Button>
+        <Button fullWidth variant="contained" onClick={handleOpenWorkout}>
+          Start an empty Workout
+        </Button>
       )}
-      {console.log("filtered: ", filteredExercise)}
-      {console.log("workouts from global: ", workouts)}
       <Modal
         style={style.modal}
         open={isWorkoutModalOpen}
         onClose={handleCloseWorkout}
       >
         <Box style={style.box}>
+          <TextField
+            inputProps={{ style: { padding: 5, border: "none" } }}
+            onChange={(e) => setWorkoutTitle(e.target.value)}
+            id="outlined-basic"
+            variant="filled"
+            name="Title"
+            placeholder="Title: "
+          />
           <h2>Choose Exercise</h2>
-          <List>
+          <List style={style.list}>
             {exercises &&
               exercises.map((item, index) => {
                 return (
                   <Exercises
                     addExercise={addExercise}
-                    filteredExercise={filteredExercise}
                     key={index}
                     item={item}
                   />
                 );
               })}
           </List>
-          {filteredExercise.length > 0 && (
-            <Button onClick={createWorkoutExercises} style={style.add}>
+          {isWorkoutStarted && (
+            <Button
+              variant="contained"
+              onClick={createWorkoutExercises}
+              style={style.add}
+            >
               Add
             </Button>
           )}
         </Box>
       </Modal>
-      {filteredExercise.length > 0 &&
-        filteredExercise.map((item, index) => {
-          return (
-            <WorkoutItem
-              key={index}
-              index={index + 1}
-              exercise={item}
-              updateExercise={updateExercise}
-            />
-          );
-        })}
-      {filteredExercise.length > 0 && (
-        <Button onClick={updateGlobalWorkouts}>Finish workout</Button>
+      {isWorkoutStarted &&
+        filteredExercise
+          .sort()
+          .map((item, index) => (
+            <WorkoutItem key={index} index={index + 1} exercise={item} />
+          ))}
+      {isWorkoutStarted && (
+        <>
+          <Button
+            style={style.button}
+            fullWidth
+            variant="contained"
+            onClick={handleOpenWorkout}
+          >
+            Add exercise
+          </Button>
+          <Button
+            style={style.button}
+            sx={{ bgcolor: "success.main" }}
+            fullWidth
+            variant="contained"
+            onClick={() => setIsConfirmDialogOpen2(true)}
+          >
+            Finish workout
+          </Button>
+          <ConfirmDialog
+            open={isConfirmDialogOpen2}
+            setOpen={setIsConfirmDialogOpen2}
+            onConfirm={updateGlobalWorkouts}
+          >
+            Do You want to finish workout ??
+          </ConfirmDialog>
+        </>
       )}
-      <Button onClick={showLocal}>Show local</Button>
+      {isWorkoutStarted && (
+        <Button
+          style={style.cancel}
+          sx={{ bgcolor: "error.main" }}
+          fullWidth
+          variant="contained"
+          onClick={() => setIsConfirmDialogOpen(true)}
+        >
+          Cancel workout
+        </Button>
+      )}
+      <ConfirmDialog
+        open={isConfirmDialogOpen}
+        setOpen={setIsConfirmDialogOpen}
+        onConfirm={cancelWorkout}
+      >
+        Do You want to cancel workout ??
+      </ConfirmDialog>
+
+      <Button variant="contained" onClick={showLocal}>
+        Show local
+      </Button>
     </Container>
   );
 };

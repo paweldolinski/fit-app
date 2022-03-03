@@ -6,11 +6,13 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import * as React from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { WorkoutContext } from "../context/workoutContext";
 
-const Exercises = ({ addExercise, item }) => {
+const Exercises = ({ item }) => {
   const [isChecked, setIsChecked] = useState(false);
-  const clickHandle = () => {
+  const { addExercise, filteredExercise } = useContext(WorkoutContext);
+  const toggleChecked = () => {
     setIsChecked(!isChecked);
   };
 
@@ -18,7 +20,7 @@ const Exercises = ({ addExercise, item }) => {
     <ListItem component="div" disablePadding>
       <ListItemButton
         onClick={() => {
-          clickHandle();
+          toggleChecked();
           addExercise(item);
         }}
       >
