@@ -12,13 +12,11 @@ const style = {
   },
 };
 
-const WorkoutHistorySetRow = () => {
+const WorkoutHistorySetRow = ({ kg, reps }) => {
   return (
     <TableRow>
-      <TableCell>DATA</TableCell>
-      <TableCell>
-        <p></p>
-      </TableCell>
+      <TableCell>KG: {kg}</TableCell>
+      <TableCell>Reps: {reps}</TableCell>
     </TableRow>
   );
 };

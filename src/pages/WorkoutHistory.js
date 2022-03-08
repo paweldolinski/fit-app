@@ -3,12 +3,16 @@ import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import {
   Chip,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  Paper,
+  TableCell,
+  TableBody,
   Stack,
 } from "@mui/material";
+import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 
 const style = {
   container: {
@@ -49,6 +53,7 @@ const Workout = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
   const [exerciseArr, setExerciseArr] = useState([]);
   const [chosedExercise, setChosedExercise] = useState("");
+  const [exerciseSets, setExerciseSets] = useState([]);
 
   const getWorkoutHistory = () => {
     const getData = window.localStorage.getItem("workoutsArr");
@@ -57,19 +62,19 @@ const Workout = () => {
     setWorkoutsFromDb(dataArr);
 
     // const workout = {
-    //   name: "Bench Press (Barbell)",
+    //   name: chosedExercise,
     //   sets: [],
     // };
-    //
-    // dataArr.forEach((item) => {
-    //   const { sets } =
-    //     item.finishedExercises.find(({ name }) => name === workout.name) || {};
-    //   if (sets) {
-    //     workout.sets = [...workout.sets, ...sets];
-    //   }
-    // });
-    //
-    // console.log("workout", workout);
+
+    dataArr.forEach((item) => {
+      const { sets } =
+        item.finishedExercises.find(({ name }) => name === chosedExercise) ||
+        {};
+      if (sets) {
+        console.log(sets, "sets");
+        setExerciseSets(sets);
+      }
+    });
   };
 
   const getExercises = () => {
@@ -83,12 +88,11 @@ const Workout = () => {
 
     const removeDuplicates = result.filter((v, i, a) => a.indexOf(v) == i);
 
-    console.log(removeDuplicates);
-
     setExerciseArr(removeDuplicates);
   };
 
   const handleClick = (label) => {
+    setExerciseSets([]);
     setChosedExercise(label);
   };
 
@@ -97,14 +101,19 @@ const Workout = () => {
   }, []);
 
   useEffect(() => {
+    getWorkoutHistory();
+  }, [chosedExercise]);
+
+  useEffect(() => {
     getExercises();
   }, [workoutsFromDb]);
 
   return (
     <Container style={style.container} component="main" maxWidth="xs">
       <h1>Your Exercises</h1>
-      {console.log(chosedExercise)}
-      {console.log(exerciseArr)}
+      {/* {console.log(chosedExercise)}
+      {console.log(exerciseArr)} */}
+      {console.log("exerciseSets: ", exerciseSets)}
 
       <Stack
         direction="row"
@@ -123,24 +132,23 @@ const Workout = () => {
             );
           })}
       </Stack>
-
-      {chosedExercise}
-
-      {/*<TableContainer component={Paper}>*/}
-      {/*  <Table>*/}
-      {/*    <TableHead>*/}
-      {/*      <TableRow>*/}
-      {/*        <TableCell align="center">NAME</TableCell>*/}
-      {/*      </TableRow>*/}
-      {/*    </TableHead>*/}
-      {/*    <TableBody>*/}
-      {/*      /!*{workoutsHistory &&*!/*/}
-      {/*      /!*  workoutsHistory.map((row, index) => (*!/*/}
-      {/*      /!*    <WorkoutHistoryItem key={index} />*!/*/}
-      {/*      /!*  ))}*!/*/}
-      {/*    </TableBody>*/}
-      {/*  </Table>*/}
-      {/*</TableContainer>*/}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">{chosedExercise}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {exerciseSets &&
+              exerciseSets.map((item) => {
+                const { kg, reps } = item;
+                console.log(kg, reps);
+                return <WorkoutHistorySetRow kg={item.kg} reps={item.reps} />;
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };
