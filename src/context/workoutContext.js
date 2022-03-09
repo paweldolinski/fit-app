@@ -12,7 +12,6 @@ const exercisesArr = [
   "Bicep Curl Inclined (Dumbbell)",
   "Chest Fly",
   "Squat",
-  "Chest fly",
   "Sumo Deadlift",
   "Deadlift (Barbell)",
   "Deadlift (Trap Bar)",
@@ -46,12 +45,9 @@ const WorkoutProvider = (props) => {
   const [isConfirmDialogOpen2, setIsConfirmDialogOpen2] = useState(false);
 
   const addExercise = (exercise) => {
-    const timestamp = Date.now();
-
     setFilteredExercise([
       ...filteredExercise,
       {
-        timestamp,
         name: exercise,
         sets: [{ id: 0, kg: "", reps: "" }],
       },

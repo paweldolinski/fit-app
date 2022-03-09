@@ -11,6 +11,7 @@ import {
   TableCell,
   TableBody,
   Stack,
+  Button
 } from "@mui/material";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 
@@ -55,9 +56,17 @@ const Workout = () => {
   const [chosedExercise, setChosedExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
 
+  const showLocal = () => {
+    console.log(
+      JSON.parse(window.localStorage.getItem("workoutsArr")),
+      "from local"
+    );
+  };
+
   const getWorkoutHistory = () => {
     const getData = window.localStorage.getItem("workoutsArr");
     const dataArr = JSON.parse(getData);
+    let setsArr = [];
 
     setWorkoutsFromDb(dataArr);
 
@@ -67,14 +76,29 @@ const Workout = () => {
     // };
 
     dataArr.forEach((item) => {
+      const { timestamp } = item;
+      const date = new Date(timestamp).toLocaleDateString();
+      console.log(item, "item");
       const { sets } =
         item.finishedExercises.find(({ name }) => name === chosedExercise) ||
         {};
+
       if (sets) {
-        console.log(sets, "sets");
-        setExerciseSets(sets);
+        sets.forEach((set) => {
+          const { kg, reps } = set;
+          const setObj = { date, kg: "", reps: "" };
+
+          setObj.kg = kg;
+          setObj.reps = reps;
+          setsArr.push(setObj);
+        });
       }
     });
+
+    setExerciseSets(setsArr);
+
+    console.log(exerciseSets, "exerciseSets");
+    console.log(setsArr, "setsArr");
   };
 
   const getExercises = () => {
@@ -132,23 +156,29 @@ const Workout = () => {
             );
           })}
       </Stack>
+      <h1>{chosedExercise}</h1>
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
             <TableRow>
-              <TableCell align="center">{chosedExercise}</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>KG</TableCell>
+              <TableCell>REPS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {exerciseSets &&
               exerciseSets.map((item) => {
-                const { kg, reps } = item;
-                console.log(kg, reps);
-                return <WorkoutHistorySetRow kg={item.kg} reps={item.reps} />;
+                const { kg, reps, date } = item;
+
+                return <WorkoutHistorySetRow kg={kg} reps={reps} date={date} />;
               })}
           </TableBody>
         </Table>
       </TableContainer>
+      <Button variant="contained" onClick={showLocal}>
+        Show local
+      </Button>
     </Container>
   );
 };
