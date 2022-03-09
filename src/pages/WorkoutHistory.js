@@ -3,12 +3,17 @@ import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import {
   Chip,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  Paper,
+  TableCell,
+  TableBody,
   Stack,
+  Button
 } from "@mui/material";
+import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 
 const style = {
   container: {
@@ -49,27 +54,51 @@ const Workout = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
   const [exerciseArr, setExerciseArr] = useState([]);
   const [chosedExercise, setChosedExercise] = useState("");
+  const [exerciseSets, setExerciseSets] = useState([]);
+
+  const showLocal = () => {
+    console.log(
+      JSON.parse(window.localStorage.getItem("workoutsArr")),
+      "from local"
+    );
+  };
 
   const getWorkoutHistory = () => {
     const getData = window.localStorage.getItem("workoutsArr");
     const dataArr = JSON.parse(getData);
+    let setsArr = [];
 
     setWorkoutsFromDb(dataArr);
 
     // const workout = {
-    //   name: "Bench Press (Barbell)",
+    //   name: chosedExercise,
     //   sets: [],
     // };
-    //
-    // dataArr.forEach((item) => {
-    //   const { sets } =
-    //     item.finishedExercises.find(({ name }) => name === workout.name) || {};
-    //   if (sets) {
-    //     workout.sets = [...workout.sets, ...sets];
-    //   }
-    // });
-    //
-    // console.log("workout", workout);
+
+    dataArr.forEach((item) => {
+      const { timestamp } = item;
+      const date = new Date(timestamp).toLocaleDateString();
+      console.log(item, "item");
+      const { sets } =
+        item.finishedExercises.find(({ name }) => name === chosedExercise) ||
+        {};
+
+      if (sets) {
+        sets.forEach((set) => {
+          const { kg, reps } = set;
+          const setObj = { date, kg: "", reps: "" };
+
+          setObj.kg = kg;
+          setObj.reps = reps;
+          setsArr.push(setObj);
+        });
+      }
+    });
+
+    setExerciseSets(setsArr);
+
+    console.log(exerciseSets, "exerciseSets");
+    console.log(setsArr, "setsArr");
   };
 
   const getExercises = () => {
@@ -83,12 +112,11 @@ const Workout = () => {
 
     const removeDuplicates = result.filter((v, i, a) => a.indexOf(v) == i);
 
-    console.log(removeDuplicates);
-
     setExerciseArr(removeDuplicates);
   };
 
   const handleClick = (label) => {
+    setExerciseSets([]);
     setChosedExercise(label);
   };
 
@@ -97,14 +125,19 @@ const Workout = () => {
   }, []);
 
   useEffect(() => {
+    getWorkoutHistory();
+  }, [chosedExercise]);
+
+  useEffect(() => {
     getExercises();
   }, [workoutsFromDb]);
 
   return (
     <Container style={style.container} component="main" maxWidth="xs">
       <h1>Your Exercises</h1>
-      {console.log(chosedExercise)}
-      {console.log(exerciseArr)}
+      {/* {console.log(chosedExercise)}
+      {console.log(exerciseArr)} */}
+      {console.log("exerciseSets: ", exerciseSets)}
 
       <Stack
         direction="row"
@@ -123,24 +156,29 @@ const Workout = () => {
             );
           })}
       </Stack>
+      <h1>{chosedExercise}</h1>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>KG</TableCell>
+              <TableCell>REPS</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {exerciseSets &&
+              exerciseSets.map((item) => {
+                const { kg, reps, date } = item;
 
-      {chosedExercise}
-
-      {/*<TableContainer component={Paper}>*/}
-      {/*  <Table>*/}
-      {/*    <TableHead>*/}
-      {/*      <TableRow>*/}
-      {/*        <TableCell align="center">NAME</TableCell>*/}
-      {/*      </TableRow>*/}
-      {/*    </TableHead>*/}
-      {/*    <TableBody>*/}
-      {/*      /!*{workoutsHistory &&*!/*/}
-      {/*      /!*  workoutsHistory.map((row, index) => (*!/*/}
-      {/*      /!*    <WorkoutHistoryItem key={index} />*!/*/}
-      {/*      /!*  ))}*!/*/}
-      {/*    </TableBody>*/}
-      {/*  </Table>*/}
-      {/*</TableContainer>*/}
+                return <WorkoutHistorySetRow kg={kg} reps={reps} date={date} />;
+              })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Button variant="contained" onClick={showLocal}>
+        Show local
+      </Button>
     </Container>
   );
 };
