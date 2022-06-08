@@ -1,13 +1,14 @@
 import * as React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
+import { getItemFromLocalstorage } from "../utils/localStorage";
 
 const WorkoutHistory = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
   const [exercisesArr, setExercisesArr] = useState([]);
-  const [choseExercise, setChosedExercise] = useState("");
-  const [exerciseSets, setExerciseSets] = useState([]);
+  const [choseExercise, setChoseExercise] = useState("");
+  const [allExercises, setAllExercises] = useState([]);
   const [bestResult, setBestResult] = useState();
 
   const memoExercisesOptionArray = useMemo(
@@ -19,7 +20,7 @@ const WorkoutHistory = () => {
     [exercisesArr]
   );
 
-  const getWorkoutHistory = () => {
+  const getExerciseHistory = useCallback(() => {
     const getData = window.localStorage.getItem("userInfo");
     const { workoutsArr } = JSON.parse(getData);
     let setsArr = [];
@@ -44,26 +45,28 @@ const WorkoutHistory = () => {
       }
     });
 
-    setExerciseSets(setsArr || []);
-  };
+    setAllExercises(setsArr || []);
+  }, [choseExercise]);
 
-  const getExercises = () => {
+  const getAllExercises = () => {
+    const getData = getItemFromLocalstorage("userInfo");
+    const { workoutsArr } = getData;
     let result = [];
-    workoutsFromDb.forEach((item) => {
+
+    workoutsArr.forEach((item) => {
       item.finishedExercises.map(({ name }) => {
         result.push(name);
       });
     });
     const removeDuplicates = result.filter((v, i, a) => a.indexOf(v) === i);
-
-    setExercisesArr(removeDuplicates);
+    setAllExercises(removeDuplicates);
   };
 
   const handleExerciseChoose = ({ value }) => {
     if (value === choseExercise) return;
 
     setExerciseSets([]);
-    setChosedExercise(value);
+    setChoseExercise(value);
   };
 
   const getBestResult = () => {
@@ -72,7 +75,7 @@ const WorkoutHistory = () => {
   };
 
   useEffect(() => {
-    getWorkoutHistory();
+    getExerciseHistory();
   }, [choseExercise]);
 
   useEffect(() => {
