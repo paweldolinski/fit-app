@@ -1,7 +1,6 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -11,27 +10,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
+import { Loader } from "../components/Loader";
 
 const theme = createTheme();
 
 const Login = () => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(user);
-  };
+  const { onLoginChangeHandler, onLoginHandler, isLoading } =
+    useContext(UserContext);
 
   return (
     <ThemeProvider theme={theme}>
@@ -44,19 +31,20 @@ const Login = () => {
             alignItems: "center",
           }}
         >
+          {isLoading && <Loader />}
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }} />
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={onLoginHandler}
             noValidate
             sx={{ mt: 1 }}
           >
             <TextField
               margin="normal"
-              onChange={handleChange}
+              onChange={onLoginChangeHandler}
               required
               fullWidth
               id="email"
@@ -67,7 +55,7 @@ const Login = () => {
             />
             <TextField
               margin="normal"
-              onChange={handleChange}
+              onChange={onLoginChangeHandler}
               required
               fullWidth
               name="password"

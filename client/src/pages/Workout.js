@@ -50,7 +50,6 @@ const Workout = () => {
     exercises,
     setWorkouts,
     filteredExercise,
-    updateGlobalWorkouts,
     cancelWorkout,
     isWorkoutModalOpen,
     setIsWorkoutModalOpen,
@@ -59,6 +58,7 @@ const Workout = () => {
     isConfirmDialogOpen2,
     setIsConfirmDialogOpen,
     setIsConfirmDialogOpen2,
+    finishWorkout,
   } = useContext(WorkoutContext);
 
   const handleOpenWorkout = () => {
@@ -78,13 +78,6 @@ const Workout = () => {
     filteredExercise.length > 0
       ? setIsWorkoutStarted(true)
       : setIsWorkoutStarted(false);
-  };
-
-  const showLocal = () => {
-    console.log(
-      JSON.parse(window.localStorage.getItem("workoutsArr")),
-      "from local"
-    );
   };
 
   useEffect(() => {
@@ -164,7 +157,7 @@ const Workout = () => {
           <ConfirmDialog
             open={isConfirmDialogOpen2}
             setOpen={setIsConfirmDialogOpen2}
-            onConfirm={updateGlobalWorkouts}
+            onConfirm={finishWorkout}
           >
             Do You want to finish workout ??
           </ConfirmDialog>
@@ -188,10 +181,6 @@ const Workout = () => {
       >
         Do You want to cancel workout ??
       </ConfirmDialog>
-
-      <Button variant="contained" onClick={showLocal}>
-        Show local
-      </Button>
     </Container>
   );
 };

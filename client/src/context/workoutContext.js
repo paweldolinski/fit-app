@@ -68,39 +68,50 @@ const WorkoutProvider = (props) => {
   const setWorkoutObj = (filteredExercise) => {
     const timestamp = Date.now();
     let today = new Date(timestamp);
-
     today = today.toLocaleDateString();
     setWorkoutTitle("");
 
-    setWorkouts([
-      ...workouts,
-      {
-        timestamp,
-        name: `${
-          workoutTitle == ""
-            ? ""
-            : typeof workoutTitle == "undefined"
-            ? ""
-            : `${workoutTitle} - `
-        }${today}`,
-        finishedExercises: filteredExercise,
+    return {
+      timestamp,
+      name: `${
+        workoutTitle == ""
+          ? ""
+          : typeof workoutTitle == "undefined"
+          ? ""
+          : `${workoutTitle} - `
+      }${today}`,
+      finishedExercises: filteredExercise,
+    };
+  };
+
+  const finishWorkout = async () => {
+    const finishedWorkout = setWorkoutObj(filteredExercise);
+    const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+    const { name,email, workoutsArr } = userInfo;
+    const existingStorage = {name, email, workoutsArr}
+    const options = {
+      method: "POST",
+      body: JSON.stringify({
+        finishedWorkout,
+        email,
+      }),
+      headers: {
+        "Content-Type": "application/json",
       },
-    ]);
-  };
+    };
 
-  const updateGlobalWorkouts = () => {
-    setWorkoutObj(filteredExercise);
+      existingStorage.workoutsArr.push(finishedWorkout)
+      window.localStorage.setItem("userInfo",JSON.stringify( existingStorage ))
 
-    setFilteredExercise([]);
-  };
-
-  const pushWorkoutToDB = () => {
-    const getData = window.localStorage.getItem("workoutsArr");
-    const dataArr = JSON.parse(getData);
-    console.log("workouts from push", workouts);
-
-    workouts.map((workout) => dataArr.push(workout));
-    window.localStorage.setItem("workoutsArr", JSON.stringify(dataArr));
+    try {
+      const response = await fetch("http://localhost:5000/addWorkout", options);
+      // const json = await response.json();
+      //
+      // console.log(json, "json response");
+    } catch (e) {
+      console.log(e);
+    }
+      setFilteredExercise([])
   };
 
   const cancelWorkout = () => {
@@ -115,7 +126,6 @@ const WorkoutProvider = (props) => {
   };
 
   useEffect(() => {
-    pushWorkoutToDB();
     // localStorage.removeItem("workoutsArr");
   });
 
@@ -138,10 +148,10 @@ const WorkoutProvider = (props) => {
         setIsConfirmDialogOpen2,
         setWorkoutObj: setWorkoutObj,
         addExercise: addExercise,
-        updateGlobalWorkouts: updateGlobalWorkouts,
         cancelWorkout: cancelWorkout,
         updateExercise: updateExercise,
         handleClickDialog: handleClickDialog,
+        finishWorkout: finishWorkout,
       }}
     >
       {props.children}

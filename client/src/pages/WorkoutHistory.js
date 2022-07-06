@@ -11,7 +11,6 @@ import {
   TableCell,
   TableBody,
   Stack,
-  Button
 } from "@mui/material";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 
@@ -55,30 +54,18 @@ const Workout = () => {
   const [exerciseArr, setExerciseArr] = useState([]);
   const [chosedExercise, setChosedExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
-
-  const showLocal = () => {
-    console.log(
-      JSON.parse(window.localStorage.getItem("workoutsArr")),
-      "from local"
-    );
-  };
+  const [bestResult, setBestResult] = useState();
 
   const getWorkoutHistory = () => {
-    const getData = window.localStorage.getItem("workoutsArr");
-    const dataArr = JSON.parse(getData);
+    const getData = window.localStorage.getItem("userInfo");
+    const { workoutsArr } = JSON.parse(getData);
     let setsArr = [];
 
-    setWorkoutsFromDb(dataArr);
+    setWorkoutsFromDb(workoutsArr);
 
-    // const workout = {
-    //   name: chosedExercise,
-    //   sets: [],
-    // };
-
-    dataArr.forEach((item) => {
+    workoutsArr.forEach((item) => {
       const { timestamp } = item;
       const date = new Date(timestamp).toLocaleDateString();
-      console.log(item, "item");
       const { sets } =
         item.finishedExercises.find(({ name }) => name === chosedExercise) ||
         {};
@@ -88,24 +75,20 @@ const Workout = () => {
           const { kg, reps } = set;
           const setObj = { date, kg: "", reps: "" };
 
-          setObj.kg = kg;
-          setObj.reps = reps;
+          setObj.kg = parseInt(kg);
+          setObj.reps = parseInt(reps);
           setsArr.push(setObj);
         });
       }
     });
 
-    setExerciseSets(setsArr);
-
-    console.log(exerciseSets, "exerciseSets");
-    console.log(setsArr, "setsArr");
+    setExerciseSets(setsArr || []);
   };
 
   const getExercises = () => {
     let result = [];
     workoutsFromDb.forEach((item) => {
       item.finishedExercises.map(({ name }) => {
-        // setExerciseArr((exerciseArr) => [...exerciseArr, name]);
         result.push(name);
       });
     });
@@ -120,6 +103,11 @@ const Workout = () => {
     setChosedExercise(label);
   };
 
+  const getBestResult = () => {
+    const max = exerciseSets.reduce((a, b) => (a.kg > b.kg ? a : b)).kg;
+    setBestResult(max);
+  };
+
   useEffect(() => {
     getWorkoutHistory();
   }, []);
@@ -129,16 +117,16 @@ const Workout = () => {
   }, [chosedExercise]);
 
   useEffect(() => {
+    exerciseSets.length > 1 && getBestResult();
+  }, [exerciseSets]);
+
+  useEffect(() => {
     getExercises();
   }, [workoutsFromDb]);
 
   return (
     <Container style={style.container} component="main" maxWidth="xs">
       <h1>Your Exercises</h1>
-      {/* {console.log(chosedExercise)}
-      {console.log(exerciseArr)} */}
-      {console.log("exerciseSets: ", exerciseSets)}
-
       <Stack
         direction="row"
         sx={{ flexWrap: "wrap", justifyContent: "center" }}
@@ -157,6 +145,7 @@ const Workout = () => {
           })}
       </Stack>
       <h1>{chosedExercise}</h1>
+      <h3>Best: {bestResult}</h3>
       <TableContainer component={Paper}>
         <Table>
           <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
@@ -167,18 +156,23 @@ const Workout = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {console.log(exerciseSets)}
             {exerciseSets &&
-              exerciseSets.map((item) => {
+              exerciseSets.map((item, index) => {
                 const { kg, reps, date } = item;
 
-                return <WorkoutHistorySetRow kg={kg} reps={reps} date={date} />;
+                return (
+                  <WorkoutHistorySetRow
+                    kg={kg}
+                    reps={reps}
+                    date={date}
+                    key={index}
+                  />
+                );
               })}
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" onClick={showLocal}>
-        Show local
-      </Button>
     </Container>
   );
 };
