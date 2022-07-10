@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,15 +10,23 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useContext } from "react";
 import { UserContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 import { Loader } from "../components/Loader";
 
 const theme = createTheme();
 
 const Login = () => {
-  const { onLoginChangeHandler, onLoginHandler, isLoading } =
-    useContext(UserContext);
+  const { onLoginChangeHandler, onLoginHandler, isLoading } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+
+    if (userInfo) {
+      navigate("/userProfile");
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>

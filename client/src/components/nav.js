@@ -10,6 +10,8 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const { isLoggedIn, logOut, userObj } = useContext(UserContext);
 
+    console.log(isLoggedIn)
+
   const toggleDrawer = (open) => (event) => {
     if (
       event &&

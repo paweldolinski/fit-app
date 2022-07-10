@@ -10,10 +10,12 @@ const makeNewUser = async (req, res) => {
   try {
     const user = await User.findOne({ email: email });
 
-    if (user)
+    if (user) {
       return res
-        .status(400)
-        .json({ message: `User with ${email} exist already` });
+          .status(400)
+          .json({ message: `User with ${email} already exist` });
+    }
+
 
     const newUser = await User.create({
       email,
@@ -29,10 +31,9 @@ const makeNewUser = async (req, res) => {
         token: generateAuthToken(newUser._id),
       });
     } else {
-      res.send({ message: "chuj go wie" });
+      res.send({ message: "Server error" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "Internal server error" });
   }
 };

@@ -13,6 +13,7 @@ import {
   Stack,
 } from "@mui/material";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   container: {
@@ -55,6 +56,7 @@ const Workout = () => {
   const [chosedExercise, setChosedExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
   const [bestResult, setBestResult] = useState();
+  const navigate = useNavigate();
 
   const getWorkoutHistory = () => {
     const getData = window.localStorage.getItem("userInfo");
@@ -112,6 +114,13 @@ const Workout = () => {
     getWorkoutHistory();
   }, []);
 
+  // useEffect(() => {
+  //   const userInfo = localStorage.getItem("userInfo");
+  //   if (!userInfo) {
+  //     navigate("/login");
+  //   }
+  // },[]);
+
   useEffect(() => {
     getWorkoutHistory();
   }, [chosedExercise]);
@@ -156,7 +165,6 @@ const Workout = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.log(exerciseSets)}
             {exerciseSets &&
               exerciseSets.map((item, index) => {
                 const { kg, reps, date } = item;

@@ -8,6 +8,7 @@ const UserProvider = (props) => {
   const [message, setMessage] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
   const onLoginChangeHandler = (e) => {
     setUserObj({
       ...userObj,
@@ -55,10 +56,10 @@ const UserProvider = (props) => {
   const logOut = () => {
     localStorage.removeItem("userInfo");
     setIsLoggedIn(false);
-    console.log("logOut");
   };
 
   useEffect(() => {
+    console.log("context", isLoggedIn)
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
     if (userInfo) {
