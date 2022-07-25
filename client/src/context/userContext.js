@@ -1,4 +1,5 @@
-import React, { useContext, useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect } from "react";
+import { setItemToLocalstorage } from "../Utiles/localStorage";
 
 export const UserContext = createContext();
 
@@ -6,8 +7,6 @@ const UserProvider = (props) => {
   const [userObj, setUserObj] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 
   const onLoginChangeHandler = (e) => {
     setUserObj({
@@ -18,11 +17,12 @@ const UserProvider = (props) => {
 
   const onLoginHandler = async (e) => {
     e.preventDefault();
+    const { email, password } = userObj;
     const options = {
       method: "POST",
       body: JSON.stringify({
-        email: userObj.email,
-        password: userObj.password,
+        email,
+        password,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -37,16 +37,11 @@ const UserProvider = (props) => {
 
       if (response.status === 200) {
         const { user, token } = json;
-        const { name, email, workoutsArr } = user;
-        const userObjDB = { name, email, workoutsArr };
 
-        setUserObj(userObjDB);
-        setMessage("");
+        setUserObj(user);
         setIsLoading(false);
-        setIsLoggedIn(true);
-        localStorage.setItem("userInfo", JSON.stringify(userObjDB));
-      } else {
-        console.log(json, "json from front");
+        setItemToLocalstorage("token", token);
+        setItemToLocalstorage("userInfo", JSON.stringify(user));
       }
     } catch (err) {
       setMessage(err);
@@ -54,16 +49,15 @@ const UserProvider = (props) => {
   };
 
   const logOut = () => {
-    localStorage.removeItem("userInfo");
-    setIsLoggedIn(false);
+    localStorage.clear();
+    setUserObj({});
+    window.location = "/login";
   };
 
   useEffect(() => {
-    console.log("context", isLoggedIn)
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
     if (userInfo) {
-      setIsLoggedIn(true);
       setUserObj(userInfo);
     }
   }, []);
@@ -72,10 +66,8 @@ const UserProvider = (props) => {
     <UserContext.Provider
       value={{
         userObj,
-        isLoggedIn,
         isLoading,
         message,
-        setIsLoggedIn: setIsLoggedIn,
         setUserObj: setUserObj,
         onLoginHandler: onLoginHandler,
         onLoginChangeHandler: onLoginChangeHandler,

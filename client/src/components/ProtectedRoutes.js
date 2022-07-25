@@ -1,16 +1,17 @@
-import { Outlet } from "react-router";
-import Login from "../pages/Login";
+import { Navigate, useLocation } from "react-router-dom";
 
-const useAuth =()=> {
-    const userInfo = localStorage.getItem("userInfo");
+const useAuth = () => localStorage.getItem("userInfo");
+// zrobic autentykacje na podstawie JWT
 
-    return userInfo
-}
+const ProtectedRoutes = ({ children }) => {
+  const location = useLocation();
+  const isValid = useAuth();
 
-const ProtectedRoutes =()=> {
-    const isAuth = useAuth();
+  if (!isValid) {
+    return <Navigate to="/login" state={{ path: location.pathname }} />;
+  }
 
-    return isAuth ? <Outlet /> : <Login />
-}
+  return children;
+};
 
-export default ProtectedRoutes
+export default ProtectedRoutes;

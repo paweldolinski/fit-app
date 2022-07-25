@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/userContext";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
@@ -8,9 +8,7 @@ import Divider from "@mui/material/Divider";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLoggedIn, logOut, userObj } = useContext(UserContext);
-
-    console.log(isLoggedIn)
+  const { logOut, userObj, setUserObj } = useContext(UserContext);
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -20,7 +18,6 @@ export default function Nav() {
     ) {
       return;
     }
-
     setIsOpen(open);
   };
 
@@ -39,17 +36,34 @@ export default function Nav() {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      {isLoggedIn && <p>{userObj.name}</p>}
+      {userObj && <p>{userObj.name}</p>}
       <Link href="/workout-history">Workout history</Link>
       <Link href="/workout">Workout</Link>
       <Divider />
       <Link href="/">Home</Link>
-      <Link href="/register">Register</Link>
-      <Link href="/login">Login</Link>
-      {isLoggedIn && <Button onClick={logOut}>Log Out</Button>}
+
+      {userObj.name ? (
+        <>
+          <Link href={"/user-profile"}>User Profile</Link>
+          <Button onClick={logOut}>Log Out</Button>
+        </>
+      ) : (
+        <>
+          <Link href="/register">Register</Link>
+          <Link href="/login">Login</Link>
+        </>
+      )}
     </Box>
   );
 
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+
+    if (userInfo) {
+      const user = JSON.parse(userInfo);
+      setUserObj(user);
+    }
+  }, []);
   return (
     <div>
       <Button onClick={toggleDrawer(true)}>Open</Button>

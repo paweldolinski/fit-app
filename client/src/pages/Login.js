@@ -11,20 +11,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../context/userContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Loader } from "../components/Loader";
 
 const theme = createTheme();
 
 const Login = () => {
-  const { onLoginChangeHandler, onLoginHandler, isLoading } = useContext(UserContext);
+  const { onLoginChangeHandler, onLoginHandler, isLoading } =
+    useContext(UserContext);
+  const location = useLocation();
+  const redirectionPath = location.state?.path || "/user-profile";
   const navigate = useNavigate();
 
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
 
     if (userInfo) {
-      navigate("/userProfile");
+      navigate(redirectionPath);
     }
   });
 

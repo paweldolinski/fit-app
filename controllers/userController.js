@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+const secret = process.env.JWTPRIVATEKEY;
 const { User } = require("../model/UserSchema");
 const bcrypt = require("bcrypt");
 const { generateAuthToken } = require("../model/utils");
@@ -12,10 +14,9 @@ const makeNewUser = async (req, res) => {
 
     if (user) {
       return res
-          .status(400)
-          .json({ message: `User with ${email} already exist` });
+        .status(400)
+        .json({ status: "error", message: `User with ${email} already exist` });
     }
-
 
     const newUser = await User.create({
       email,
@@ -25,16 +26,13 @@ const makeNewUser = async (req, res) => {
 
     if (newUser) {
       res.status(201).json({
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        token: generateAuthToken(newUser._id),
+        user: newUser._id,
       });
     } else {
-      res.send({ message: "Server error" });
+      res.send({ status: "error", message: "Server error" });
     }
   } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
+    res.status(500).send({ status: "error", message: "Internal server error" });
   }
 };
 
@@ -45,23 +43,21 @@ const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (!user && user === null) {
-      res.status(400).json({ message: "Invalid user" });
+      res.status(400).json({ status: "error", message: "Invalid user" });
     }
 
     if (user && !(await user.matchPassword(password))) {
-      res.status(400).json({ message: "Invalid password" });
+      res.status(400).json({ status: "error", message: "Invalid password" });
     }
 
     if (user && (await user.matchPassword(password))) {
+      const token = generateAuthToken(user._id);
+      const { name, email, _id, workoutsArr } = user;
+
       return res.status(200).json({
         message: "Valid login",
-        user: {
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-          workoutsArr: user.workoutsArr,
-          token: generateAuthToken(user._id),
-        },
+        user: { name, email, _id, workoutsArr },
+        token,
       });
     } else {
       return res.status(400).json({
@@ -73,19 +69,24 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-const verify = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+const verify = async (req, res, next) => {
+  const token = req.headers["x-access-token"];
 
-  if (user) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateAuthToken(user._id),
-    });
-  } else {
-    res.send({ message: "bad auth" });
+  console.log(token);
+
+  try {
+    const decoded = jwt.verify(token, secret);
+    console.log(decoded, "decode");
+    const id = decoded.id;
+    const user = await User.findOne({ _id: id });
+
+    if (user) {
+      console.log("ok token");
+      res.json({ status: "ok", message: "login successfully" });
+    }
+  } catch {
+    console.log("zle token");
+    res.json({ status: "error", message: "invalid token" });
   }
 };
 
@@ -100,7 +101,7 @@ const addToWorkout = async (req, res, next) => {
   try {
     const userUpdate = User.findOneAndUpdate(
       { email },
-      { $push: { workoutsArr:  finishedWorkout  } }
+      { $push: { workoutsArr: finishedWorkout } }
     );
     const data = await userUpdate;
 
