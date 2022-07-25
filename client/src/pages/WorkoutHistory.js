@@ -50,7 +50,7 @@ const style = {
   },
 };
 
-const Workout = () => {
+const WorkoutHistory = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
   const [exerciseArr, setExerciseArr] = useState([]);
   const [chosedExercise, setChosedExercise] = useState("");
@@ -113,13 +113,6 @@ const Workout = () => {
   useEffect(() => {
     getWorkoutHistory();
   }, []);
-
-  // useEffect(() => {
-  //   const userInfo = localStorage.getItem("userInfo");
-  //   if (!userInfo) {
-  //     navigate("/login");
-  //   }
-  // },[]);
 
   useEffect(() => {
     getWorkoutHistory();
@@ -185,4 +178,4 @@ const Workout = () => {
   );
 };
 
-export default Workout;
+export default WorkoutHistory;

@@ -1,25 +1,39 @@
-import {useState, useEffect, useContext} from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
-    const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")))
+  const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const verify = async () => {
+    const token = localStorage.getItem("token");
+    console.log("verify");
 
-    console.log(userObj)
+    const response = await fetch("http://localhost:5000/verify", {
+      method: "GET",
+      headers: {
+        "x-access-token": token,
+      },
+    });
 
-    useEffect(() => {
-        if (!userObj) {
-            navigate("/login");
-        }
-    },[userObj]);
+    const json = await response.json();
 
-    return (
-      <div className="register">
-        <h1>UserProfile</h1>
-        <h2>Welcome: {userObj && userObj.name}</h2>
-      </div>
-    );
+    if (json.status !== "ok") {
+      console.log("wrong token");
+      navigate("/login");
+    }
+  };
+
+  useEffect(() => {
+    verify();
+  }, []);
+
+  return (
+    <div className="register">
+      <h1>UserProfile</h1>
+      <h2>Welcome: {userObj && userObj.name}</h2>
+    </div>
+  );
 };
 
 export default UserProfile;
