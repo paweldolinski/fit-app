@@ -3,11 +3,13 @@ import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { List, Modal, TextField } from "@mui/material";
+import { IconButton, List, Modal, TextField } from "@mui/material";
 import Exercises from "../components/Exercises";
 import WorkoutItem from "../components/WorkoutItem";
 import { WorkoutContext } from "../context/workoutContext";
 import ConfirmDialog from "../components/ConfirmDialog";
+import BasicDialog from "../components/BasicDialog";
+import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
   container: {
@@ -45,20 +47,22 @@ const style = {
 
 const Workout = () => {
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
+  const [isFinishWorkoutDialogOpen, setIsFinishWorkoutDialogOpen] =
+    useState(false);
+  const [isCancelWorkoutDialogOpen, setIsCancelWorkoutDialogOpen] =
+    useState(false);
+  const [isEmptySetDialogOpen, setIsEmptySetDialogOpen] = useState(false);
+  const [timestamp, setTimeStamp] = useState();
   const {
-    addExercise,
     exercises,
     setWorkouts,
     filteredExercise,
     cancelWorkout,
-    isWorkoutModalOpen,
-    setIsWorkoutModalOpen,
     setWorkoutTitle,
-    isConfirmDialogOpen,
-    isConfirmDialogOpen2,
-    setIsConfirmDialogOpen,
-    setIsConfirmDialogOpen2,
     finishWorkout,
+    isEmptySet,
+    checkIfEmptySet,
   } = useContext(WorkoutContext);
 
   const handleOpenWorkout = () => {
@@ -80,12 +84,31 @@ const Workout = () => {
       : setIsWorkoutStarted(false);
   };
 
+  const checkIsEmptySetInAllSets = () => {
+    const checkIsEmptySetInAllSets = [];
+
+    filteredExercise &&
+      filteredExercise.map((exercise) =>
+        exercise.sets.map((set) => checkIsEmptySetInAllSets.push(set))
+      );
+
+    checkIfEmptySet(checkIsEmptySetInAllSets);
+  };
+
+  const isExerciseChosed = (exercise) =>
+    filteredExercise.some((item) => item.name === exercise);
+
   useEffect(() => {
     checkWorkout();
+    console.log(filteredExercise, "filtered");
+  }, [filteredExercise.length]);
+
+  useEffect(() => {
+    checkIsEmptySetInAllSets();
   });
 
   return (
-    <Container style={style.container} component="main" maxWidth="xs">
+    <Container style={style.container} component="main" maxWidth="md">
       {filteredExercise.length === 0 && (
         <Button fullWidth variant="contained" onClick={handleOpenWorkout}>
           Start an empty Workout
@@ -105,13 +128,16 @@ const Workout = () => {
             name="Title"
             placeholder="Title: "
           />
+          <IconButton onClick={handleCloseWorkout}>
+            <CloseIcon />
+          </IconButton>
           <h2>Choose Exercise</h2>
           <List style={style.list}>
             {exercises &&
               exercises.map((item, index) => {
                 return (
                   <Exercises
-                    addExercise={addExercise}
+                    isExerciseChosed={isExerciseChosed(item)}
                     key={index}
                     item={item}
                   />
@@ -130,12 +156,18 @@ const Workout = () => {
         </Box>
       </Modal>
       {isWorkoutStarted &&
+        !isWorkoutModalOpen &&
         filteredExercise
           .sort()
           .map((item, index) => (
-            <WorkoutItem key={index} index={index + 1} exercise={item} />
+            <WorkoutItem
+              key={index}
+              index={index + 1}
+              exercise={item}
+              checkIsEmptySetInAllSets={checkIsEmptySetInAllSets}
+            />
           ))}
-      {isWorkoutStarted && (
+      {isWorkoutStarted && !isWorkoutModalOpen && (
         <>
           <Button
             style={style.button}
@@ -150,37 +182,46 @@ const Workout = () => {
             sx={{ bgcolor: "success.main" }}
             fullWidth
             variant="contained"
-            onClick={() => setIsConfirmDialogOpen2(true)}
+            onClick={() =>
+              isEmptySet
+                ? setIsEmptySetDialogOpen(true)
+                : setIsFinishWorkoutDialogOpen(true)
+            }
           >
             Finish workout
           </Button>
           <ConfirmDialog
-            open={isConfirmDialogOpen2}
-            setOpen={setIsConfirmDialogOpen2}
+            open={isFinishWorkoutDialogOpen}
+            setOpen={setIsFinishWorkoutDialogOpen}
             onConfirm={finishWorkout}
           >
             Do You want to finish workout ??
           </ConfirmDialog>
+          <BasicDialog
+            open={isEmptySetDialogOpen}
+            setOpen={setIsEmptySetDialogOpen}
+          >
+            You have empty set, fill with data or remove
+          </BasicDialog>
+          <Button
+            style={style.cancel}
+            sx={{ bgcolor: "error.main" }}
+            fullWidth
+            variant="contained"
+            onClick={() => setIsCancelWorkoutDialogOpen(true)}
+          >
+            Cancel workout
+          </Button>
+
+          <ConfirmDialog
+            open={isCancelWorkoutDialogOpen}
+            setOpen={setIsCancelWorkoutDialogOpen}
+            onConfirm={cancelWorkout}
+          >
+            Do You want to cancel workout ??
+          </ConfirmDialog>
         </>
       )}
-      {isWorkoutStarted && (
-        <Button
-          style={style.cancel}
-          sx={{ bgcolor: "error.main" }}
-          fullWidth
-          variant="contained"
-          onClick={() => setIsConfirmDialogOpen(true)}
-        >
-          Cancel workout
-        </Button>
-      )}
-      <ConfirmDialog
-        open={isConfirmDialogOpen}
-        setOpen={setIsConfirmDialogOpen}
-        onConfirm={cancelWorkout}
-      >
-        Do You want to cancel workout ??
-      </ConfirmDialog>
     </Container>
   );
 };

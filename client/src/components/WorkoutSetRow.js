@@ -1,5 +1,6 @@
 import * as React from "react";
-import { TextField, TableRow, TableCell } from "@mui/material";
+import { TextField, TableRow, TableCell, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const style = {
   div: {
@@ -12,16 +13,25 @@ const style = {
   },
 };
 
-const WorkoutSetRow = ({ index, onChange, prev }) => {
+const WorkoutSetRow = ({ index, onChange, prev, removeSet }) => {
+  const setNumberSet = () => {
+    return index + 1;
+  };
+
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
+      <TableCell>{setNumberSet()}</TableCell>
       <TableCell>
         <p>{prev ? prev : "-"}</p>
       </TableCell>
       <TableCell>
         <TextField
-          inputProps={{ style: { padding: 5, border: "none" } }}
+          inputProps={{
+            style: {
+              padding: 5,
+              border: "none",
+            },
+          }}
           type="number"
           onChange={onChange}
           style={style.textField}
@@ -33,7 +43,12 @@ const WorkoutSetRow = ({ index, onChange, prev }) => {
       </TableCell>
       <TableCell>
         <TextField
-          inputProps={{ style: { padding: 5, border: "none" } }}
+          inputProps={{
+            style: {
+              padding: 5,
+              border: "none",
+            },
+          }}
           type="number"
           onChange={onChange}
           style={style.textField}
@@ -43,6 +58,13 @@ const WorkoutSetRow = ({ index, onChange, prev }) => {
           data-id={index}
         />
       </TableCell>
+      {index > 0 && (
+        <TableCell>
+          <IconButton data-id={index} onClick={() => removeSet(index)}>
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
