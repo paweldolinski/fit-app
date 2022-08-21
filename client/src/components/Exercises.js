@@ -6,12 +6,12 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import * as React from "react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
 
-const Exercises = ({ item }) => {
-  const [isChecked, setIsChecked] = useState(false);
-  const { addExercise, filteredExercise } = useContext(WorkoutContext);
+const Exercises = ({ item, isExerciseChosed }) => {
+  const [isChecked, setIsChecked] = useState(isExerciseChosed);
+  const { addExercise, removeExercise } = useContext(WorkoutContext);
   const toggleChecked = () => {
     setIsChecked(!isChecked);
   };
@@ -21,7 +21,7 @@ const Exercises = ({ item }) => {
       <ListItemButton
         onClick={() => {
           toggleChecked();
-          addExercise(item);
+          isChecked ? removeExercise(item) : addExercise(item);
         }}
       >
         <ListItemIcon>{isChecked && <CheckCircleIcon />}</ListItemIcon>

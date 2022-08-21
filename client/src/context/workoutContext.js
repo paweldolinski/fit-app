@@ -1,5 +1,4 @@
 import React, { useState, createContext, useEffect } from "react";
-import testArr from "../mock/workout";
 
 export const WorkoutContext = createContext();
 
@@ -35,14 +34,14 @@ const exercisesArr = [
 ];
 
 const WorkoutProvider = (props) => {
-  const [exercises, setExercises] = useState(exercisesArr.sort());
+  const [exercises] = useState(exercisesArr.sort());
   const [filteredExercise, setFilteredExercise] = useState([]);
-  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [workouts, setWorkouts] = useState([]);
   const [workoutsHistory, setWorkoutHistory] = useState([]);
   const [workoutTitle, setWorkoutTitle] = useState();
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isConfirmDialogOpen2, setIsConfirmDialogOpen2] = useState(false);
+  const [isEmptySet, setIsEmptySet] = useState(false);
 
   const addExercise = (exercise) => {
     setFilteredExercise([
@@ -52,6 +51,12 @@ const WorkoutProvider = (props) => {
         sets: [{ id: 0, kg: "", reps: "" }],
       },
     ]);
+  };
+
+  const removeExercise = (exercise) => {
+    const result = filteredExercise.filter((item) => item.name !== exercise);
+
+    setFilteredExercise(result);
   };
 
   const updateExercise = (sets, name) => {
@@ -84,11 +89,22 @@ const WorkoutProvider = (props) => {
     };
   };
 
+  const checkIfEmptySet = (setsArr) => {
+    setsArr &&
+      setsArr.map((set) => {
+        if (set.kg.length === 0 || set.reps.length === 0) {
+          setIsEmptySet(true);
+        } else {
+          setIsEmptySet(false);
+        }
+      });
+  };
+
   const finishWorkout = async () => {
     const finishedWorkout = setWorkoutObj(filteredExercise);
     const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-    const { name,email, workoutsArr } = userInfo;
-    const existingStorage = {name, email, workoutsArr}
+    const { name, email, workoutsArr } = userInfo;
+    const existingStorage = { name, email, workoutsArr };
     const options = {
       method: "POST",
       body: JSON.stringify({
@@ -100,18 +116,16 @@ const WorkoutProvider = (props) => {
       },
     };
 
-      existingStorage.workoutsArr.push(finishedWorkout)
-      window.localStorage.setItem("userInfo",JSON.stringify( existingStorage ))
+    console.log(finishedWorkout, "finished workout");
+    existingStorage.workoutsArr.push(finishedWorkout);
+    window.localStorage.setItem("userInfo", JSON.stringify(existingStorage));
 
     try {
-      const response = await fetch("http://localhost:5000/addWorkout", options);
-      // const json = await response.json();
-      //
-      // console.log(json, "json response");
+      await fetch("http://localhost:5000/addWorkout", options);
     } catch (e) {
-      console.log(e);
+      console.log(e, "error from post addWorkout");
     }
-      setFilteredExercise([])
+    setFilteredExercise([]);
   };
 
   const cancelWorkout = () => {
@@ -125,10 +139,6 @@ const WorkoutProvider = (props) => {
     setFilteredExercise(updatedFilteredExercises);
   };
 
-  useEffect(() => {
-    // localStorage.removeItem("workoutsArr");
-  });
-
   return (
     <WorkoutContext.Provider
       value={{
@@ -138,20 +148,22 @@ const WorkoutProvider = (props) => {
         workoutsHistory,
         setWorkoutHistory,
         filteredExercise,
-        isWorkoutModalOpen,
-        setIsWorkoutModalOpen,
         workoutTitle,
         setWorkoutTitle,
         isConfirmDialogOpen,
         isConfirmDialogOpen2,
         setIsConfirmDialogOpen,
         setIsConfirmDialogOpen2,
+        isEmptySet,
         setWorkoutObj: setWorkoutObj,
         addExercise: addExercise,
+        removeExercise: removeExercise,
         cancelWorkout: cancelWorkout,
         updateExercise: updateExercise,
         handleClickDialog: handleClickDialog,
         finishWorkout: finishWorkout,
+        checkIfEmptySet: checkIfEmptySet,
+        setIsEmptySet: setIsEmptySet,
       }}
     >
       {props.children}

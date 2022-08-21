@@ -15,6 +15,7 @@ import WorkoutSetRow from "./WorkoutSetRow";
 import { WorkoutContext } from "../context/workoutContext";
 import { MoreVert } from "@mui/icons-material";
 import SeeMoreDialog from "./SeeMoreDialog";
+import { getItemFromLocalstorage } from "../Utiles/localStorage";
 
 const style = {
   wrapper: {
@@ -30,44 +31,62 @@ const style = {
   },
 };
 
-const WorkoutItem = ({ exercise }) => {
+const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const { name, sets } = exercise;
-  const { workouts, updateExercise } = useContext(WorkoutContext);
+  const { updateExercise } = useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
+    checkIsEmptySetInAllSets();
+  };
+
+  const removeSet = (id) => {
+    const result = setsArr.filter((set) => set.id !== id);
+    setSetsArr(result);
   };
 
   const onChange = (e) => {
     const value = e.target.value;
     const unit = e.target.name;
-    const id = e.target.parentElement.parentElement.getAttribute("data-id");
-    const test = setsArr.map((item) => {
-      if (id == item.id) {
+    const id = parseInt(
+      e.target.parentElement.parentElement.getAttribute("data-id")
+    );
+
+    const setValues = setsArr.map((item) => {
+      if (id === item.id) {
         item[unit] = value;
       }
       return item;
     });
-    // setSetsArr(test);
-    updateExercise(test, name);
+    updateExercise(setValues, name);
+    checkIsEmptySetInAllSets();
   };
 
   const checkPrev = () => {
-    workouts.map((item) => {
-      if (item.name == name) {
-        setPrevSets(item.sets);
-      }
+    const workouts = getItemFromLocalstorage("userInfo").workoutsArr;
+    let lastWorkout = [];
+
+    workouts.map((workout) => {
+      workout.finishedExercises.map((exercise) => {
+        if (exercise.name === name) {
+          lastWorkout.push(exercise);
+        }
+      });
     });
+
+    if (lastWorkout.length > 0) {
+      setPrevSets(lastWorkout.at(-1).sets);
+    }
   };
 
   const getPrev = (index) => {
     let previousSet;
 
     prevSets.filter((prev) => {
-      if (prev.id == index) {
+      if (prev.id === index) {
         previousSet = `${prev.kg} x ${prev.reps}`;
       }
     });
@@ -86,6 +105,10 @@ const WorkoutItem = ({ exercise }) => {
   useEffect(() => {
     checkPrev();
   }, []);
+
+  useEffect(() => {
+    updateExercise(setsArr, name);
+  }, [setsArr]);
 
   return (
     <div style={style.wrapper}>
@@ -122,6 +145,7 @@ const WorkoutItem = ({ exercise }) => {
                   row={row}
                   name={name}
                   prev={getPrev(index)}
+                  removeSet={removeSet}
                 />
               ))}
           </TableBody>
