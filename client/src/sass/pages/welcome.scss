@@ -1,0 +1,41 @@
+$primary: map-get($palette-base, primary);
+$bg: map-get($palette-base, bg);
+
+.welcome {
+  padding: 75px 15px 0 15px;
+  width: 100%;
+
+  .logo {
+    width: 75px;
+    height: 77px;
+    margin: 0 auto 20px auto;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 53px;
+  }
+
+  .separator {
+    margin-bottom: 36px ;
+  }
+
+  .btn {
+    margin-bottom: 10px;
+
+    &:nth-child(5) {
+      margin-bottom: 36px;
+    }
+  }
+
+  .container {
+    justify-content: space-evenly;
+  }
+
+  .icon-tile {
+    margin-bottom: 54px;
+  }
+}

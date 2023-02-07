@@ -1,0 +1,23 @@
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: grey;
+  padding: 20px;
+  border-radius: 5px;
+
+  p {
+    margin-bottom: 10px;
+  }
+
+  &__btns-wrapper {
+    display: flex;
+  }
+
+  button {
+    margin: 0 auto;
+    display: block;
+    min-width: 50px;
+  }
+}

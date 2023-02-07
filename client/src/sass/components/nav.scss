@@ -1,0 +1,15 @@
+$secondary: map-get($palette-base, secondary);
+$tertiary: map-get($palette-base, tertiary);
+
+.nav {
+  width: 100%;
+  max-width: 500px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-evenly;
+  padding: 13px 0;
+  border-top: solid 1px $tertiary;
+}

@@ -1,0 +1,17 @@
+$white: map-get($palette-base,white);
+$primary: map-get($palette-base, primary);
+
+.btn {
+  &__btn {
+    width: 100%;
+    border: none;
+    height: 50px;
+    background-color: $white;
+    color: $primary;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 17px;
+    outline: none;
+    border-radius: 4px;
+  }
+}

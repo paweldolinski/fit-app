@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
-import { setItemToLocalstorage } from "../Utiles/localStorage";
+import { setItemToLocalstorage } from "../utiles/localStorage";
 
 export const UserContext = createContext();
 
@@ -7,11 +7,13 @@ const UserProvider = (props) => {
   const [userObj, setUserObj] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isNewUser, setIsNewUser] = useState(null);
 
   const onLoginChangeHandler = (e) => {
+    const { name, value } = e.target;
     setUserObj({
       ...userObj,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -59,7 +61,10 @@ const UserProvider = (props) => {
 
     if (userInfo) {
       setUserObj(userInfo);
+      setIsNewUser(userInfo.workoutsArr.length === 0);
     }
+
+    console.log(isNewUser, "useEffect");
   }, []);
 
   return (
@@ -69,9 +74,11 @@ const UserProvider = (props) => {
         isLoading,
         message,
         setUserObj: setUserObj,
+        isNewUser: isNewUser,
         onLoginHandler: onLoginHandler,
         onLoginChangeHandler: onLoginChangeHandler,
         logOut: logOut,
+        setIsNewUser: setIsNewUser,
       }}
     >
       {props.children}

@@ -1,0 +1,13 @@
+$white: map-get($palette-base, white);
+.back {
+  margin-bottom: 51px;
+  display: block;
+  text-decoration: none;
+  color: $white;
+  font-size: 17px;
+
+  img {
+    width: 12px;
+    margin-right: 5px;
+  }
+}

@@ -1,71 +1,86 @@
 import * as React from "react";
-import { TextField, TableRow, TableCell, IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import Icon from "../assets/svg/bottom-chevron.svg";
+import WorkoutSetRowOptionDialog from "./WorkoutSetRowOptionDialog";
+import { useEffect, useState } from "react";
 
-const style = {
-  div: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textField: {
-    margin: "20px 10px 20px 0",
-  },
-};
+// TODO limit value.length < 3 of input
 
-const WorkoutSetRow = ({ index, onChange, prev, removeSet }) => {
+const WorkoutSetRow = ({
+  index,
+  onChange,
+  prev,
+  removeSet,
+  copySet,
+  kg,
+  reps,
+}) => {
+  const [isOptionOpen, setIsOptionOpen] = useState(false);
   const setNumberSet = () => {
     return index + 1;
   };
 
+  const toggleIsOpenOption = (e) => {
+    setIsOptionOpen(!isOptionOpen);
+  };
+
+  useEffect(() => {
+    const body = document.body;
+    const closeOption = (e) => {
+      const {
+        classList: { value },
+      } = e.target;
+
+      if (value === "option-btn") return;
+
+      setIsOptionOpen(false);
+    };
+
+    body.addEventListener("click", closeOption);
+
+    return () => body.removeEventListener("click", closeOption);
+  }, []);
+
   return (
-    <TableRow>
-      <TableCell>{setNumberSet()}</TableCell>
-      <TableCell>
-        <p>{prev ? prev : "-"}</p>
-      </TableCell>
-      <TableCell>
-        <TextField
-          inputProps={{
-            style: {
-              padding: 5,
-              border: "none",
-            },
-          }}
-          type="number"
-          onChange={onChange}
-          style={style.textField}
-          id="outlined-basic"
-          variant="outlined"
-          name="kg"
-          data-id={index}
-        />
-      </TableCell>
-      <TableCell>
-        <TextField
-          inputProps={{
-            style: {
-              padding: 5,
-              border: "none",
-            },
-          }}
-          type="number"
-          onChange={onChange}
-          style={style.textField}
-          id="outlined-basic"
-          variant="outlined"
-          name="reps"
-          data-id={index}
-        />
-      </TableCell>
-      {index > 0 && (
-        <TableCell>
-          <IconButton data-id={index} onClick={() => removeSet(index)}>
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      )}
-    </TableRow>
+    <>
+      {prev && <p className="workout-set-row__prev">Last: {prev}</p>}
+      <div className="workout-set-row__wrapper container">
+        <div className="workout-set-row__set-number">{setNumberSet()}</div>
+        <div className="workout-set-row__kg-wrapper">
+          <input
+            className="workout-set-row__kg"
+            onChange={onChange}
+            name="kg"
+            data-id={index}
+            type="text"
+            value={kg}
+            maxLength="3"
+          />
+          <span>kg</span>
+        </div>
+        <div className="workout-set-row__separator"></div>
+        <div className="workout-set-row__reps-wrapper">
+          <span>x</span>
+          <input
+            className="workout-set-row__reps"
+            onChange={onChange}
+            name="reps"
+            data-id={index}
+            type="text"
+            maxLength="2"
+          />
+        </div>
+        <div className="workout-set-row__option-btn">
+          <img className="option-btn" src={Icon} onClick={toggleIsOpenOption} />
+        </div>
+        {isOptionOpen && (
+          <WorkoutSetRowOptionDialog
+            removeSet={removeSet}
+            setId={index}
+            copySet={copySet}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

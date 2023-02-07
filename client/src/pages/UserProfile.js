@@ -1,7 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import Back from "../components/Back";
+import { UserContext } from "../context/userContext";
+import Avatar from "../assets/png/arni.png";
+import Button from "../components/Button";
 
 const UserProfile = () => {
+  const { logOut } = useContext(UserContext);
   const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")));
   const navigate = useNavigate();
 
@@ -29,9 +34,19 @@ const UserProfile = () => {
   }, []);
 
   return (
-    <div className="register">
-      <h1>UserProfile</h1>
-      <h2>Welcome: {userObj && userObj.name}</h2>
+    <div className="user-profile">
+      <Back />
+      <h1>Profile</h1>
+      <div className="user-profile__name-wrapper">
+        <img className="user-profile__avatar" src={Avatar} />
+        <div className="user-profile__name">
+          <p>{userObj && userObj.name}</p>
+          <p>{userObj.workoutsArr.length} workouts</p>
+        </div>
+      </div>
+      <Button onClick={logOut} title="LogOut" name="LogOut">
+        LogOut
+      </Button>
     </div>
   );
 };

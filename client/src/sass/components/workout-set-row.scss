@@ -1,0 +1,87 @@
+$primary: map-get($palette-base, primary);
+$tertiary: map-get($palette-base, tertiary);
+$quaternary: map-get($palette-base, quaternary);
+$white: map-get($palette-base, white);
+
+.workout-set-row {
+  &__wrapper {
+    height: 50px;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    &.empty {
+      border: solid 2px red;
+    }
+  }
+
+  &__set-number {
+    background-color: $white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    border-radius: 5px 0 0 5px;
+    border-right: 1px solid $tertiary;
+  }
+
+  &__kg-wrapper, &__reps-wrapper {
+    position: relative;
+    flex: 3 1 0;
+
+    input {
+      height: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      width: 100%;
+      border: none;
+    }
+
+    span {
+      position: absolute;
+      top: 50%;
+      right: 30px;
+      transform: translateY(-50%);
+    }
+  }
+
+  &__separator {
+    height: 40px;
+    width: 1px;
+    background-color: $tertiary;
+    align-self: center;
+  }
+
+  &__reps-wrapper {
+    input {
+      position: relative;
+    }
+
+    span {
+      left: 30px;
+      width: max-content;
+      z-index: 1;
+    }
+  }
+
+  &__option-btn {
+    position: relative;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex: 1 1;
+    border-left: 1px solid $tertiary;
+    cursor: pointer;
+
+    &.active {
+      transform: translateY(90%);
+    }
+
+    img {
+      width: 25px;
+    }
+  }
+}

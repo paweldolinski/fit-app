@@ -1,0 +1,20 @@
+$white: map-get($palette-base, white);
+
+.login {
+  width: 100%;
+  margin: 34px 15px 0 15px;
+
+  h1 {
+    font-weight: 700;
+  }
+
+  .btn {
+    margin-bottom: 27px;
+  }
+
+  .forgot-password {
+    text-align: center;
+    display: block;
+    color: $white;
+  }
+}
