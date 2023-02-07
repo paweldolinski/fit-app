@@ -1,0 +1,12 @@
+$primary: map-get($palette-base, primary);
+
+.signup {
+  width: 100%;
+  align-self: flex-start;
+  margin: 34px 15px 0 15px;
+
+  .btn {
+    margin-bottom: 28px;
+  }
+
+}

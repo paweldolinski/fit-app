@@ -1,0 +1,23 @@
+$white: map-get($palette-base, white);
+
+.finished-workout {
+  margin-top: 105px;
+  padding: 0 15px;
+
+  h1 {
+    margin-bottom: 38px;
+    font-weight: 700;
+    font-size: 32px;
+    text-align: left;
+  }
+
+  &__text {
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 17px;
+  }
+
+  &__result {
+    margin-bottom: 20px;
+  }
+}

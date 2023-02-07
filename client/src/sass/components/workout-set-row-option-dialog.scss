@@ -1,0 +1,32 @@
+$white: map-get($palette-base,white);
+$black: map-get($palette-base,black);
+
+.workout-set-row-options-wrapper {
+  position: absolute;
+  width: 160px;
+  background-color: $white;
+  padding: 23px 15px 23px 13px;
+  border-radius: 5px;
+  right: 0;
+  bottom: -130px;
+  z-index: 2;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    cursor: pointer;
+    &:first-child {
+      margin-bottom: 35px;
+    }
+  }
+
+  &__icon {
+    margin-right: 10px;
+  }
+
+  &__text {
+    color: $black;
+  }
+}

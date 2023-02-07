@@ -1,15 +1,9 @@
-import {
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
+import CheckedIcon from "../assets/svg/checked.svg";
 
-const Exercises = ({ item, isExerciseChosed }) => {
+const Exercise = ({ exercise, isExerciseChosed }) => {
   const [isChecked, setIsChecked] = useState(isExerciseChosed);
   const { addExercise, removeExercise } = useContext(WorkoutContext);
   const toggleChecked = () => {
@@ -17,18 +11,20 @@ const Exercises = ({ item, isExerciseChosed }) => {
   };
 
   return (
-    <ListItem component="div" disablePadding>
-      <ListItemButton
-        onClick={() => {
-          toggleChecked();
-          isChecked ? removeExercise(item) : addExercise(item);
-        }}
-      >
-        <ListItemIcon>{isChecked && <CheckCircleIcon />}</ListItemIcon>
-        <ListItemText primary={item} />
-      </ListItemButton>
-    </ListItem>
+    <li
+      className={
+        isExerciseChosed
+          ? "workout__exercise-item active"
+          : "workout__exercise-item"
+      }
+      onClick={() => {
+        toggleChecked();
+        isChecked ? removeExercise(exercise) : addExercise(exercise);
+      }}
+    >
+      <span>{exercise}</span> {isExerciseChosed && <img src={CheckedIcon} />}
+    </li>
   );
 };
 
-export default Exercises;
+export default Exercise;

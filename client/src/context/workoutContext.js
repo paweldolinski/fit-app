@@ -35,13 +35,19 @@ const exercisesArr = [
 
 const WorkoutProvider = (props) => {
   const [exercises] = useState(exercisesArr.sort());
+  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
+
   const [filteredExercise, setFilteredExercise] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [workoutsHistory, setWorkoutHistory] = useState([]);
   const [workoutTitle, setWorkoutTitle] = useState();
-  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const [isConfirmDialogOpen2, setIsConfirmDialogOpen2] = useState(false);
   const [isEmptySet, setIsEmptySet] = useState(false);
+  const [isEmptySetModalOpen, setIsEmptySetModalOpen] = useState(false);
+  const [isFinishWorkoutPopupOpen, setIsFinishWorkoutPopupOpen] =
+    useState(false);
+  const [isWorkoutFinished, setIsWorkoutFinished] = useState(false);
+  const [isCancelWorkoutPopupOpen, setIsCancelWorkoutPopupOpen] =
+    useState(false);
 
   const addExercise = (exercise) => {
     setFilteredExercise([
@@ -78,7 +84,7 @@ const WorkoutProvider = (props) => {
 
     return {
       timestamp,
-      name: `${
+      date: `${
         workoutTitle == ""
           ? ""
           : typeof workoutTitle == "undefined"
@@ -116,19 +122,19 @@ const WorkoutProvider = (props) => {
       },
     };
 
-    console.log(finishedWorkout, "finished workout");
     existingStorage.workoutsArr.push(finishedWorkout);
     window.localStorage.setItem("userInfo", JSON.stringify(existingStorage));
-
+    console.log("finish");
     try {
       await fetch("http://localhost:5000/addWorkout", options);
+      setIsFinishWorkoutPopupOpen(false);
     } catch (e) {
       console.log(e, "error from post addWorkout");
     }
-    setFilteredExercise([]);
   };
 
   const cancelWorkout = () => {
+    setIsCancelWorkoutPopupOpen(false);
     setFilteredExercise([]);
   };
 
@@ -150,12 +156,15 @@ const WorkoutProvider = (props) => {
         filteredExercise,
         workoutTitle,
         setWorkoutTitle,
-        isConfirmDialogOpen,
-        isConfirmDialogOpen2,
-        setIsConfirmDialogOpen,
-        setIsConfirmDialogOpen2,
         isEmptySet,
+        isWorkoutModalOpen,
+        isEmptySetModalOpen,
+        isFinishWorkoutPopupOpen,
+        isWorkoutFinished,
+        isCancelWorkoutPopupOpen,
+        setIsCancelWorkoutPopupOpen,
         setWorkoutObj: setWorkoutObj,
+        setIsWorkoutModalOpen: setIsWorkoutModalOpen,
         addExercise: addExercise,
         removeExercise: removeExercise,
         cancelWorkout: cancelWorkout,
@@ -164,6 +173,9 @@ const WorkoutProvider = (props) => {
         finishWorkout: finishWorkout,
         checkIfEmptySet: checkIfEmptySet,
         setIsEmptySet: setIsEmptySet,
+        setIsEmptySetModalOpen: setIsEmptySetModalOpen,
+        setIsFinishWorkoutPopupOpen: setIsFinishWorkoutPopupOpen,
+        setIsWorkoutFinished: setIsWorkoutFinished,
       }}
     >
       {props.children}

@@ -1,0 +1,39 @@
+$primary: map-get($palette-base, primary);
+
+.user-profile {
+  height: 100%;
+
+  h1 {
+    margin-bottom: 47px;
+    text-align: left;
+  }
+  &__name-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    margin-right: 24px;
+  }
+
+  &__name {
+    p {
+      text-align: left;
+
+      &:first-child {
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      &:nth-child(2) {
+        opacity: 0.75;
+      }
+    }
+  }
+
+  .btn {
+    margin-top: 100%;
+  }
+}

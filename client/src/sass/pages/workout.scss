@@ -1,0 +1,99 @@
+$primary: map-get($palette-base, primary);
+$secondary: map-get($palette-base, secondary);
+$tertiary: map-get($palette-base, tertiary);
+$quaternary: map-get($palette-base, quaternary);
+$white: map-get($palette-base, white);
+
+.workout {
+  height: calc(100% - 34px);
+  box-sizing: border-box;
+
+  &__wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    p:last-child{
+      margin-bottom: 20px;
+    }
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  &__last-workout {
+    p {
+      text-align: right;
+      &:nth-child(1) {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  &__welcome-screen {
+    p {
+      font-size: 45px;
+      text-align: left;
+      margin-bottom: 10px;
+
+      &:nth-child(1) {
+        margin-left: 19px;
+      }
+
+      &:nth-child(2) {
+        margin-left: 48px;
+      }
+
+      &:nth-child(3) {
+       text-align: right;
+      }
+    }
+  }
+
+
+    &__btn-wrapper {
+      margin-top: auto;
+      margin-bottom: 30px;
+    }
+
+  .btn {
+    margin-bottom: 10px;
+  }
+
+  .btn__btn[name="newWorkout"],
+  .btn__btn[name="startWorkout"],
+  .btn__btn[name="finishWorkout"],
+  .btn__btn[name="addSet"] {
+    background-color: $secondary;
+  }
+
+  &__exercises-wrapper {
+    border-radius: 5px;
+    max-height: 360px;
+    overflow: scroll;
+  }
+  &__exercise-item {
+    display: flex;
+    position: relative;
+    color: $primary;
+    background-color: $white;
+    padding: 17px 10px;
+    border-bottom: solid 1px $quaternary;
+    font-size: 15px;
+    cursor: pointer;
+
+    span {
+      margin: auto;
+    }
+
+    img {
+      position: absolute;
+      right: 10px;
+      bottom: 12px;
+
+    }
+  }
+}

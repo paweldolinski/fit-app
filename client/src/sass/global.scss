@@ -1,0 +1,108 @@
+$primary: map-get($palette-base, primary);
+$tertiary: map-get($palette-base, tertiary);
+$white: map-get($palette-base, white);
+$black: map-get($palette-base, black);
+$bg: map-get($palette-base, bg);
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
+}
+
+#root {
+  display: flex;
+  height: calc(100vh - 34px);
+  width: 100%;
+  max-width: 360px;
+  overflow: hidden;
+  padding: 34px 15px 0 15px;
+  position: relative;
+}
+
+.wrapper {
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 94px;
+}
+
+h1,
+h2,
+h3,
+p {
+  text-align: center;
+  margin: 0;
+  color: $white;
+}
+
+h1 {
+  font-size: 32px;
+
+  &.left {
+    text-align: left;
+    margin-bottom: 41px;
+  }
+}
+
+h3 {
+  font-size: 17px;
+}
+
+p {
+  font-size: 15px;
+  position: relative;
+
+  &.separator {
+    color: $white;
+    &:before {
+      content: "";
+      display: block;
+      height: 2px;
+      background: $tertiary;
+      margin-right: 10px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 24%;
+    };
+
+    &:after {
+      content: "";
+      display: block;
+      height: 2px;
+      background: $tertiary;
+      margin-left: 10px;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 24%;
+    };
+  }
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  position: relative;
+
+  &__column {
+    flex-direction: column;
+  }
+
+  &__center {
+    justify-content: center;
+  }
+}

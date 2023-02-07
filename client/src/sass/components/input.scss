@@ -1,0 +1,27 @@
+$secondary: map-get($palette-base, secondary);
+$white: map-get($palette-base, white);
+$primary: map-get($palette-base, primary);
+
+.input {
+  margin-bottom: 10px;
+  position: relative;
+
+  &__input {
+    width: 100%;
+    border: none;
+    height: 50px;
+    background-color: $white;
+    padding: 15px 9px;
+    font-size: 17px;
+    box-sizing: border-box;
+    outline: none;
+    color: $primary;
+    border-radius: 4px;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 13px;
+    right: 20px;
+  }
+}

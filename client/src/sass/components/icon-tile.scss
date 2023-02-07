@@ -1,0 +1,19 @@
+$secondary: map-get($palette-base, secondary);
+
+.icon-tile {
+  display: block;
+  width: 50px;
+  cursor: pointer;
+  text-decoration: none;
+
+  img {
+    width: 100%;
+    margin-bottom: 3px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 10px;
+    color: $secondary;
+  }
+}

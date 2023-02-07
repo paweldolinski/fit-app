@@ -1,0 +1,24 @@
+$primary: map-get($palette-base, primary);
+$tertiary: map-get($palette-base, tertiary);
+$quaternary: map-get($palette-base, quaternary);
+$white: map-get($palette-base, white);
+
+.workout-item {
+  margin-bottom: 40px;
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      text-align: left;
+      font-weight: 700;
+      font-size: 17px;
+      margin-bottom: 4px;
+
+      &:nth-child(2) {
+        margin-bottom: 9px;
+      }
+    }
+  }
+}

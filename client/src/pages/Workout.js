@@ -1,81 +1,40 @@
-import Box from "@mui/material/Box";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import { IconButton, List, Modal, TextField } from "@mui/material";
-import Exercises from "../components/Exercises";
-import WorkoutItem from "../components/WorkoutItem";
 import { WorkoutContext } from "../context/workoutContext";
-import ConfirmDialog from "../components/ConfirmDialog";
-import BasicDialog from "../components/BasicDialog";
-import CloseIcon from "@mui/icons-material/Close";
-
-const style = {
-  container: {
-    paddingBottom: "20px",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  box: {
-    position: "relative",
-    backgroundColor: "white",
-    boxShadow: 24,
-    padding: 40,
-    minWidth: 300,
-  },
-  chip: {
-    margin: 10,
-  },
-  list: {
-    maxHeight: "80vh",
-    overflow: "auto",
-  },
-  add: {
-    marginLeft: "80%",
-  },
-  button: {
-    margin: "5px 0",
-  },
-  cancel: {
-    margin: "15px 0",
-  },
-};
+import Back from "../components/Back";
+import Button from "../components/Button";
+import Exercise from "../components/Exercises";
+import WorkoutItem from "../components/WorkoutItem";
+import Popup from "../components/Popup";
+import FinishedWorkout from "./FinishedWorkout";
 
 const Workout = () => {
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
-  const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-  const [isFinishWorkoutDialogOpen, setIsFinishWorkoutDialogOpen] =
-    useState(false);
-  const [isCancelWorkoutDialogOpen, setIsCancelWorkoutDialogOpen] =
-    useState(false);
-  const [isEmptySetDialogOpen, setIsEmptySetDialogOpen] = useState(false);
-  const [timestamp, setTimeStamp] = useState();
   const {
     exercises,
     setWorkouts,
     filteredExercise,
     cancelWorkout,
-    setWorkoutTitle,
     finishWorkout,
     isEmptySet,
     checkIfEmptySet,
+    setIsWorkoutModalOpen,
+    isWorkoutModalOpen,
+    setIsEmptySetModalOpen,
+    isEmptySetModalOpen,
+    isCancelWorkoutPopupOpen,
+    setIsCancelWorkoutPopupOpen,
+    isFinishWorkoutPopupOpen,
+    isWorkoutFinished,
+    setIsWorkoutFinished,
+    setIsFinishWorkoutPopupOpen,
   } = useContext(WorkoutContext);
+  const [lastWorkoutDate, setLastWorkoutDate] = useState();
+  const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")));
 
   const handleOpenWorkout = () => {
     setWorkouts([]);
     setIsWorkoutModalOpen(true);
-  };
-
-  const handleCloseWorkout = () => {
-    setIsWorkoutModalOpen(false);
-  };
-
-  const createWorkoutExercises = () => {
-    setIsWorkoutModalOpen(false);
   };
 
   const checkWorkout = () => {
@@ -99,131 +58,137 @@ const Workout = () => {
     filteredExercise.some((item) => item.name === exercise);
 
   useEffect(() => {
+    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0].date;
+    setLastWorkoutDate(lastWorkoutDate);
+  }, []);
+
+  useEffect(() => {
     checkWorkout();
-    console.log(filteredExercise, "filtered");
   }, [filteredExercise.length]);
 
   useEffect(() => {
     checkIsEmptySetInAllSets();
   });
 
-  return (
-    <Container style={style.container} component="main" maxWidth="md">
-      {filteredExercise.length === 0 && (
-        <Button fullWidth variant="contained" onClick={handleOpenWorkout}>
-          Start an empty Workout
-        </Button>
-      )}
-      <Modal
-        style={style.modal}
-        open={isWorkoutModalOpen}
-        onClose={handleCloseWorkout}
-      >
-        <Box style={style.box}>
-          <TextField
-            inputProps={{ style: { padding: 5, border: "none" } }}
-            onChange={(e) => setWorkoutTitle(e.target.value)}
-            id="outlined-basic"
-            variant="filled"
-            name="Title"
-            placeholder="Title: "
-          />
-          <IconButton onClick={handleCloseWorkout}>
-            <CloseIcon />
-          </IconButton>
-          <h2>Choose Exercise</h2>
-          <List style={style.list}>
-            {exercises &&
-              exercises.map((item, index) => {
-                return (
-                  <Exercises
-                    isExerciseChosed={isExerciseChosed(item)}
-                    key={index}
-                    item={item}
-                  />
-                );
-              })}
-          </List>
-          {isWorkoutStarted && (
-            <Button
-              variant="contained"
-              onClick={createWorkoutExercises}
-              style={style.add}
-            >
-              Add
-            </Button>
-          )}
-        </Box>
-      </Modal>
-      {isWorkoutStarted &&
-        !isWorkoutModalOpen &&
-        filteredExercise
-          .sort()
-          .map((item, index) => (
-            <WorkoutItem
-              key={index}
-              index={index + 1}
-              exercise={item}
-              checkIsEmptySetInAllSets={checkIsEmptySetInAllSets}
-            />
-          ))}
-      {isWorkoutStarted && !isWorkoutModalOpen && (
-        <>
-          <Button
-            style={style.button}
-            fullWidth
-            variant="contained"
-            onClick={handleOpenWorkout}
-          >
-            Add exercise
-          </Button>
-          <Button
-            style={style.button}
-            sx={{ bgcolor: "success.main" }}
-            fullWidth
-            variant="contained"
-            onClick={() =>
-              isEmptySet
-                ? setIsEmptySetDialogOpen(true)
-                : setIsFinishWorkoutDialogOpen(true)
-            }
-          >
-            Finish workout
-          </Button>
-          <ConfirmDialog
-            open={isFinishWorkoutDialogOpen}
-            setOpen={setIsFinishWorkoutDialogOpen}
-            onConfirm={finishWorkout}
-          >
-            Do You want to finish workout ??
-          </ConfirmDialog>
-          <BasicDialog
-            open={isEmptySetDialogOpen}
-            setOpen={setIsEmptySetDialogOpen}
-          >
-            You have empty set, fill with data or remove
-          </BasicDialog>
-          <Button
-            style={style.cancel}
-            sx={{ bgcolor: "error.main" }}
-            fullWidth
-            variant="contained"
-            onClick={() => setIsCancelWorkoutDialogOpen(true)}
-          >
-            Cancel workout
-          </Button>
+  console.log(isCancelWorkoutPopupOpen, "cancel");
 
-          <ConfirmDialog
-            open={isCancelWorkoutDialogOpen}
-            setOpen={setIsCancelWorkoutDialogOpen}
-            onConfirm={cancelWorkout}
-          >
-            Do You want to cancel workout ??
-          </ConfirmDialog>
-        </>
-      )}
-    </Container>
-  );
+  if (isWorkoutFinished) {
+    return <FinishedWorkout filteredExercise={filteredExercise} />;
+  } else {
+    return (
+      <div className="workout">
+        <div className="workout__wrapper">
+          <div className="workout__top">
+            <Back />
+            <div className="workout__last-workout">
+              <p>Last Workout :</p>
+              <p className="workout__date">{lastWorkoutDate}</p>
+            </div>
+          </div>
+          {isWorkoutModalOpen && (
+            <>
+              <h1 className="left">Add exercises</h1>
+              <ul className="workout__exercises-wrapper">
+                {exercises.map((exercise) => (
+                  <Exercise
+                    key={exercise}
+                    exercise={exercise}
+                    isExerciseChosed={isExerciseChosed(exercise)}
+                  />
+                ))}
+              </ul>
+              <Button
+                title="Start workout"
+                name="startWorkout"
+                onClick={() => {
+                  setIsWorkoutStarted(true);
+                  setIsWorkoutModalOpen(false);
+                }}
+              />
+            </>
+          )}
+          {isWorkoutStarted &&
+            !isWorkoutModalOpen &&
+            filteredExercise
+              .sort()
+              .map((item, index) => (
+                <WorkoutItem
+                  key={index}
+                  index={index + 1}
+                  exercise={item}
+                  checkIsEmptySetInAllSets={checkIsEmptySetInAllSets}
+                />
+              ))}
+          {isWorkoutStarted && !isWorkoutModalOpen && (
+            <>
+              <Button title="Add exercise" onClick={handleOpenWorkout} />
+              <Button
+                title="Finish Workout"
+                name="finishWorkout"
+                onClick={() =>
+                  isEmptySet
+                    ? setIsEmptySetModalOpen(true)
+                    : setIsFinishWorkoutPopupOpen(true)
+                }
+              />
+              <Button
+                title="Cancel workout"
+                onClick={() => setIsCancelWorkoutPopupOpen(true)}
+              />
+            </>
+          )}
+          {isEmptySetModalOpen && (
+            <Popup
+              text="You cant finish workout with empty sets! "
+              onApprove={() => setIsEmptySetModalOpen(false)}
+            />
+          )}
+          {isFinishWorkoutPopupOpen && (
+            <Popup
+              text="Do you want to finish your workout ?"
+              onApprove={() => {
+                finishWorkout();
+                setIsWorkoutFinished(true);
+              }}
+              onCancel={() => setIsFinishWorkoutPopupOpen(false)}
+            />
+          )}
+          {isCancelWorkoutPopupOpen && (
+            <Popup
+              text="Do you want to cancel workout ?"
+              onApprove={cancelWorkout}
+              onCancel={() => setIsCancelWorkoutPopupOpen(false)}
+            />
+          )}
+
+          {isWorkoutStarted ||
+            (!isWorkoutModalOpen && (
+              <>
+                <h1 className="left">Workout</h1>
+                <div className="workout__welcome-screen">
+                  <p>ARNIE</p>
+                  <p>IS WATCHING</p>
+                  <p>YOU</p>
+                </div>
+                <div className="workout__btn-wrapper">
+                  <Button
+                    title="Your Templates"
+                    onClick={() => console.log("Your template")}
+                    name="yourTemplates"
+                  />
+                  <Button
+                    title="Start a New Workout +"
+                    onClick={() => setIsWorkoutModalOpen(true)}
+                    name="newWorkout"
+                  />
+                </div>
+                <p>Remember to exercise systematically.</p>
+              </>
+            ))}
+        </div>
+      </div>
+    );
+  }
 };
 
 export default Workout;

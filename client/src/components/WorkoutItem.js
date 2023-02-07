@@ -1,66 +1,57 @@
 import * as React from "react";
-import {
-  TableRow,
-  TableCell,
-  TableContainer,
-  Paper,
-  TableHead,
-  TableBody,
-  Table,
-  IconButton,
-} from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
 import WorkoutSetRow from "./WorkoutSetRow";
+import Button from "./Button";
 import { WorkoutContext } from "../context/workoutContext";
-import { MoreVert } from "@mui/icons-material";
-import SeeMoreDialog from "./SeeMoreDialog";
-import { getItemFromLocalstorage } from "../Utiles/localStorage";
-
-const style = {
-  wrapper: {
-    marginBottom: "20px",
-  },
-  div: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  textField: {
-    margin: "20px 10px 20px 0",
-  },
-};
+import { getItemFromLocalstorage } from "../utiles/localStorage";
 
 const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const { name, sets } = exercise;
   const { updateExercise } = useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
     checkIsEmptySetInAllSets();
   };
 
-  const removeSet = (id) => {
-    const result = setsArr.filter((set) => set.id !== id);
+  const removeSet = (setId) => {
+    const result = setsArr.filter(({ id }) => id !== setId);
+
     setSetsArr(result);
   };
 
+  const copySet = (setId) => {
+    const obj = {};
+
+    setsArr.forEach((item) => {
+      if (item.id === setId) {
+        obj.id = setsArr.length;
+        obj.kg = item.kg;
+        obj.reps = item.reps;
+      }
+    });
+
+    setSetsArr([...setsArr, obj]);
+  };
+
   const onChange = (e) => {
-    const value = e.target.value;
-    const unit = e.target.name;
-    const id = parseInt(
-      e.target.parentElement.parentElement.getAttribute("data-id")
-    );
+    const {
+      value,
+      name,
+      dataset: { id },
+    } = e.target;
+    const unit = name;
+    const parsedId = parseInt(id);
 
     const setValues = setsArr.map((item) => {
-      if (id === item.id) {
+      if (parsedId === item.id) {
         item[unit] = value;
       }
       return item;
     });
+
     updateExercise(setValues, name);
     checkIsEmptySetInAllSets();
   };
@@ -68,14 +59,14 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const checkPrev = () => {
     const workouts = getItemFromLocalstorage("userInfo").workoutsArr;
     let lastWorkout = [];
-
-    workouts.map((workout) => {
-      workout.finishedExercises.map((exercise) => {
-        if (exercise.name === name) {
-          lastWorkout.push(exercise);
-        }
+    workouts &&
+      workouts.map((workout) => {
+        workout.finishedExercises.map((exercise) => {
+          if (exercise.name === name) {
+            lastWorkout.push(exercise);
+          }
+        });
       });
-    });
 
     if (lastWorkout.length > 0) {
       setPrevSets(lastWorkout.at(-1).sets);
@@ -90,16 +81,7 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
         previousSet = `${prev.kg} x ${prev.reps}`;
       }
     });
-
     return previousSet;
-  };
-
-  const handleClickOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -111,49 +93,35 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   }, [setsArr]);
 
   return (
-    <div style={style.wrapper}>
-      <div style={style.div}>
-        <h3>{name}</h3>
-        <IconButton onClick={handleClickOpen}>
-          <MoreVert />
-        </IconButton>
-        <SeeMoreDialog
-          handleClickOpen={handleClickOpen}
-          handleClose={handleClose}
-          isOpen={isOpen}
-          name={name}
-        />
+    <div className="workout-item">
+      <div className="workout-item__wrapper">
+        <div className="workout-item__info">
+          <div>
+            <p className="workout-item__exercise">{name}</p>
+          </div>
+          <div>
+            <p>Sets: {setsArr.length}</p>
+          </div>
+        </div>
+        <div className="workout-item__sets-wrapper">
+          {setsArr?.map((row, index) => (
+            <WorkoutSetRow
+              id={index}
+              onChange={onChange}
+              key={index}
+              index={index}
+              row={row}
+              name={name}
+              prev={getPrev(index)}
+              removeSet={removeSet}
+              copySet={copySet}
+              kg={row.kg}
+              reps={row.reps}
+            />
+          ))}
+        </div>
+        <Button onClick={addSet} title="+ Add set" name="addSet"></Button>
       </div>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>SET</TableCell>
-              <TableCell align="center">PREVIOUS</TableCell>
-              <TableCell align="center">KG</TableCell>
-              <TableCell align="center">REPS</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {setsArr &&
-              setsArr.map((row, index) => (
-                <WorkoutSetRow
-                  id={index}
-                  onChange={onChange}
-                  key={index}
-                  index={index}
-                  row={row}
-                  name={name}
-                  prev={getPrev(index)}
-                  removeSet={removeSet}
-                />
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Button variant="contained" onClick={addSet}>
-        Add Set
-      </Button>
     </div>
   );
 };
