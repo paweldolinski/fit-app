@@ -7,8 +7,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "dev": "concurrently \"nodemon server.js\" \" cd client && npm start\"",
-    "build": "react-scripts build",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "build": "react-scripts build"
   },
   "repository": {
     "type": "git",
