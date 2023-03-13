@@ -32,7 +32,7 @@ const style = {
     minWidth: 300,
   },
   chip: {
-    margin: 10,
+    margin: 5,
   },
   list: {
     maxHeight: "80vh",
@@ -140,39 +140,43 @@ const WorkoutHistory = () => {
                 onClick={(e) => handleClick(e.target.innerText)}
                 label={item}
                 variant="outlined"
-                sx={{ margin: "10px" }}
+                sx={{ margin: "2px" }}
               />
             );
           })}
       </Stack>
-      <h1>{chosedExercise}</h1>
-      <h3>Best: {bestResult}</h3>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>KG</TableCell>
-              <TableCell>REPS</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {exerciseSets &&
-              exerciseSets.map((item, index) => {
-                const { kg, reps, date } = item;
+      <div className="best-wrapper" style={style.bestWrapper}>
+        <h1>{chosedExercise}</h1>
+        <h3>Best: {bestResult}</h3>
+      </div>
+      <Paper sx={{ overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>KG</TableCell>
+                <TableCell>REPS</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {exerciseSets &&
+                exerciseSets.map((item, index) => {
+                  const { kg, reps, date } = item;
 
-                return (
-                  <WorkoutHistorySetRow
-                    kg={kg}
-                    reps={reps}
-                    date={date}
-                    key={index}
-                  />
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                  return (
+                    <WorkoutHistorySetRow
+                      kg={kg}
+                      reps={reps}
+                      date={date}
+                      key={index}
+                    />
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </Container>
   );
 };

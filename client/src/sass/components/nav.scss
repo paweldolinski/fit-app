@@ -2,6 +2,7 @@ $secondary: map-get($palette-base, secondary);
 $tertiary: map-get($palette-base, tertiary);
 
 .nav {
+  background-color: #3d186c;
   width: 100%;
   max-width: 500px;
   position: fixed;
