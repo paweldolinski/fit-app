@@ -58,7 +58,7 @@ const Workout = () => {
     filteredExercise.some((item) => item.name === exercise);
 
   useEffect(() => {
-    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0].date;
+    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
     setLastWorkoutDate(lastWorkoutDate);
   }, []);
 
