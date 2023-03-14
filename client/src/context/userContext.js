@@ -36,6 +36,10 @@ const UserProvider = (props) => {
     try {
       const response = await fetch("http://localhost:5000/login", options);
       const json = await response.json();
+      const { message } = json;
+      setMessage(message);
+
+      console.log(json, "json");
 
       if (response.status === 200) {
         const { user, token } = json;
@@ -44,9 +48,12 @@ const UserProvider = (props) => {
         setIsLoading(false);
         setItemToLocalstorage("token", token);
         setItemToLocalstorage("userInfo", JSON.stringify(user));
+        setMessage(message);
+      } else {
+        setMessage(message);
       }
     } catch (err) {
-      setMessage(err);
+      setMessage(`${message} - ${err}`);
     }
   };
 
@@ -63,8 +70,6 @@ const UserProvider = (props) => {
       setUserObj(userInfo);
       setIsNewUser(userInfo.workoutsArr.length === 0);
     }
-
-    console.log(isNewUser, "useEffect");
   }, []);
 
   return (

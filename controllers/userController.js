@@ -36,26 +36,29 @@ const makeNewUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res, next) => {
+const loginUser = async (req, res) => {
   const { password, email } = req.body;
 
   try {
     const user = await User.findOne({ email });
+    const isMatchedPassword = await user?.matchPassword(password);
 
-    if (!user && user === null) {
-      res.status(400).json({ status: "error", message: "Invalid user" });
+    if (!user) {
+      return res.status(400).json({ status: "error", message: "Invalid user" });
     }
 
-    if (user && !(await user.matchPassword(password))) {
-      res.status(400).json({ status: "error", message: "Invalid password" });
+    if (user && !isMatchedPassword) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Invalid password" });
     }
 
-    if (user && (await user.matchPassword(password))) {
+    if (user && isMatchedPassword) {
       const token = generateAuthToken(user._id);
       const { name, email, _id, workoutsArr } = user;
 
       return res.status(200).json({
-        message: "Valid login",
+        message: "User login successfully",
         user: { name, email, _id, workoutsArr },
         token,
       });
@@ -65,7 +68,7 @@ const loginUser = async (req, res, next) => {
       });
     }
   } catch (error) {
-    return;
+    return res.json({ message: error });
   }
 };
 
@@ -74,17 +77,14 @@ const verify = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, secret);
-    console.log(decoded, "decode");
     const id = decoded.id;
     const user = await User.findOne({ _id: id });
 
     if (user) {
-      console.log("ok token");
-      res.json({ status: "ok", message: "login successfully" });
+      res.json({ status: "ok", message: "Login successfully" });
     }
-  } catch {
-    console.log("zle token");
-    res.json({ status: "error", message: "invalid token" });
+  } catch (error) {
+    res.json({ status: "error", message: `invalid token: ${error}` });
   }
 };
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/userContext";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Input from "../components/Input";
@@ -6,7 +6,7 @@ import Back from "../components/Back";
 import Button from "../components/Button";
 
 const Login = () => {
-  const { onLoginChangeHandler, onLoginHandler, isLoading } =
+  const { onLoginChangeHandler, onLoginHandler, message } =
     useContext(UserContext);
   const location = useLocation();
   const redirectionPath = location.state?.path || "/user-profile";
@@ -39,6 +39,7 @@ const Login = () => {
       <Link className="forgot-password" to="#">
         Forgot Password ?
       </Link>
+      <p>{message}</p>
     </div>
   );
 };
