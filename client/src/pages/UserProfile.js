@@ -14,7 +14,7 @@ const UserProfile = () => {
     const token = localStorage.getItem("token");
     console.log("verify");
 
-    const response = await fetch("http://localhost:5000/verify", {
+    const response = await fetch("verify", {
       method: "GET",
       headers: {
         "x-access-token": token,

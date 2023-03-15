@@ -32,7 +32,7 @@ const SignUp = () => {
       setMessage("Passwords do not match");
       return;
     }
-    const response = fetch("http://localhost:5000/register", {
+    const response = fetch("/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
