@@ -126,7 +126,7 @@ const WorkoutProvider = (props) => {
     window.localStorage.setItem("userInfo", JSON.stringify(existingStorage));
     console.log("finish");
     try {
-      await fetch("http://localhost:5000/addWorkout", options);
+      await fetch("/addWorkout", options);
       setIsFinishWorkoutPopupOpen(false);
     } catch (e) {
       console.log(e, "error from post addWorkout");
