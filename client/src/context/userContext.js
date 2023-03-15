@@ -34,7 +34,7 @@ const UserProvider = (props) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/login", options);
+      const response = await fetch("/login", options);
       const json = await response.json();
       const { message } = json;
       setMessage(message);

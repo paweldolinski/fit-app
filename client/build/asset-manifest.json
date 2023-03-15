@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.3f501a76.css",
-    "main.js": "/static/js/main.7ab4bdb5.js",
+    "main.js": "/static/js/main.370614de.js",
     "static/media/arni.png": "/static/media/arni.ea550b487f0a04f7828f.png",
     "static/media/left-chevron-svgrepo-com.svg": "/static/media/left-chevron-svgrepo-com.80017cfd53dfecd9efbd20fad8f61194.svg",
     "static/media/workout.svg": "/static/media/workout.7bd088479780e054c818328857ee5d6a.svg",
@@ -17,10 +17,10 @@
     "static/media/bottom-chevron.svg": "/static/media/bottom-chevron.1771ae2d86b7e676b65294c178bd1df4.svg",
     "static/media/bin.svg": "/static/media/bin.94d2c4499db890ea1d22bdc6e6e7c91b.svg",
     "main.3f501a76.css.map": "/static/css/main.3f501a76.css.map",
-    "main.7ab4bdb5.js.map": "/static/js/main.7ab4bdb5.js.map"
+    "main.370614de.js.map": "/static/js/main.370614de.js.map"
   },
   "entrypoints": [
     "static/css/main.3f501a76.css",
-    "static/js/main.7ab4bdb5.js"
+    "static/js/main.370614de.js"
   ]
 }
