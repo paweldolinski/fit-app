@@ -1,12 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.3f501a76.css",
-    "main.js": "/static/js/main.a4ecd992.js",
+    "main.css": "/static/css/main.d6be60f0.css",
+    "main.js": "/static/js/main.fb8df146.js",
     "static/media/arni.png": "/static/media/arni.ea550b487f0a04f7828f.png",
     "static/media/left-chevron-svgrepo-com.svg": "/static/media/left-chevron-svgrepo-com.80017cfd53dfecd9efbd20fad8f61194.svg",
-    "static/media/workout.svg": "/static/media/workout.7bd088479780e054c818328857ee5d6a.svg",
-    "static/media/history.svg": "/static/media/history.e5a450fab72e1c067a91bfd28a83f61f.svg",
-    "static/media/profile.svg": "/static/media/profile.5f9f7e8dfd746ef137a7c5bbfc81666c.svg",
+    "static/media/dumbbell.svg": "/static/media/dumbbell.b0b6506382a542e3afaf04c58dad8807.svg",
     "static/media/exercises.svg": "/static/media/exercises.4cf72553a9487ac8bd2c415e4cdf52fd.svg",
     "static/media/eye.svg": "/static/media/eye.e615cf2668e0f498b33cb88ff2741b0c.svg",
     "static/media/crossed-eye.svg": "/static/media/crossed-eye.78ce634e5ec08931ad64d39b65144741.svg",
@@ -16,11 +14,11 @@
     "static/media/copy.svg": "/static/media/copy.69e87e603420c443eae92822146b4436.svg",
     "static/media/bottom-chevron.svg": "/static/media/bottom-chevron.1771ae2d86b7e676b65294c178bd1df4.svg",
     "static/media/bin.svg": "/static/media/bin.94d2c4499db890ea1d22bdc6e6e7c91b.svg",
-    "main.3f501a76.css.map": "/static/css/main.3f501a76.css.map",
-    "main.a4ecd992.js.map": "/static/js/main.a4ecd992.js.map"
+    "main.d6be60f0.css.map": "/static/css/main.d6be60f0.css.map",
+    "main.fb8df146.js.map": "/static/js/main.fb8df146.js.map"
   },
   "entrypoints": [
-    "static/css/main.3f501a76.css",
-    "static/js/main.a4ecd992.js"
+    "static/css/main.d6be60f0.css",
+    "static/js/main.fb8df146.js"
   ]
 }

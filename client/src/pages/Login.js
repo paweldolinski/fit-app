@@ -4,9 +4,10 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import Input from "../components/Input";
 import Back from "../components/Back";
 import Button from "../components/Button";
+import { Loader } from "../components/Loader";
 
 const Login = () => {
-  const { onLoginChangeHandler, onLoginHandler, message } =
+  const { onLoginChangeHandler, onLoginHandler, message, isLoading } =
     useContext(UserContext);
   const location = useLocation();
   const redirectionPath = location.state?.path || "/user-profile";
@@ -40,6 +41,7 @@ const Login = () => {
         Forgot Password ?
       </Link>
       <p>{message}</p>
+      {isLoading && <Loader />}
     </div>
   );
 };

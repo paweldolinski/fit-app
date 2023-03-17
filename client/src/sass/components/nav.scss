@@ -10,7 +10,8 @@ $tertiary: map-get($palette-base, tertiary);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  justify-content: space-evenly;
-  padding: 13px 0;
+  justify-content: space-between;
+  padding: 13px 50px;
   border-top: solid 1px $tertiary;
+  box-sizing: border-box;
 }

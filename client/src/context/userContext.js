@@ -39,8 +39,6 @@ const UserProvider = (props) => {
       const { message } = json;
       setMessage(message);
 
-      console.log(json, "json");
-
       if (response.status === 200) {
         const { user, token } = json;
 
@@ -77,12 +75,14 @@ const UserProvider = (props) => {
       value={{
         userObj,
         isLoading,
+        setIsLoading: setIsLoading,
         message,
         setUserObj: setUserObj,
         isNewUser: isNewUser,
         onLoginHandler: onLoginHandler,
         onLoginChangeHandler: onLoginChangeHandler,
         logOut: logOut,
+        setMessage: setMessage,
         setIsNewUser: setIsNewUser,
       }}
     >
