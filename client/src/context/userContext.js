@@ -49,9 +49,11 @@ const UserProvider = (props) => {
         setMessage(message);
       } else {
         setMessage(message);
+        setIsLoading(false);
       }
     } catch (err) {
       setMessage(`${message} - ${err}`);
+      setIsLoading(false);
     }
   };
 
