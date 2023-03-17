@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Policy from "../components/Policy";
 import Back from "../components/Back";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { Loader } from "../components/Loader";
+import { UserContext } from "../context/userContext";
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState({
@@ -13,8 +15,8 @@ const SignUp = () => {
     confirmPassword: "",
   });
   const [success, setSuccess] = useState(false);
-  const [message, setMessage] = useState(false);
-  const [error, setError] = useState(false);
+  const { message, setMessage, isLoading, setIsLoading } =
+    useContext(UserContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,8 +30,11 @@ const SignUp = () => {
     const { email, name, password, confirmPassword } = newUser;
     event.preventDefault();
 
+    setIsLoading(true);
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
+      setIsLoading(false);
       return;
     }
     const response = fetch("/register", {
@@ -49,9 +54,11 @@ const SignUp = () => {
     if (data.status === 201) {
       setSuccess(true);
       setMessage(json.message);
+      setIsLoading(false);
     } else {
       setSuccess(false);
       setMessage(json.message);
+      setIsLoading(false);
     }
   };
 
@@ -81,7 +88,9 @@ const SignUp = () => {
           icon={true}
         />
         <Button title="Sign up" onClick={handleSubmit} />
+        <p>{message}</p>
         <Policy />
+        {isLoading && <Loader />}
       </div>
     );
   }
