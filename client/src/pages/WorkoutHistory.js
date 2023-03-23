@@ -1,60 +1,23 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
-import {
-  Chip,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  Paper,
-  TableCell,
-  TableBody,
-  Stack,
-} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
-
-const style = {
-  container: {
-    paddingBottom: "20px",
-    maxWidth: "1200px",
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  box: {
-    position: "relative",
-    backgroundColor: "white",
-    boxShadow: 24,
-    padding: 40,
-    minWidth: 300,
-  },
-  chip: {
-    margin: 5,
-  },
-  list: {
-    maxHeight: "80vh",
-    overflow: "auto",
-  },
-  add: {
-    marginLeft: "80%",
-  },
-  button: {
-    margin: "5px 0",
-  },
-  cancel: {
-    margin: "15px 0",
-  },
-};
 
 const WorkoutHistory = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
-  const [exerciseArr, setExerciseArr] = useState([]);
-  const [chosedExercise, setChosedExercise] = useState("");
+  const [exercisesArr, setExercisesArr] = useState([]);
+  const [choseExercise, setChosedExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
   const [bestResult, setBestResult] = useState();
+
+  const memoExercisesOptionArray = useMemo(
+    () =>
+      exercisesArr?.map((exercise) => ({
+        value: exercise,
+        label: exercise,
+      })),
+    [exercisesArr]
+  );
 
   const getWorkoutHistory = () => {
     const getData = window.localStorage.getItem("userInfo");
@@ -67,8 +30,7 @@ const WorkoutHistory = () => {
       const { timestamp } = item;
       const date = new Date(timestamp).toLocaleDateString();
       const { sets } =
-        item.finishedExercises.find(({ name }) => name === chosedExercise) ||
-        {};
+        item.finishedExercises.find(({ name }) => name === choseExercise) || {};
 
       if (sets) {
         sets.forEach((set) => {
@@ -94,14 +56,14 @@ const WorkoutHistory = () => {
     });
     const removeDuplicates = result.filter((v, i, a) => a.indexOf(v) === i);
 
-    setExerciseArr(removeDuplicates);
+    setExercisesArr(removeDuplicates);
   };
 
-  const handleClick = (label) => {
-    if (label === chosedExercise) return;
+  const handleExerciseChoose = ({ value }) => {
+    if (value === choseExercise) return;
 
     setExerciseSets([]);
-    setChosedExercise(label);
+    setChosedExercise(value);
   };
 
   const getBestResult = () => {
@@ -111,11 +73,7 @@ const WorkoutHistory = () => {
 
   useEffect(() => {
     getWorkoutHistory();
-  }, []);
-
-  useEffect(() => {
-    getWorkoutHistory();
-  }, [chosedExercise]);
+  }, [choseExercise]);
 
   useEffect(() => {
     exerciseSets.length > 1 && getBestResult();
@@ -126,58 +84,36 @@ const WorkoutHistory = () => {
   }, [workoutsFromDb]);
 
   return (
-    <Container style={style.container} component="main" maxWidth="xs">
-      <h1>Your Exercises</h1>
-      <Stack
-        direction="row"
-        sx={{ flexWrap: "wrap", justifyContent: "center" }}
-      >
-        {exerciseArr &&
-          exerciseArr.map((item, index) => {
-            return (
-              <Chip
-                key={index}
-                onClick={(e) => handleClick(e.target.innerText)}
-                label={item}
-                variant="outlined"
-                sx={{ margin: "2px" }}
-              />
-            );
-          })}
-      </Stack>
-      <div className="best-wrapper" style={style.bestWrapper}>
-        <h1>{chosedExercise}</h1>
-        <h3>Best: {bestResult}</h3>
-      </div>
-      <Paper sx={{ overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead sx={{ backgroundColor: "#e5e5e5" }}>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>KG</TableCell>
-                <TableCell>REPS</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {exerciseSets &&
-                exerciseSets.map((item, index) => {
-                  const { kg, reps, date } = item;
+    <div className="workout-history">
+      <h1>History</h1>
+      <Select
+        options={memoExercisesOptionArray}
+        placeholder="Choose exercise"
+        onChange={handleExerciseChoose}
+        className="workout-history__select"
+      />
 
-                  return (
-                    <WorkoutHistorySetRow
-                      kg={kg}
-                      reps={reps}
-                      date={date}
-                      key={index}
-                    />
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </Container>
+      {choseExercise && (
+        <>
+          <div className="workout-history__best-wrapper">
+            <h2>{choseExercise}</h2>
+            <p className="workout-history__best">Best: {bestResult}</p>
+          </div>
+          <div className="workout-history__results-wrapper">
+            <div className="workout-history__results-header">
+              <span>Date</span>
+              <span>Kg</span>
+              <span>Reps</span>
+            </div>
+            <div className="workout-history__results-table">
+              {exerciseSets?.map((props) => (
+                <WorkoutHistorySetRow {...props} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

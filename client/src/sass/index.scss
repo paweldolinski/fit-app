@@ -8,6 +8,7 @@
 @import "pages/signup";
 @import "pages/workout";
 @import "pages/profile";
+@import "pages/workout-history";
 
 @import "components/nav";
 @import "components/input";
@@ -24,10 +25,10 @@
 @import "components/loader";
 
 
-
 .best-wrapper {
   margin: 10px 0;
-  h1,h3 {
+
+  h1, h3 {
     text-align: left;
 
   }
