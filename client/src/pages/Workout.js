@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
-import Back from "../components/Back";
 import Button from "../components/Button";
 import Exercise from "../components/Exercises";
 import WorkoutItem from "../components/WorkoutItem";
@@ -28,9 +27,9 @@ const Workout = () => {
     isWorkoutFinished,
     setIsWorkoutFinished,
     setIsFinishWorkoutPopupOpen,
+    startWorkoutTimestamp,
+    setStartWorkoutTimestamp,
   } = useContext(WorkoutContext);
-  const [lastWorkoutDate, setLastWorkoutDate] = useState();
-  const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")));
 
   const handleOpenWorkout = () => {
     setWorkouts([]);
@@ -54,13 +53,18 @@ const Workout = () => {
     checkIfEmptySet(checkIsEmptySetInAllSets);
   };
 
-  const isExerciseChosed = (exercise) =>
+  const isExerciseChose = (exercise) =>
     filteredExercise.some((item) => item.name === exercise);
 
-  useEffect(() => {
-    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
-    setLastWorkoutDate(lastWorkoutDate);
-  }, []);
+  const startWorkout = () => {
+    setIsWorkoutStarted(true);
+    setIsWorkoutModalOpen(false);
+
+    if (startWorkoutTimestamp > 0) return;
+
+    const timeStamp = Date.now();
+    setStartWorkoutTimestamp(timeStamp);
+  };
 
   useEffect(() => {
     checkWorkout();
@@ -70,21 +74,13 @@ const Workout = () => {
     checkIsEmptySetInAllSets();
   });
 
-  console.log(isCancelWorkoutPopupOpen, "cancel");
-
   if (isWorkoutFinished) {
     return <FinishedWorkout filteredExercise={filteredExercise} />;
   } else {
     return (
       <div className="workout">
         <div className="workout__wrapper">
-          <div className="workout__top">
-            <Back />
-            <div className="workout__last-workout">
-              <p>Last Workout :</p>
-              <p className="workout__date">{lastWorkoutDate}</p>
-            </div>
-          </div>
+          <div className="workout__top"></div>
           {isWorkoutModalOpen && (
             <>
               <h1 className="left">Add exercises</h1>
@@ -93,17 +89,14 @@ const Workout = () => {
                   <Exercise
                     key={exercise}
                     exercise={exercise}
-                    isExerciseChosed={isExerciseChosed(exercise)}
+                    isExerciseChose={isExerciseChose(exercise)}
                   />
                 ))}
               </ul>
               <Button
-                title="Start workout"
+                title={isWorkoutStarted ? "Add exercises" : "Start workout"}
                 name="startWorkout"
-                onClick={() => {
-                  setIsWorkoutStarted(true);
-                  setIsWorkoutModalOpen(false);
-                }}
+                onClick={startWorkout}
               />
             </>
           )}

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
+import { getItemFromLocalstorage } from "../utils/localStorage";
 
 const WorkoutHistory = () => {
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
@@ -19,9 +20,9 @@ const WorkoutHistory = () => {
     [exercisesArr]
   );
 
-  const getWorkoutHistory = () => {
-    const getData = window.localStorage.getItem("userInfo");
-    const { workoutsArr } = JSON.parse(getData);
+  const getExerciseHistory = () => {
+    const getData = getItemFromLocalstorage("userInfo");
+    const { workoutsArr } = getData;
     let setsArr = [];
 
     setWorkoutsFromDb(workoutsArr);
@@ -47,7 +48,7 @@ const WorkoutHistory = () => {
     setExerciseSets(setsArr || []);
   };
 
-  const getExercises = () => {
+  const getAllExercises = () => {
     let result = [];
     workoutsFromDb.forEach((item) => {
       item.finishedExercises.map(({ name }) => {
@@ -72,7 +73,7 @@ const WorkoutHistory = () => {
   };
 
   useEffect(() => {
-    getWorkoutHistory();
+    getExerciseHistory();
   }, [choseExercise]);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const WorkoutHistory = () => {
   }, [exerciseSets]);
 
   useEffect(() => {
-    getExercises();
+    getAllExercises();
   }, [workoutsFromDb]);
 
   return (

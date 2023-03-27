@@ -1,9 +1,13 @@
 import Button from "../components/Button";
 import { useContext } from "react";
 import { WorkoutContext } from "../context/workoutContext";
+import { convertMsToHM } from "../utils/time";
 
 const FinishedWorkout = ({ filteredExercise }) => {
-  const { setIsWorkoutFinished, cancelWorkout } = useContext(WorkoutContext);
+  const { setIsWorkoutFinished, cancelWorkout, workoutTimeMs } =
+    useContext(WorkoutContext);
+  const workoutTime = convertMsToHM(workoutTimeMs);
+
   const endWorkout = () => {
     cancelWorkout();
     setIsWorkoutFinished(false);
@@ -13,9 +17,12 @@ const FinishedWorkout = ({ filteredExercise }) => {
     <div className="finished-workout">
       <h1>Workout finished</h1>
       <p className="finished-workout__text">
-        Good job!
-        <br /> You have finished your daily workout:
+        Good job! You have spent {workoutTime}
       </p>
+      <p className="finished-workout__text">
+        You have finished your daily workout:
+      </p>
+
       {filteredExercise &&
         filteredExercise.map((item, index) => (
           <div className="finished-workout__result" key={index}>

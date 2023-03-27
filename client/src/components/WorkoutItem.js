@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import WorkoutSetRow from "./WorkoutSetRow";
 import Button from "./Button";
 import { WorkoutContext } from "../context/workoutContext";
-import { getItemFromLocalstorage } from "../utiles/localStorage";
+import { getItemFromLocalstorage } from "../utils/localStorage";
 
 const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const { name, sets } = exercise;
