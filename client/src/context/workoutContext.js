@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { createContext, useState } from "react";
 
 export const WorkoutContext = createContext();
 
@@ -36,11 +36,9 @@ const exercisesArr = [
 const WorkoutProvider = (props) => {
   const [exercises] = useState(exercisesArr.sort());
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-
   const [filteredExercise, setFilteredExercise] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [workoutsHistory, setWorkoutHistory] = useState([]);
-  const [workoutTitle, setWorkoutTitle] = useState();
   const [isEmptySet, setIsEmptySet] = useState(false);
   const [isEmptySetModalOpen, setIsEmptySetModalOpen] = useState(false);
   const [isFinishWorkoutPopupOpen, setIsFinishWorkoutPopupOpen] =
@@ -48,6 +46,12 @@ const WorkoutProvider = (props) => {
   const [isWorkoutFinished, setIsWorkoutFinished] = useState(false);
   const [isCancelWorkoutPopupOpen, setIsCancelWorkoutPopupOpen] =
     useState(false);
+  const [startWorkoutTimestamp, setStartWorkoutTimestamp] = useState(0);
+  const [workoutTimeMs, setWorkoutTimeMs] = useState(0);
+  const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
+  const [allExercises, setAllExercises] = useState([]);
+  const [exerciseSets, setExerciseSets] = useState([]);
+  const [bestResult, setBestResult] = useState(0);
 
   const addExercise = (exercise) => {
     setFilteredExercise([
@@ -78,19 +82,15 @@ const WorkoutProvider = (props) => {
 
   const setWorkoutObj = (filteredExercise) => {
     const timestamp = Date.now();
-    let today = new Date(timestamp);
-    today = today.toLocaleDateString();
-    setWorkoutTitle("");
+    const workoutTimeMs = timestamp - startWorkoutTimestamp;
+    const today = new Date(timestamp).toLocaleDateString();
+
+    setWorkoutTimeMs(workoutTimeMs);
 
     return {
       timestamp,
-      date: `${
-        workoutTitle == ""
-          ? ""
-          : typeof workoutTitle == "undefined"
-          ? ""
-          : `${workoutTitle} - `
-      }${today}`,
+      date: today,
+      timeSpent: workoutTimeMs,
       finishedExercises: filteredExercise,
     };
   };
@@ -124,10 +124,11 @@ const WorkoutProvider = (props) => {
 
     existingStorage.workoutsArr.push(finishedWorkout);
     window.localStorage.setItem("userInfo", JSON.stringify(existingStorage));
-    console.log("finish");
+
     try {
       await fetch("/addWorkout", options);
       setIsFinishWorkoutPopupOpen(false);
+      setStartWorkoutTimestamp(0);
     } catch (e) {
       console.log(e, "error from post addWorkout");
     }
@@ -136,6 +137,7 @@ const WorkoutProvider = (props) => {
   const cancelWorkout = () => {
     setIsCancelWorkoutPopupOpen(false);
     setFilteredExercise([]);
+    setStartWorkoutTimestamp(0);
   };
 
   const handleClickDialog = (exercise) => {
@@ -148,22 +150,30 @@ const WorkoutProvider = (props) => {
   return (
     <WorkoutContext.Provider
       value={{
+        startWorkoutTimestamp,
+        workoutTimeMs,
         exercises,
         workouts,
         setWorkouts,
         workoutsHistory,
         setWorkoutHistory,
         filteredExercise,
-        workoutTitle,
-        setWorkoutTitle,
         isEmptySet,
         isWorkoutModalOpen,
         isEmptySetModalOpen,
         isFinishWorkoutPopupOpen,
         isWorkoutFinished,
         isCancelWorkoutPopupOpen,
+        allExercises,
+        setAllExercises: setAllExercises,
+        workoutsFromDb,
+        exerciseSets,
+        bestResult,
+        setExerciseSets: setExerciseSets,
+        setWorkoutsFromDb: setWorkoutsFromDb,
         setIsCancelWorkoutPopupOpen,
         setWorkoutObj: setWorkoutObj,
+        setStartWorkoutTimestamp: setStartWorkoutTimestamp,
         setIsWorkoutModalOpen: setIsWorkoutModalOpen,
         addExercise: addExercise,
         removeExercise: removeExercise,

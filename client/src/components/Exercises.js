@@ -3,8 +3,8 @@ import { useContext, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
 import CheckedIcon from "../assets/svg/checked.svg";
 
-const Exercise = ({ exercise, isExerciseChosed }) => {
-  const [isChecked, setIsChecked] = useState(isExerciseChosed);
+const Exercise = ({ exercise, isExerciseChose }) => {
+  const [isChecked, setIsChecked] = useState(isExerciseChose);
   const { addExercise, removeExercise } = useContext(WorkoutContext);
   const toggleChecked = () => {
     setIsChecked(!isChecked);
@@ -13,7 +13,7 @@ const Exercise = ({ exercise, isExerciseChosed }) => {
   return (
     <li
       className={
-        isExerciseChosed
+        isExerciseChose
           ? "workout__exercise-item active"
           : "workout__exercise-item"
       }
@@ -22,7 +22,7 @@ const Exercise = ({ exercise, isExerciseChosed }) => {
         isChecked ? removeExercise(exercise) : addExercise(exercise);
       }}
     >
-      <span>{exercise}</span> {isExerciseChosed && <img src={CheckedIcon} />}
+      <span>{exercise}</span> {isExerciseChose && <img src={CheckedIcon} />}
     </li>
   );
 };

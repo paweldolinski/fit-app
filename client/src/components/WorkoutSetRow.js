@@ -1,19 +1,11 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Icon from "../assets/svg/bottom-chevron.svg";
 import WorkoutSetRowOptionDialog from "./WorkoutSetRowOptionDialog";
-import { useEffect, useState } from "react";
 
 // TODO limit value.length < 3 of input
 
-const WorkoutSetRow = ({
-  index,
-  onChange,
-  prev,
-  removeSet,
-  copySet,
-  kg,
-  reps,
-}) => {
+const WorkoutSetRow = ({ index, onChange, prev, removeSet, copySet, kg }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const setNumberSet = () => {
     return index + 1;
