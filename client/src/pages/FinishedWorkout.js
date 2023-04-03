@@ -4,13 +4,18 @@ import { WorkoutContext } from "../context/workoutContext";
 import { convertMsToHM } from "../utils/time";
 
 const FinishedWorkout = ({ filteredExercise }) => {
-  const { setIsWorkoutFinished, cancelWorkout, workoutTimeMs } =
-    useContext(WorkoutContext);
+  const {
+    setIsWorkoutFinished,
+    cancelWorkout,
+    workoutTimeMs,
+    setIsWorkoutStarted,
+  } = useContext(WorkoutContext);
   const workoutTime = convertMsToHM(workoutTimeMs);
 
   const endWorkout = () => {
     cancelWorkout();
     setIsWorkoutFinished(false);
+    setIsWorkoutStarted(false);
   };
 
   return (

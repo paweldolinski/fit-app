@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { WorkoutContext } from "../context/workoutContext";
 import Button from "../components/Button";
 import Exercise from "../components/Exercises";
@@ -8,7 +8,6 @@ import Popup from "../components/Popup";
 import FinishedWorkout from "./FinishedWorkout";
 
 const Workout = () => {
-  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const {
     exercises,
     setWorkouts,
@@ -29,17 +28,13 @@ const Workout = () => {
     setIsFinishWorkoutPopupOpen,
     startWorkoutTimestamp,
     setStartWorkoutTimestamp,
+    isWorkoutStarted,
+    setIsWorkoutStarted,
   } = useContext(WorkoutContext);
 
   const handleOpenWorkout = () => {
     setWorkouts([]);
     setIsWorkoutModalOpen(true);
-  };
-
-  const checkWorkout = () => {
-    filteredExercise.length > 0
-      ? setIsWorkoutStarted(true)
-      : setIsWorkoutStarted(false);
   };
 
   const checkIsEmptySetInAllSets = () => {
@@ -57,18 +52,15 @@ const Workout = () => {
     filteredExercise.some((item) => item.name === exercise);
 
   const startWorkout = () => {
-    setIsWorkoutStarted(true);
-    setIsWorkoutModalOpen(false);
-
+    if (filteredExercise.length === 0) return;
     if (startWorkoutTimestamp > 0) return;
 
     const timeStamp = Date.now();
+
+    setIsWorkoutStarted(true);
+    setIsWorkoutModalOpen(false);
     setStartWorkoutTimestamp(timeStamp);
   };
-
-  useEffect(() => {
-    checkWorkout();
-  }, [filteredExercise.length]);
 
   useEffect(() => {
     checkIsEmptySetInAllSets();

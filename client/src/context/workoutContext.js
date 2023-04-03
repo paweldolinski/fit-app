@@ -1,10 +1,18 @@
 import React, { createContext, useState } from "react";
+import {
+  getItemFromLocalstorage,
+  setItemToLocalstorage,
+} from "../utils/localStorage";
 
 export const WorkoutContext = createContext();
 
 const exercisesArr = [
   "Bench Press (Barbell)",
   "Bench Press (Dumbbell)",
+  "Bench Press Inclined (Dumbbell)",
+  "Bench Press Inclined (Barbell)",
+  "Bench Press Decline (Dumbbell)",
+  "Bench Press Decline (Barbell)",
   "Bicep Curl Standing (Barbell)",
   "Bicep Curl Standing (Dumbbell)",
   "Bicep Curl Sitting (Dumbbell)",
@@ -16,7 +24,9 @@ const exercisesArr = [
   "Deadlift (Trap Bar)",
   "Leg Press",
   "Lat Pulldown (Cable)",
-  "Lat Pulldown (Machine)",
+  "Lat Pulldown Open Grip (Machine)",
+  "Lat Pulldown Reverse Grip (Machine)",
+  "Lat Pulldown Close Grip (Machine)",
   "Incline Row (Dumbbell)",
   "Lateral Raise (Machine)",
   "Lateral Raise (Dumbbell)",
@@ -28,6 +38,7 @@ const exercisesArr = [
   "Triceps Extension (Cable - curve bar)",
   "Triceps Extension (Cable - ropes bar)",
   "Triceps Dip",
+  "Triceps French Press",
   "Preacher Curl (Machine)",
   "Preacher Curl (Dumbbell)",
   "Preacher Curl (Barbell)",
@@ -36,9 +47,6 @@ const exercisesArr = [
 const WorkoutProvider = (props) => {
   const [exercises] = useState(exercisesArr.sort());
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-  const [filteredExercise, setFilteredExercise] = useState([]);
-  const [workouts, setWorkouts] = useState([]);
-  const [workoutsHistory, setWorkoutHistory] = useState([]);
   const [isEmptySet, setIsEmptySet] = useState(false);
   const [isEmptySetModalOpen, setIsEmptySetModalOpen] = useState(false);
   const [isFinishWorkoutPopupOpen, setIsFinishWorkoutPopupOpen] =
@@ -46,12 +54,16 @@ const WorkoutProvider = (props) => {
   const [isWorkoutFinished, setIsWorkoutFinished] = useState(false);
   const [isCancelWorkoutPopupOpen, setIsCancelWorkoutPopupOpen] =
     useState(false);
+  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const [startWorkoutTimestamp, setStartWorkoutTimestamp] = useState(0);
+  const [bestResult, setBestResult] = useState(0);
   const [workoutTimeMs, setWorkoutTimeMs] = useState(0);
   const [workoutsFromDb, setWorkoutsFromDb] = useState([]);
   const [allExercises, setAllExercises] = useState([]);
   const [exerciseSets, setExerciseSets] = useState([]);
-  const [bestResult, setBestResult] = useState(0);
+  const [filteredExercise, setFilteredExercise] = useState([]);
+  const [workouts, setWorkouts] = useState([]);
+  const [workoutsHistory, setWorkoutHistory] = useState([]);
 
   const addExercise = (exercise) => {
     setFilteredExercise([
@@ -108,7 +120,7 @@ const WorkoutProvider = (props) => {
 
   const finishWorkout = async () => {
     const finishedWorkout = setWorkoutObj(filteredExercise);
-    const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+    const userInfo = getItemFromLocalstorage("userInfo");
     const { name, email, workoutsArr } = userInfo;
     const existingStorage = { name, email, workoutsArr };
     const options = {
@@ -123,7 +135,7 @@ const WorkoutProvider = (props) => {
     };
 
     existingStorage.workoutsArr.push(finishedWorkout);
-    window.localStorage.setItem("userInfo", JSON.stringify(existingStorage));
+    setItemToLocalstorage("userInfo", JSON.stringify(existingStorage));
 
     try {
       await fetch("/addWorkout", options);
@@ -169,10 +181,12 @@ const WorkoutProvider = (props) => {
         workoutsFromDb,
         exerciseSets,
         bestResult,
+        isWorkoutStarted,
         setExerciseSets: setExerciseSets,
         setWorkoutsFromDb: setWorkoutsFromDb,
         setIsCancelWorkoutPopupOpen,
         setWorkoutObj: setWorkoutObj,
+        setIsWorkoutStarted: setIsWorkoutStarted,
         setStartWorkoutTimestamp: setStartWorkoutTimestamp,
         setIsWorkoutModalOpen: setIsWorkoutModalOpen,
         addExercise: addExercise,
@@ -186,6 +200,7 @@ const WorkoutProvider = (props) => {
         setIsEmptySetModalOpen: setIsEmptySetModalOpen,
         setIsFinishWorkoutPopupOpen: setIsFinishWorkoutPopupOpen,
         setIsWorkoutFinished: setIsWorkoutFinished,
+        setFilteredExercise: setFilteredExercise,
       }}
     >
       {props.children}

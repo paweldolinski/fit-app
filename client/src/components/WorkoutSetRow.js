@@ -3,15 +3,21 @@ import { useEffect, useState } from "react";
 import Icon from "../assets/svg/bottom-chevron.svg";
 import WorkoutSetRowOptionDialog from "./WorkoutSetRowOptionDialog";
 
-// TODO limit value.length < 3 of input
-
-const WorkoutSetRow = ({ index, onChange, prev, removeSet, copySet, kg }) => {
+const WorkoutSetRow = ({
+  index,
+  onChange,
+  prev,
+  removeSet,
+  copySet,
+  kg,
+  reps,
+}) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const setNumberSet = () => {
     return index + 1;
   };
 
-  const toggleIsOpenOption = (e) => {
+  const toggleIsOpenOption = () => {
     setIsOptionOpen(!isOptionOpen);
   };
 
@@ -45,7 +51,7 @@ const WorkoutSetRow = ({ index, onChange, prev, removeSet, copySet, kg }) => {
             data-id={index}
             type="text"
             value={kg}
-            maxLength="3"
+            maxLength="4"
           />
           <span>kg</span>
         </div>
@@ -59,6 +65,7 @@ const WorkoutSetRow = ({ index, onChange, prev, removeSet, copySet, kg }) => {
             data-id={index}
             type="text"
             maxLength="2"
+            value={reps}
           />
         </div>
         <div className="workout-set-row__option-btn">
