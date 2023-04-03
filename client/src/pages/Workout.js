@@ -53,12 +53,13 @@ const Workout = () => {
 
   const startWorkout = () => {
     if (filteredExercise.length === 0) return;
-    if (startWorkoutTimestamp > 0) return;
-
-    const timeStamp = Date.now();
 
     setIsWorkoutStarted(true);
     setIsWorkoutModalOpen(false);
+
+    if (startWorkoutTimestamp > 0) return;
+
+    const timeStamp = Date.now();
     setStartWorkoutTimestamp(timeStamp);
   };
 
