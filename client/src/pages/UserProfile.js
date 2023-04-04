@@ -56,7 +56,6 @@ const UserProfile = () => {
           <p>Hi {userObj && userObj.name}</p>
           <p>{userObj.workoutsArr.length} workouts</p>
           <p>Last workout: {lastWorkoutDate}</p>
-
           <p>Time spent on the gym {getAllWorkoutTimeSpent} in total</p>
         </div>
       </div>

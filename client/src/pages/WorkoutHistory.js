@@ -51,9 +51,7 @@ const WorkoutHistory = () => {
   const getAllExercises = () => {
     let result = [];
     workoutsFromDb.forEach((item) => {
-      item.finishedExercises.map(({ name }) => {
-        result.push(name);
-      });
+      item.finishedExercises.map(({ name }) => result.push(name));
     });
     const removeDuplicates = result.filter((v, i, a) => a.indexOf(v) === i);
 

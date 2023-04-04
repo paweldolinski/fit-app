@@ -7,7 +7,8 @@ import { getItemFromLocalstorage } from "../utils/localStorage";
 
 const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const { name, sets } = exercise;
-  const { updateExercise } = useContext(WorkoutContext);
+  const { updateExercise, filteredExercise, setFilteredExercise } =
+    useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
 
@@ -20,6 +21,12 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
     const result = setsArr.filter(({ id }) => id !== setId);
 
     setSetsArr(result);
+  };
+
+  const removeWorkoutItemIfNoSets = () => {
+    const results = filteredExercise.filter(({ sets }) => sets.length > 0);
+
+    setFilteredExercise(results);
   };
 
   const copySet = (setId) => {
@@ -90,6 +97,7 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
 
   useEffect(() => {
     updateExercise(setsArr, name);
+    removeWorkoutItemIfNoSets();
   }, [setsArr]);
 
   return (
