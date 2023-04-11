@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  workoutTemplates: {
+    type: Array,
+    default: [],
+  },
   isDeleted: {
     type: Boolean,
     default: false,

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.b97bea95.css",
-    "main.js": "/static/js/main.842bd297.js",
+    "main.css": "/static/css/main.ea2adcdb.css",
+    "main.js": "/static/js/main.096a553a.js",
     "static/media/arni.png": "/static/media/arni.ea550b487f0a04f7828f.png",
     "static/media/left-chevron-svgrepo-com.svg": "/static/media/left-chevron-svgrepo-com.80017cfd53dfecd9efbd20fad8f61194.svg",
     "static/media/dumbbell.svg": "/static/media/dumbbell.b0b6506382a542e3afaf04c58dad8807.svg",
@@ -14,11 +14,11 @@
     "static/media/copy.svg": "/static/media/copy.69e87e603420c443eae92822146b4436.svg",
     "static/media/bottom-chevron.svg": "/static/media/bottom-chevron.1771ae2d86b7e676b65294c178bd1df4.svg",
     "static/media/bin.svg": "/static/media/bin.94d2c4499db890ea1d22bdc6e6e7c91b.svg",
-    "main.b97bea95.css.map": "/static/css/main.b97bea95.css.map",
-    "main.842bd297.js.map": "/static/js/main.842bd297.js.map"
+    "main.ea2adcdb.css.map": "/static/css/main.ea2adcdb.css.map",
+    "main.096a553a.js.map": "/static/js/main.096a553a.js.map"
   },
   "entrypoints": [
-    "static/css/main.b97bea95.css",
-    "static/js/main.842bd297.js"
+    "static/css/main.ea2adcdb.css",
+    "static/js/main.096a553a.js"
   ]
 }

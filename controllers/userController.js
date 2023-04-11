@@ -55,11 +55,10 @@ const loginUser = async (req, res) => {
 
     if (user && isMatchedPassword) {
       const token = generateAuthToken(user._id);
-      const { name, email, _id, workoutsArr } = user;
 
       return res.status(200).json({
         message: "User login successfully",
-        user: { name, email, _id, workoutsArr },
+        user,
         token,
       });
     } else {
@@ -113,10 +112,75 @@ const addToWorkout = async (req, res, next) => {
   }
 };
 
+const saveWorkoutTemplate = async (req, res, next) => {
+  const { email, savedWorkoutTemplate } = req.body;
+  const { title } = savedWorkoutTemplate;
+
+  try {
+    const userUpdate = User.findOneAndUpdate(
+      { email },
+      { $push: { workoutTemplates: savedWorkoutTemplate } }
+    );
+    const data = await userUpdate;
+
+    if (data) {
+      return res.status(200).json({
+        message: `Workout template: ${title} has been added`,
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+// db.lists.update({}, { $unset: { "interests.3": 1 } });
+// db.lists.update({}, { $pull: { interests: null } });
+//db.people.update({"name":"dannie"}, {'$pull': {"interests": "guitar"}})
+
+const removeSavedTemplate = async (req, res, next) => {
+  const { title, email } = req.body;
+
+  try {
+    const removeTemplate = User.findOneAndUpdate(
+      { email: email },
+      { $pull: { workoutTemplates: { title: title } } }
+    );
+    await removeTemplate;
+
+    if (removeTemplate) {
+      return res.status(200).json({
+        message: `Workout template: ${title} has been removed`,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  // try {
+
+  //   const userUpdate = User.findOneAndUpdate(
+  //     { email },
+  //     { $unset: { "workoutTemplates.title": title } }
+  //   );
+  //
+  //   const data = await userUpdate;
+  //
+  //   if (data) {
+  //     return res.status(200).json({
+  //       message: `Workout template has been deleted`,
+  //     });
+  //   }
+  // } catch (e) {
+  //   console.log(e);
+  // }
+};
+
 module.exports = {
   makeNewUser,
   loginUser,
   verify,
   logout,
   addToWorkout,
+  saveWorkoutTemplate,
+  removeSavedTemplate,
 };

@@ -15,7 +15,6 @@ const FinishedWorkout = ({ filteredExercise }) => {
   const endWorkout = () => {
     cancelWorkout();
     setIsWorkoutFinished(false);
-    setIsWorkoutStarted(false);
   };
 
   return (

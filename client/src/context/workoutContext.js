@@ -55,6 +55,7 @@ const WorkoutProvider = (props) => {
   const [isCancelWorkoutPopupOpen, setIsCancelWorkoutPopupOpen] =
     useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const [isSavedTemplatesOpen, setIsSavedTemplatesOpen] = useState(false);
   const [startWorkoutTimestamp, setStartWorkoutTimestamp] = useState(0);
   const [bestResult, setBestResult] = useState(0);
   const [workoutTimeMs, setWorkoutTimeMs] = useState(0);
@@ -118,11 +119,22 @@ const WorkoutProvider = (props) => {
       });
   };
 
+  const setWorkoutFromTemplate = (exercises) => {
+    const result = exercises.map((exercise) => ({
+      name: exercise,
+      sets: [{ id: 0, kg: "", reps: "" }],
+    }));
+
+    setFilteredExercise(result);
+    setIsWorkoutStarted(true);
+    setIsSavedTemplatesOpen(false);
+  };
+
   const finishWorkout = async () => {
     const finishedWorkout = setWorkoutObj(filteredExercise);
     const userInfo = getItemFromLocalstorage("userInfo");
-    const { name, email, workoutsArr } = userInfo;
-    const existingStorage = { name, email, workoutsArr };
+    const { name, email, workoutsArr, workoutTemplates } = userInfo;
+    const existingStorage = { name, email, workoutsArr, workoutTemplates };
     const options = {
       method: "POST",
       body: JSON.stringify({
@@ -150,6 +162,7 @@ const WorkoutProvider = (props) => {
     setIsCancelWorkoutPopupOpen(false);
     setFilteredExercise([]);
     setStartWorkoutTimestamp(0);
+    setIsWorkoutStarted(false);
   };
 
   const handleClickDialog = (exercise) => {
@@ -182,6 +195,8 @@ const WorkoutProvider = (props) => {
         exerciseSets,
         bestResult,
         isWorkoutStarted,
+        isSavedTemplatesOpen,
+        setIsSavedTemplatesOpen: setIsSavedTemplatesOpen,
         setExerciseSets: setExerciseSets,
         setWorkoutsFromDb: setWorkoutsFromDb,
         setIsCancelWorkoutPopupOpen,
@@ -201,6 +216,7 @@ const WorkoutProvider = (props) => {
         setIsFinishWorkoutPopupOpen: setIsFinishWorkoutPopupOpen,
         setIsWorkoutFinished: setIsWorkoutFinished,
         setFilteredExercise: setFilteredExercise,
+        setWorkoutFromTemplate: setWorkoutFromTemplate,
       }}
     >
       {props.children}

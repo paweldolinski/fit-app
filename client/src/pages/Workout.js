@@ -1,11 +1,16 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
 import Button from "../components/Button";
 import Exercise from "../components/Exercises";
 import WorkoutItem from "../components/WorkoutItem";
 import Popup from "../components/Popup";
 import FinishedWorkout from "./FinishedWorkout";
+import {
+  getItemFromLocalstorage,
+  setItemToLocalstorage,
+} from "../utils/localStorage";
+import WorkoutTemplatesPopup from "../components/WorkoutTemplatesPopup";
 
 const Workout = () => {
   const {
@@ -30,12 +35,19 @@ const Workout = () => {
     setStartWorkoutTimestamp,
     isWorkoutStarted,
     setIsWorkoutStarted,
+    isSavedTemplatesOpen,
+    setIsSavedTemplatesOpen,
   } = useContext(WorkoutContext);
+
+  const [savedWorkoutTitle, setSavedWorkoutTitle] = useState("");
+  const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
 
   const handleOpenWorkout = () => {
     setWorkouts([]);
     setIsWorkoutModalOpen(true);
   };
+
+  console.log(filteredExercise);
 
   const checkIsEmptySetInAllSets = () => {
     const checkIsEmptySetInAllSets = [];
@@ -61,6 +73,43 @@ const Workout = () => {
 
     const timeStamp = Date.now();
     setStartWorkoutTimestamp(timeStamp);
+  };
+
+  const setTitleForSavedWorkout = ({ target: { value } }) => {
+    setSavedWorkoutTitle(value);
+  };
+
+  const saveWorkoutTemplate = async () => {
+    const savedExercises = filteredExercise.map(({ name }) => name);
+    const userInfo = getItemFromLocalstorage("userInfo");
+    const { name, email, workoutsArr, workoutTemplates } = userInfo;
+    const existingStorage = { name, email, workoutsArr, workoutTemplates };
+    const template = { title: savedWorkoutTitle, exercises: savedExercises };
+    const options = {
+      method: "POST",
+      body: JSON.stringify({
+        savedWorkoutTemplate: template,
+        email,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    existingStorage.workoutTemplates.push(template);
+    setItemToLocalstorage("userInfo", JSON.stringify(existingStorage));
+
+    try {
+      await fetch("/saveTemplate", options);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setIsSaveWorkoutPopupOpen(false);
+  };
+
+  const showSavedWorkoutTemplates = () => {
+    setIsSavedTemplatesOpen(true);
   };
 
   useEffect(() => {
@@ -118,6 +167,10 @@ const Workout = () => {
                 }
               />
               <Button
+                title="Save workout"
+                onClick={() => setIsSaveWorkoutPopupOpen(true)}
+              />
+              <Button
                 title="Cancel workout"
                 onClick={() => setIsCancelWorkoutPopupOpen(true)}
               />
@@ -147,6 +200,20 @@ const Workout = () => {
             />
           )}
 
+          {isSaveWorkoutPopupOpen && (
+            <Popup
+              text="Do you want to save those exercises as a workout template?"
+              onApprove={saveWorkoutTemplate}
+              onCancel={() => setIsSaveWorkoutPopupOpen(false)}
+              input={true}
+              onChange={setTitleForSavedWorkout}
+            />
+          )}
+
+          {isSavedTemplatesOpen && (
+            <WorkoutTemplatesPopup onClose={setIsSavedTemplatesOpen} />
+          )}
+
           {isWorkoutStarted ||
             (!isWorkoutModalOpen && (
               <>
@@ -159,7 +226,7 @@ const Workout = () => {
                 <div className="workout__btn-wrapper">
                   <Button
                     title="Your Templates"
-                    onClick={() => console.log("Your template")}
+                    onClick={showSavedWorkoutTemplates}
                     name="yourTemplates"
                   />
                   <Button
