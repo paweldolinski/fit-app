@@ -7,7 +7,6 @@ const UserProvider = (props) => {
   const [userObj, setUserObj] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [isNewUser, setIsNewUser] = useState(null);
 
   const onLoginChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -68,7 +67,6 @@ const UserProvider = (props) => {
 
     if (userInfo) {
       setUserObj(userInfo);
-      setIsNewUser(userInfo.workoutsArr.length === 0);
     }
   }, []);
 
@@ -80,12 +78,10 @@ const UserProvider = (props) => {
         setIsLoading: setIsLoading,
         message,
         setUserObj: setUserObj,
-        isNewUser: isNewUser,
         onLoginHandler: onLoginHandler,
         onLoginChangeHandler: onLoginChangeHandler,
         logOut: logOut,
         setMessage: setMessage,
-        setIsNewUser: setIsNewUser,
       }}
     >
       {props.children}
