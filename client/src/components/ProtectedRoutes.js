@@ -1,17 +1,12 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const useAuth = () => localStorage.getItem("userInfo");
+const useAuth = () => localStorage.getItem("token");
 // zrobic autentykacje na podstawie JWT
 
 const ProtectedRoutes = ({ children }) => {
-  const location = useLocation();
   const isValid = useAuth();
 
-  if (!isValid) {
-    return <Navigate to="/login" state={{ path: location.pathname }} />;
-  }
-
-  return children;
+  return isValid ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoutes;

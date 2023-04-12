@@ -1,20 +1,18 @@
 import { useCallback, useMemo, useState } from "react";
 
-export const useStorage = (storageType, key) => {
+export const useLocalStorage = (keyName) => {
   const [state, setState] = useState(false);
-  const storages = {
-    LOCAL_STORAGE: localStorage,
-    SESSION_STORAGE: sessionStorage,
-  };
-  const storage = storages[storageType];
 
-  const value = useMemo(() => storage.getItem(key), [storage, key, state]);
+  const value = useMemo(() => {
+    localStorage.getItem(keyName);
+  }, [keyName, state]);
+
   const setValue = useCallback(
     (value) => {
-      storage.setItem(key, value);
+      localStorage.setItem(keyName, JSON.stringify(value));
       setState((prev) => !prev);
     },
-    [storage, setState]
+    [setState]
   );
 
   return [value, setValue];

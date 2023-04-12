@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../context/userContext";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Back from "../components/Back";
 import Button from "../components/Button";
@@ -14,9 +14,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
+    const isUserLoggedIn = localStorage.getItem("token");
 
-    if (userInfo) {
+    if (isUserLoggedIn) {
       navigate(redirectionPath);
     }
   });
