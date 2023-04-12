@@ -6,6 +6,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { Loader } from "../components/Loader";
 import { UserContext } from "../context/userContext";
+import { useQuery } from "react-query";
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState({
@@ -25,6 +26,8 @@ const SignUp = () => {
       [name]: value,
     });
   };
+
+  const {} = useQuery("status");
 
   const handleSubmit = async (event) => {
     const { email, name, password, confirmPassword } = newUser;

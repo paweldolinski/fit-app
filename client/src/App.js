@@ -1,72 +1,60 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import SignUp from "./pages/Register";
 import WelcomePage from "./pages/WelcomePage";
 import Nav from "./components/Nav";
-import Workout from "./pages/Workout";
-import WorkoutHistory from "./pages/WorkoutHistory";
-import FinishedWorkout from "./pages/FinishedWorkout";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import Tutorial from "./components/Tutorial";
-import { UserContext } from "./context/userContext";
+import WorkoutHistory from "./pages/WorkoutHistory";
+import FinishedWorkout from "./pages/FinishedWorkout";
+import Workout from "./pages/Workout";
 
 const App = () => {
-  const { isNewUser } = useContext(UserContext);
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route path="/register" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/user-profile"
-          element={
-            <ProtectedRoutes>
-              <div className="wrapper">
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            path="/user-profile"
+            element={
+              <>
                 <UserProfile />
                 <Nav />
+              </>
+            }
+          />
+          <Route
+            path="/workout"
+            element={
+              <div className="wrapper">
+                <Workout />
+                <Nav />
               </div>
-            </ProtectedRoutes>
-          }
-        />
-        <Route
-          path="/workout"
-          element={
-            <div className="wrapper">
-              <ProtectedRoutes>
-                {isNewUser ? (
-                  <Tutorial />
-                ) : (
-                  <>
-                    <Workout />
-                    <Nav />
-                  </>
-                )}
-              </ProtectedRoutes>
-            </div>
-          }
-        />
-        <Route
-          path="/workout-history"
-          element={
-            <ProtectedRoutes>
-              <WorkoutHistory />
-              <Nav />
-            </ProtectedRoutes>
-          }
-        />
-        <Route
-          path="/finished-workout"
-          element={
-            <ProtectedRoutes>
-              <FinishedWorkout />
-              <Nav />
-            </ProtectedRoutes>
-          }
-        />
+            }
+          />
+          <Route
+            path="/workout-history"
+            element={
+              <>
+                <WorkoutHistory />
+                <Nav />
+              </>
+            }
+          />
+          <Route
+            path="/finished-workout"
+            element={
+              <>
+                <FinishedWorkout />
+                <Nav />
+              </>
+            }
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

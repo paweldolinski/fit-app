@@ -1,24 +1,25 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import { setItemToLocalstorage } from "../utils/localStorage";
 
 export const UserContext = createContext();
 
 const UserProvider = (props) => {
+  const [user, setUser] = useState({});
   const [userObj, setUserObj] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const onLoginChangeHandler = (e) => {
     const { name, value } = e.target;
-    setUserObj({
-      ...userObj,
+    setUser({
+      ...user,
       [name]: value,
     });
   };
 
   const onLoginHandler = async (e) => {
     e.preventDefault();
-    const { email, password } = userObj;
+    const { email, password } = user;
     const options = {
       method: "POST",
       body: JSON.stringify({
@@ -41,10 +42,10 @@ const UserProvider = (props) => {
       if (response.status === 200) {
         const { user, token } = json;
 
-        setUserObj(user);
         setIsLoading(false);
         setItemToLocalstorage("token", token);
         setItemToLocalstorage("userInfo", JSON.stringify(user));
+        setUserObj(user);
         setMessage(message);
       } else {
         setMessage(message);
@@ -61,14 +62,6 @@ const UserProvider = (props) => {
     setUserObj({});
     window.location = "/login";
   };
-
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-    if (userInfo) {
-      setUserObj(userInfo);
-    }
-  }, []);
 
   return (
     <UserContext.Provider

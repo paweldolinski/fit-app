@@ -12,7 +12,7 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   const getAllWorkoutTimeSpent = useMemo(() => {
-    const allTimeSpentMs = userObj.workoutsArr.reduce(
+    const allTimeSpentMs = userObj?.workoutsArr?.reduce(
       (acc, cur) => acc + cur.timeSpent,
       0
     );
@@ -21,12 +21,13 @@ const UserProfile = () => {
 
   const verify = async () => {
     const token = localStorage.getItem("token");
+    console.log(token, "token from verify");
 
     try {
       const response = await fetch("/verify", {
         method: "GET",
         headers: {
-          "x-access-token": token,
+          "x-access-token": JSON.parse(token),
         },
       });
 
@@ -42,8 +43,8 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
-    setLastWorkoutDate(lastWorkoutDate);
+    // const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
+    // setLastWorkoutDate(lastWorkoutDate);
     verify();
   }, []);
 
@@ -54,7 +55,7 @@ const UserProfile = () => {
         <img alt="avatar" className="user-profile__avatar" src={Avatar} />
         <div className="user-profile__name">
           <p>Hi {userObj && userObj.name}</p>
-          <p>{userObj.workoutsArr.length} workouts</p>
+          <p>{userObj?.workoutsArr?.length} workouts</p>
           <p>Last workout: {lastWorkoutDate}</p>
           <p>Time spent on the gym {getAllWorkoutTimeSpent} in total</p>
         </div>
