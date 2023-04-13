@@ -6,7 +6,6 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { Loader } from "../components/Loader";
 import { UserContext } from "../context/userContext";
-import { useQuery } from "react-query";
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState({
@@ -19,19 +18,16 @@ const SignUp = () => {
   const { message, setMessage, isLoading, setIsLoading } =
     useContext(UserContext);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = ({ target: { name, value } }) => {
     setNewUser({
       ...newUser,
       [name]: value,
     });
   };
 
-  const {} = useQuery("status");
-
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (e) => {
     const { email, name, password, confirmPassword } = newUser;
-    event.preventDefault();
+    e.preventDefault();
 
     setIsLoading(true);
 
@@ -46,9 +42,9 @@ const SignUp = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password,
+        name,
+        email,
+        password,
       }),
     });
     const data = await response;
