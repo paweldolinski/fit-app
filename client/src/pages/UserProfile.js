@@ -4,20 +4,21 @@ import { UserContext } from "../context/userContext";
 import Avatar from "../assets/png/arni.png";
 import Button from "../components/Button";
 import { convertMsToHM } from "../utils/time";
+import { getItemFromLocalstorage } from "../utils/localStorage";
 
 const UserProfile = () => {
   const { logOut } = useContext(UserContext);
-  const [userObj] = useState(JSON.parse(localStorage.getItem("userInfo")));
+  const [userObj] = useState(getItemFromLocalstorage("userInfo"));
   const [lastWorkoutDate, setLastWorkoutDate] = useState();
   const navigate = useNavigate();
 
-  const getAllWorkoutTimeSpent = useMemo(() => {
-    const allTimeSpentMs = userObj?.workoutsArr?.reduce(
-      (acc, cur) => acc + cur.timeSpent,
-      0
-    );
-    return convertMsToHM(allTimeSpentMs);
-  }, [userObj]);
+  const getAllWorkoutTimeSpent = useMemo(
+    () =>
+      convertMsToHM(
+        userObj?.workoutsArr?.reduce((acc, cur) => acc + cur.timeSpent, 0)
+      ),
+    [userObj]
+  );
 
   const verify = async () => {
     const token = localStorage.getItem("token");
@@ -27,7 +28,7 @@ const UserProfile = () => {
       const response = await fetch("/verify", {
         method: "GET",
         headers: {
-          "x-access-token": JSON.parse(token),
+          "x-access-token": token,
         },
       });
 
@@ -43,8 +44,8 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    // const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
-    // setLastWorkoutDate(lastWorkoutDate);
+    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
+    setLastWorkoutDate(lastWorkoutDate);
     verify();
   }, []);
 

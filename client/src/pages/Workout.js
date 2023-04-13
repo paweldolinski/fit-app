@@ -47,21 +47,18 @@ const Workout = () => {
     setIsWorkoutModalOpen(true);
   };
 
-  console.log(filteredExercise);
-
   const checkIsEmptySetInAllSets = () => {
     const checkIsEmptySetInAllSets = [];
 
-    filteredExercise &&
-      filteredExercise.map((exercise) =>
-        exercise.sets.map((set) => checkIsEmptySetInAllSets.push(set))
-      );
+    filteredExercise?.map(({ sets }) =>
+      sets.map((set) => checkIsEmptySetInAllSets.push(set))
+    );
 
     checkIfEmptySet(checkIsEmptySetInAllSets);
   };
 
   const isExerciseChose = (exercise) =>
-    filteredExercise.some((item) => item.name === exercise);
+    filteredExercise.some(({ name }) => name === exercise);
 
   const startWorkout = () => {
     if (filteredExercise.length === 0) return;
@@ -127,7 +124,7 @@ const Workout = () => {
             <>
               <h1 className="left">Add exercises</h1>
               <ul className="workout__exercises-wrapper">
-                {exercises.map((exercise) => (
+                {exercises?.map((exercise) => (
                   <Exercise
                     key={exercise}
                     exercise={exercise}
@@ -145,7 +142,7 @@ const Workout = () => {
           {isWorkoutStarted &&
             !isWorkoutModalOpen &&
             filteredExercise
-              .sort()
+              ?.sort()
               .map((item, index) => (
                 <WorkoutItem
                   key={index}
