@@ -1,7 +1,8 @@
 import React, { createContext, useState } from "react";
 import {
-  getItemFromLocalstorage,
-  setItemToLocalstorage,
+  getTokenFromLocalStorage,
+  getUserInfoFromLocalStorage,
+  setUserInfoToLocalStorage,
 } from "../utils/localStorage";
 
 export const WorkoutContext = createContext();
@@ -63,7 +64,6 @@ const WorkoutProvider = (props) => {
   const [allExercises, setAllExercises] = useState([]);
   const [exerciseSets, setExerciseSets] = useState([]);
   const [filteredExercise, setFilteredExercise] = useState([]);
-  const [workouts, setWorkouts] = useState([]);
   const [workoutsHistory, setWorkoutHistory] = useState([]);
 
   const addExercise = (exercise) => {
@@ -132,7 +132,8 @@ const WorkoutProvider = (props) => {
 
   const finishWorkout = async () => {
     const finishedWorkout = setWorkoutObj(filteredExercise);
-    const userInfo = getItemFromLocalstorage("userInfo");
+    const userInfo = getUserInfoFromLocalStorage();
+    const token = getTokenFromLocalStorage();
     const { name, email, workoutsArr, workoutTemplates } = userInfo;
     const existingStorage = { name, email, workoutsArr, workoutTemplates };
     const options = {
@@ -143,11 +144,12 @@ const WorkoutProvider = (props) => {
       }),
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": token,
       },
     };
 
     existingStorage.workoutsArr.push(finishedWorkout);
-    setItemToLocalstorage("userInfo", JSON.stringify(existingStorage));
+    setUserInfoToLocalStorage(existingStorage);
 
     try {
       await fetch("/addWorkout", options);
@@ -178,8 +180,6 @@ const WorkoutProvider = (props) => {
         startWorkoutTimestamp,
         workoutTimeMs,
         exercises,
-        workouts,
-        setWorkouts,
         workoutsHistory,
         setWorkoutHistory,
         filteredExercise,

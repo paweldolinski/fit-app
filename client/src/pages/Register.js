@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Policy from "../components/Policy";
 import Back from "../components/Back";
 import Input from "../components/Input";
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { Loader } from "../components/Loader";
 import { UserContext } from "../context/userContext";
 

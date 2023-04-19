@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import { WorkoutContext } from "../context/workoutContext";
-import CheckedIcon from "../assets/svg/checked.svg";
+import { WorkoutContext } from "../../context/workoutContext";
+import CheckedIcon from "../../assets/svg/checked.svg";
 
 const Exercise = ({ exercise, isExerciseChose }) => {
   const [isChecked, setIsChecked] = useState(isExerciseChose);

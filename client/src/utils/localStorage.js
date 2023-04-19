@@ -1,17 +1,21 @@
-const setItemToLocalstorage = (key, value) => {
-  return localStorage.setItem(key, value);
+export const setItemToLocalstorage = (key, value) => {
+  return localStorage.setItem(key, JSON.stringify(value));
 };
 
-const getItemFromLocalstorage = (key) => {
+export const getItemFromLocalstorage = (key) => {
   return JSON.parse(localStorage.getItem(key));
 };
 
-const removeItemFromLocalstorage = (key) => {
+export const removeItemFromLocalstorage = (key) => {
   return localStorage.removeItem(key);
 };
 
-module.exports = {
-  setItemToLocalstorage,
-  getItemFromLocalstorage,
-  removeItemFromLocalstorage,
-};
+export const getUserInfoFromLocalStorage = () =>
+  getItemFromLocalstorage("userInfo");
+
+export const setUserInfoToLocalStorage = (userInfo) =>
+  setItemToLocalstorage("userInfo", userInfo);
+
+export const getTokenFromLocalStorage = () => getItemFromLocalstorage("token");
+export const setTokenToLocalStorage = (token) =>
+  setItemToLocalstorage("token", token);

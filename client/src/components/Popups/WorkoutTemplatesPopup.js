@@ -1,10 +1,12 @@
 import {
   getItemFromLocalstorage,
-  setItemToLocalstorage,
-} from "../utils/localStorage";
+  getTokenFromLocalStorage,
+  getUserInfoFromLocalStorage,
+  setUserInfoToLocalStorage,
+} from "../../utils/localStorage";
 import WorkoutTemplatesPopupRow from "./WorkoutTemplatesPopupRow";
 import { useContext, useEffect, useState } from "react";
-import { WorkoutContext } from "../context/workoutContext";
+import { WorkoutContext } from "../../context/workoutContext";
 
 const WorkoutTemplatesPopup = ({ onClose }) => {
   const { setWorkoutFromTemplate } = useContext(WorkoutContext);
@@ -12,7 +14,8 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
     useState([]);
 
   const removeTemplate = async (templateTitle) => {
-    const userInfo = getItemFromLocalstorage("userInfo");
+    const userInfo = getUserInfoFromLocalStorage();
+    const token = getTokenFromLocalStorage();
     const { name, email, workoutsArr, workoutTemplates } = userInfo;
     const existingStorage = { name, email, workoutsArr, workoutTemplates };
     const result = workoutTemplates.filter(
@@ -26,6 +29,7 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
       }),
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": token,
       },
     };
 
@@ -35,7 +39,7 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
       if (removeTemplate.status === 200) {
         existingStorage.workoutTemplates = result;
         setWorkoutTemplatesFromStorage(result);
-        setItemToLocalstorage("userInfo", JSON.stringify(existingStorage));
+        setUserInfoToLocalStorage(existingStorage);
       }
     } catch (e) {
       console.log(e);
@@ -57,12 +61,13 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
         &#x2715;
       </span>
       {workoutTemplatesFromStorage &&
-        workoutTemplatesFromStorage.map((template) => {
+        workoutTemplatesFromStorage.map((template, index) => {
           return (
             <WorkoutTemplatesPopupRow
               {...template}
               removeTemplate={removeTemplate}
               setWorkout={setWorkoutFromTemplate}
+              key={index}
             />
           );
         })}
