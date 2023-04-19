@@ -1,4 +1,4 @@
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { useContext } from "react";
 import { WorkoutContext } from "../context/workoutContext";
 import { convertMsToHM } from "../utils/time";

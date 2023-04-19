@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import Icon from "../assets/svg/bottom-chevron.svg";
+import Icon from "../../assets/svg/bottom-chevron.svg";
 import WorkoutSetRowOptionDialog from "./WorkoutSetRowOptionDialog";
 
 const WorkoutSetRow = ({

@@ -1,4 +1,4 @@
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { useNavigate } from "react-router-dom";
 import WelcomeLogo from "../assets/svg/welcome.svg";
 import Facebook from "../assets/png/facebook.png";

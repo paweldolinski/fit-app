@@ -2,9 +2,12 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import Avatar from "../assets/png/arni.png";
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { convertMsToHM } from "../utils/time";
-import { getItemFromLocalstorage } from "../utils/localStorage";
+import {
+  getItemFromLocalstorage,
+  getTokenFromLocalStorage,
+} from "../utils/localStorage";
 
 const UserProfile = () => {
   const { logOut } = useContext(UserContext);
@@ -21,8 +24,7 @@ const UserProfile = () => {
   );
 
   const verify = async () => {
-    const token = localStorage.getItem("token");
-    console.log(token, "token from verify");
+    const token = getTokenFromLocalStorage();
 
     try {
       const response = await fetch("/verify", {
@@ -33,11 +35,12 @@ const UserProfile = () => {
       });
 
       const json = await response.json();
+      console.log(json);
 
-      if (json.status !== "ok") {
-        console.log("wrong token");
-        navigate("/login");
-      }
+      // if (json.status !== "ok") {
+      //   console.log("wrong token");
+      //   navigate("/login");
+      // }
     } catch (e) {
       console.log(e);
     }

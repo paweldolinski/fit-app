@@ -3,7 +3,7 @@ import { UserContext } from "../context/userContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Back from "../components/Back";
-import Button from "../components/Button";
+import Button from "../components/Buttons/Button";
 import { Loader } from "../components/Loader";
 
 const Login = () => {

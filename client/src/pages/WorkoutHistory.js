@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
-import { getItemFromLocalstorage } from "../utils/localStorage";
+import { getUserInfoFromLocalStorage } from "../utils/localStorage";
 import { getAllExercisesOptions } from "../utils/getAllExercisesOptions";
 
 const WorkoutHistory = () => {
@@ -13,8 +13,7 @@ const WorkoutHistory = () => {
   const allExercisesArr = getAllExercisesOptions();
 
   const getUserData = () => {
-    const getData = getItemFromLocalstorage("userInfo");
-
+    const getData = getUserInfoFromLocalStorage();
     const { workoutsArr } = getData;
 
     setWorkoutsFromStorage(workoutsArr);

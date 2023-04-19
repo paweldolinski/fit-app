@@ -1,8 +1,6 @@
 import * as React from "react";
-import { UserContext } from "../context/userContext";
-import { useContext } from "react";
-import Bin from "../assets/svg/bin.svg";
-import Copy from "../assets/svg/copy.svg";
+import Bin from "../../assets/svg/bin.svg";
+import Copy from "../../assets/svg/copy.svg";
 
 const WorkoutSetRowOptionDialog = ({ removeSet, copySet, setId }) => {
   return (

@@ -1,5 +1,8 @@
 import React, { createContext, useState } from "react";
-import { setItemToLocalstorage } from "../utils/localStorage";
+import {
+  setTokenToLocalStorage,
+  setUserInfoToLocalStorage,
+} from "../utils/localStorage";
 
 export const UserContext = createContext();
 
@@ -43,8 +46,8 @@ const UserProvider = (props) => {
         const { user, token } = json;
 
         setIsLoading(false);
-        setItemToLocalstorage("token", token);
-        setItemToLocalstorage("userInfo", JSON.stringify(user));
+        setTokenToLocalStorage(token);
+        setUserInfoToLocalStorage(user);
         setUserObj(user);
         setMessage(message);
       } else {

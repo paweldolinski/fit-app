@@ -22,8 +22,8 @@ const WorkoutTemplatesPopupRow = ({
         </div>
       </div>
       <ul className="popup__exercises-wrapper">
-        {exercises.map((exercise) => {
-          return <li>{exercise}</li>;
+        {exercises.map((exercise, index) => {
+          return <li key={index}>{exercise}</li>;
         })}
       </ul>
       {isDeleteTemplatePopupOpen && (

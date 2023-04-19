@@ -1,21 +1,16 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "../context/workoutContext";
-import Button from "../components/Button";
-import Exercise from "../components/Exercises";
-import WorkoutItem from "../components/WorkoutItem";
-import Popup from "../components/Popup";
+import Button from "../components/Buttons/Button";
+import WorkoutItem from "../components/WorkoutItem/WorkoutItem";
+import Popup from "../components/Popups/Popup";
 import FinishedWorkout from "./FinishedWorkout";
-import {
-  getItemFromLocalstorage,
-  setItemToLocalstorage,
-} from "../utils/localStorage";
-import WorkoutTemplatesPopup from "../components/WorkoutTemplatesPopup";
+import WorkoutTemplatesPopup from "../components/Popups/WorkoutTemplatesPopup";
+import SaveWorkoutTemplatesPopup from "../components/Popups/SaveWorkoutTemplatesPopup";
+import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercises";
 
 const Workout = () => {
   const {
-    exercises,
-    setWorkouts,
     filteredExercise,
     cancelWorkout,
     finishWorkout,
@@ -31,19 +26,14 @@ const Workout = () => {
     isWorkoutFinished,
     setIsWorkoutFinished,
     setIsFinishWorkoutPopupOpen,
-    startWorkoutTimestamp,
-    setStartWorkoutTimestamp,
     isWorkoutStarted,
-    setIsWorkoutStarted,
     isSavedTemplatesOpen,
     setIsSavedTemplatesOpen,
   } = useContext(WorkoutContext);
 
-  const [savedWorkoutTitle, setSavedWorkoutTitle] = useState("");
   const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
 
   const handleOpenWorkout = () => {
-    setWorkouts([]);
     setIsWorkoutModalOpen(true);
   };
 
@@ -55,54 +45,6 @@ const Workout = () => {
     );
 
     checkIfEmptySet(checkIsEmptySetInAllSets);
-  };
-
-  const isExerciseChose = (exercise) =>
-    filteredExercise.some(({ name }) => name === exercise);
-
-  const startWorkout = () => {
-    if (filteredExercise.length === 0) return;
-
-    setIsWorkoutStarted(true);
-    setIsWorkoutModalOpen(false);
-
-    if (startWorkoutTimestamp > 0) return;
-
-    const timeStamp = Date.now();
-    setStartWorkoutTimestamp(timeStamp);
-  };
-
-  const setTitleForSavedWorkout = ({ target: { value } }) => {
-    setSavedWorkoutTitle(value);
-  };
-
-  const saveWorkoutTemplate = async () => {
-    const savedExercises = filteredExercise.map(({ name }) => name);
-    const userInfo = getItemFromLocalstorage("userInfo");
-    const { name, email, workoutsArr, workoutTemplates } = userInfo;
-    const existingStorage = { name, email, workoutsArr, workoutTemplates };
-    const template = { title: savedWorkoutTitle, exercises: savedExercises };
-    const options = {
-      method: "POST",
-      body: JSON.stringify({
-        savedWorkoutTemplate: template,
-        email,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    existingStorage.workoutTemplates.push(template);
-    setItemToLocalstorage("userInfo", JSON.stringify(existingStorage));
-
-    try {
-      await fetch("/saveTemplate", options);
-    } catch (error) {
-      console.log(error);
-    }
-
-    setIsSaveWorkoutPopupOpen(false);
   };
 
   const showSavedWorkoutTemplates = () => {
@@ -120,25 +62,7 @@ const Workout = () => {
       <div className="workout">
         <div className="workout__wrapper">
           <div className="workout__top"></div>
-          {isWorkoutModalOpen && (
-            <>
-              <h1 className="left">Add exercises</h1>
-              <ul className="workout__exercises-wrapper">
-                {exercises?.map((exercise) => (
-                  <Exercise
-                    key={exercise}
-                    exercise={exercise}
-                    isExerciseChose={isExerciseChose(exercise)}
-                  />
-                ))}
-              </ul>
-              <Button
-                title={isWorkoutStarted ? "Add exercises" : "Start workout"}
-                name="startWorkout"
-                onClick={startWorkout}
-              />
-            </>
-          )}
+          {isWorkoutModalOpen && <WorkoutExercises />}
           {isWorkoutStarted &&
             !isWorkoutModalOpen &&
             filteredExercise
@@ -198,12 +122,8 @@ const Workout = () => {
           )}
 
           {isSaveWorkoutPopupOpen && (
-            <Popup
-              text="Do you want to save those exercises as a workout template?"
-              onApprove={saveWorkoutTemplate}
-              onCancel={() => setIsSaveWorkoutPopupOpen(false)}
-              input={true}
-              onChange={setTitleForSavedWorkout}
+            <SaveWorkoutTemplatesPopup
+              setIsSaveWorkoutPopupOpen={setIsSaveWorkoutPopupOpen}
             />
           )}
 

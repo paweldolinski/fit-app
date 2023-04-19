@@ -1,7 +1,7 @@
-import Button from "./Button";
+import Button from "./Buttons/Button";
 import * as React from "react";
-import { UserContext } from "../context/userContext";
 import { useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 const Tutorial = () => {
   const { setIsNewUser } = useContext(UserContext);
