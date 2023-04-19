@@ -5,6 +5,7 @@ const env = require("dotenv").config();
 const path = require("path");
 const app = express();
 const port = process.env.PORT || 5000;
+const checkAuth = require("./middlewares/auth");
 
 mongoose.connect(process.env.MONGO_URI, (err) => {
   if (!err) {
@@ -17,8 +18,11 @@ mongoose.connect(process.env.MONGO_URI, (err) => {
 app.use(cors());
 app.use(express.json());
 
-const registerRouter = require("./api/user");
-app.use("/", registerRouter);
+const userRouter = require("./routes/user");
+const workoutRouter = require("./routes/workout");
+
+app.use("/", userRouter);
+app.use("/", checkAuth, workoutRouter);
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 
