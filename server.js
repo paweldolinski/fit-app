@@ -22,7 +22,7 @@ const userRouter = require("./routes/user");
 const workoutRouter = require("./routes/workout");
 
 app.use("/", userRouter);
-app.use("/", checkAuth, workoutRouter);
+app.use("/workout", checkAuth, workoutRouter);
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 

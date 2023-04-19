@@ -4,7 +4,6 @@ import CrossedEye from "../assets/svg/crossed-eye.svg";
 
 const Input = ({ placeholder, onChange, name, icon }) => {
   const [passwordShown, setPasswordShown] = useState(false);
-
   const showPassword = () => {
     setPasswordShown(!passwordShown);
   };

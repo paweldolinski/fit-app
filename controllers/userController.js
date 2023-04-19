@@ -75,9 +75,7 @@ const loginUser = async (req, res) => {
 
 const verify = async (req, res, next) => {
   const token = req.headers["x-access-token"];
-  console.log(token, "token ");
   const decoded = jwt.verify(token, secret);
-  console.log(decoded);
 
   try {
     const id = decoded.id;

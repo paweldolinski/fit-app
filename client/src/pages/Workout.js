@@ -106,10 +106,7 @@ const Workout = () => {
           {isFinishWorkoutPopupOpen && (
             <Popup
               text="Do you want to finish your workout ?"
-              onApprove={() => {
-                finishWorkout();
-                setIsWorkoutFinished(true);
-              }}
+              onApprove={() => finishWorkout()}
               onCancel={() => setIsFinishWorkoutPopupOpen(false)}
             />
           )}

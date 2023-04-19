@@ -148,13 +148,18 @@ const WorkoutProvider = (props) => {
       },
     };
 
-    existingStorage.workoutsArr.push(finishedWorkout);
-    setUserInfoToLocalStorage(existingStorage);
-
     try {
-      await fetch("/addWorkout", options);
-      setIsFinishWorkoutPopupOpen(false);
-      setStartWorkoutTimestamp(0);
+      const data = await fetch("/workout/addWorkout", options);
+
+      if (data.status === 200) {
+        // await fetch("/workout/addWorkout", options);
+        console.log("data.status === 200");
+        existingStorage.workoutsArr.push(finishedWorkout);
+        setUserInfoToLocalStorage(existingStorage);
+        setIsFinishWorkoutPopupOpen(false);
+        setIsWorkoutFinished(true);
+        setStartWorkoutTimestamp(0);
+      }
     } catch (e) {
       console.log(e, "error from post addWorkout");
     }
