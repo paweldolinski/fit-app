@@ -34,6 +34,9 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  sessionToken: {
+    type: String,
+  },
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {

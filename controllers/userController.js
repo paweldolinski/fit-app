@@ -4,13 +4,15 @@ const { User } = require("../model/UserSchema");
 const bcrypt = require("bcrypt");
 const { generateAuthToken } = require("../model/utils");
 
+const getUserByEmail = (email) => User.findOne({ email });
+
 const makeNewUser = async (req, res) => {
   const { name, password, email } = req.body;
   const salt = await bcrypt.genSalt(Number(process.env.SALT));
   const hashPassword = await bcrypt.hash(password, salt);
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await getUserByEmail(email);
 
     if (user) {
       return res
@@ -73,9 +75,11 @@ const loginUser = async (req, res) => {
 
 const verify = async (req, res, next) => {
   const token = req.headers["x-access-token"];
+  console.log(token, "token ");
+  const decoded = jwt.verify(token, secret);
+  console.log(decoded);
 
   try {
-    const decoded = jwt.verify(token, secret);
     const id = decoded.id;
     const user = await User.findOne({ _id: id });
 
@@ -133,10 +137,6 @@ const saveWorkoutTemplate = async (req, res, next) => {
   }
 };
 
-// db.lists.update({}, { $unset: { "interests.3": 1 } });
-// db.lists.update({}, { $pull: { interests: null } });
-//db.people.update({"name":"dannie"}, {'$pull': {"interests": "guitar"}})
-
 const removeSavedTemplate = async (req, res, next) => {
   const { title, email } = req.body;
 
@@ -155,24 +155,6 @@ const removeSavedTemplate = async (req, res, next) => {
   } catch (e) {
     console.log(e);
   }
-
-  // try {
-
-  //   const userUpdate = User.findOneAndUpdate(
-  //     { email },
-  //     { $unset: { "workoutTemplates.title": title } }
-  //   );
-  //
-  //   const data = await userUpdate;
-  //
-  //   if (data) {
-  //     return res.status(200).json({
-  //       message: `Workout template has been deleted`,
-  //     });
-  //   }
-  // } catch (e) {
-  //   console.log(e);
-  // }
 };
 
 module.exports = {
