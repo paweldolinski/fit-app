@@ -34,7 +34,7 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
     };
 
     try {
-      const removeTemplate = await fetch("/removeTemplate", options);
+      const removeTemplate = await fetch("/workout/removeTemplate", options);
 
       if (removeTemplate.status === 200) {
         existingStorage.workoutTemplates = result;

@@ -39,7 +39,7 @@ const SaveWorkoutTemplatesPopup = ({ setIsSaveWorkoutPopupOpen }) => {
     setUserInfoToLocalStorage(existingStorage);
 
     try {
-      await fetch("/saveTemplate", options);
+      await fetch("/workout/saveTemplate", options);
     } catch (error) {
       console.log(error);
     }
