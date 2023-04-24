@@ -76,8 +76,11 @@ $white: map-get($palette-base, white);
     border-left: 1px solid $tertiary;
     cursor: pointer;
 
-    &.active {
-      transform: translateY(90%);
+    .option-btn {
+      transition: 0.2s ease-in-out;
+      &.open {
+        transform: rotate(180deg) ;
+      }
     }
 
     img {

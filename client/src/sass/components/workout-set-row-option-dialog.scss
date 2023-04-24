@@ -1,5 +1,6 @@
 $white: map-get($palette-base,white);
 $black: map-get($palette-base,black);
+$quaternary: map-get($palette-base,quaternary);
 
 .workout-set-row-options-wrapper {
   position: absolute;
@@ -8,8 +9,9 @@ $black: map-get($palette-base,black);
   padding: 23px 15px 23px 13px;
   border-radius: 5px;
   right: 0;
-  bottom: -130px;
+  bottom: -153px;
   z-index: 2;
+  border: solid 1px $quaternary;
 
   &__item {
     display: flex;

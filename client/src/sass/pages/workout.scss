@@ -3,6 +3,7 @@ $secondary: map-get($palette-base, secondary);
 $tertiary: map-get($palette-base, tertiary);
 $quaternary: map-get($palette-base, quaternary);
 $white: map-get($palette-base, white);
+$danger: map-get($palette-base, danger);
 
 .workout {
   height: calc(100% - 34px);
@@ -16,12 +17,6 @@ $white: map-get($palette-base, white);
     p:last-child{
       margin-bottom: 20px;
     }
-  }
-
-  &__top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
   }
 
   &__last-workout {
@@ -68,6 +63,10 @@ $white: map-get($palette-base, white);
   .btn__btn[name="finishWorkout"],
   .btn__btn[name="addSet"] {
     background-color: $secondary;
+  }
+
+  .btn__btn[name="cancel"] {
+    background-color: $danger;
   }
 
   &__exercises-wrapper {

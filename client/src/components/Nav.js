@@ -1,10 +1,9 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/userContext";
 import IconTile from "./IconTile";
 import IconProfile from "../assets/png/user.png";
 import IconWorkout from "../assets/png/dumbbell.png";
 import IconHistory from "../assets/png/chart.png";
-import IconExercises from "../assets/svg/exercises.svg";
 
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
