@@ -1,0 +1,44 @@
+$secondary: map-get($palette-base, secondary);
+$white: map-get($palette-base, white);
+$danger: map-get($palette-base, danger);
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &.isRunning {
+    .btn {
+      button {
+        background-color: $danger;
+      }
+    }
+  }
+
+  div {
+    flex-shrink: 1;
+  }
+
+  .input {
+    max-width: 80px;
+  }
+
+  button {
+    padding: 0 20px;
+    background-color: $secondary;
+  }
+
+  &__counter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: $white;
+    height: 50px;
+    width: 80px;
+    padding: 15px 9px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+
+  }
+}

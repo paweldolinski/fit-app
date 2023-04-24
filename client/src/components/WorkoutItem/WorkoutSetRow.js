@@ -17,7 +17,7 @@ const WorkoutSetRow = ({
     return index + 1;
   };
 
-  const toggleIsOpenOption = () => {
+  const toggleIsOpenOption = (e) => {
     setIsOptionOpen(!isOptionOpen);
   };
 
@@ -28,7 +28,7 @@ const WorkoutSetRow = ({
         classList: { value },
       } = e.target;
 
-      if (value === "option-btn") return;
+      if (value === "option-btn open") return;
 
       setIsOptionOpen(false);
     };
@@ -69,7 +69,11 @@ const WorkoutSetRow = ({
           />
         </div>
         <div className="workout-set-row__option-btn">
-          <img className="option-btn" src={Icon} onClick={toggleIsOpenOption} />
+          <img
+            className={isOptionOpen ? "option-btn open" : "option-btn"}
+            src={Icon}
+            onClick={toggleIsOpenOption}
+          />
         </div>
         {isOptionOpen && (
           <WorkoutSetRowOptionDialog

@@ -1,10 +1,13 @@
+$bg: map-get($palette-base, bg);
+
 .popup {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: grey;
-  padding: 20px;
+  background: $bg;
+  padding: 40px 20px;
+  border: solid 2px white;
   border-radius: 5px;
 
   p {
@@ -57,5 +60,9 @@
     border: solid white 1px;
     border-radius: 2px;
     padding: 5px;
+  }
+
+  input {
+    height: 30px;
   }
 }

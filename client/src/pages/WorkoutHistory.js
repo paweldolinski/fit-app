@@ -93,6 +93,7 @@ const WorkoutHistory = () => {
           </div>
         </>
       )}
+      {/*<Chart sets={exerciseSets} />*/}
     </div>
   );
 };

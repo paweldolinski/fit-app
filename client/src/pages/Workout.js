@@ -8,6 +8,7 @@ import FinishedWorkout from "./FinishedWorkout";
 import WorkoutTemplatesPopup from "../components/Popups/WorkoutTemplatesPopup";
 import SaveWorkoutTemplatesPopup from "../components/Popups/SaveWorkoutTemplatesPopup";
 import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercises";
+import { TimerButton } from "../components/Buttons/TimerButton";
 
 const Workout = () => {
   const {
@@ -24,7 +25,6 @@ const Workout = () => {
     setIsCancelWorkoutPopupOpen,
     isFinishWorkoutPopupOpen,
     isWorkoutFinished,
-    setIsWorkoutFinished,
     setIsFinishWorkoutPopupOpen,
     isWorkoutStarted,
     isSavedTemplatesOpen,
@@ -61,7 +61,11 @@ const Workout = () => {
     return (
       <div className="workout">
         <div className="workout__wrapper">
-          <div className="workout__top"></div>
+          {isWorkoutStarted && (
+            <div className="workout__top">
+              <TimerButton />
+            </div>
+          )}
           {isWorkoutModalOpen && <WorkoutExercises />}
           {isWorkoutStarted &&
             !isWorkoutModalOpen &&
@@ -94,6 +98,7 @@ const Workout = () => {
               <Button
                 title="Cancel workout"
                 onClick={() => setIsCancelWorkoutPopupOpen(true)}
+                name="cancel"
               />
             </>
           )}
