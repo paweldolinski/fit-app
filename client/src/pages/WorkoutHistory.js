@@ -61,7 +61,7 @@ const WorkoutHistory = () => {
 
   useEffect(() => {
     getExerciseHistory(workoutsFromStorage);
-    console.log("test");
+    console.log("test1");
   }, [choseExercise]);
 
   return (
