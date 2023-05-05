@@ -7,6 +7,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 const checkAuth = require("./middlewares/auth");
 
+
+
+console.log(process.env.MONGO_URI)
 mongoose.connect(process.env.MONGO_URI, (err) => {
   if (!err) {
     console.log("=====================MongoDB connected.");

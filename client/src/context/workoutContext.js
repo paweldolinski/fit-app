@@ -1,8 +1,12 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import {
+  getPreWorkoutFromLocal,
   getTokenFromLocalStorage,
   getUserInfoFromLocalStorage,
+  setPreWorkoutsArrayToLocal,
   setUserInfoToLocalStorage,
+  setWorkoutsArrayToLocal,
+  updateWorkoutsArrayInLocal,
 } from "../utils/localStorage";
 
 export const WorkoutContext = createContext();
@@ -20,6 +24,7 @@ const exercisesArr = [
   "Bicep Curl Inclined (Dumbbell)",
   "Chest Fly",
   "Squat",
+  "Seated Cable Row",
   "Sumo Deadlift",
   "Deadlift (Barbell)",
   "Deadlift (Trap Bar)",
@@ -67,13 +72,12 @@ const WorkoutProvider = (props) => {
   const [workoutsHistory, setWorkoutHistory] = useState([]);
 
   const addExercise = (exercise) => {
-    setFilteredExercise([
-      ...filteredExercise,
-      {
-        name: exercise,
-        sets: [{ id: 0, kg: "", reps: "" }],
-      },
-    ]);
+    const exerciseObj = {
+      name: exercise,
+      sets: [{ id: 0, kg: "", reps: "" }],
+    };
+
+    setFilteredExercise([...filteredExercise, exerciseObj]);
   };
 
   const removeExercise = (exercise) => {
@@ -159,6 +163,7 @@ const WorkoutProvider = (props) => {
         setIsFinishWorkoutPopupOpen(false);
         setIsWorkoutFinished(true);
         setStartWorkoutTimestamp(0);
+        setPreWorkoutsArrayToLocal(false);
       }
     } catch (e) {
       console.log(e, "error from post addWorkout");
@@ -170,6 +175,7 @@ const WorkoutProvider = (props) => {
     setFilteredExercise([]);
     setStartWorkoutTimestamp(0);
     setIsWorkoutStarted(false);
+    setPreWorkoutsArrayToLocal(false);
   };
 
   const handleClickDialog = (exercise) => {
@@ -178,6 +184,14 @@ const WorkoutProvider = (props) => {
     );
     setFilteredExercise(updatedFilteredExercises);
   };
+
+  useEffect(() => {
+    const test = getPreWorkoutFromLocal();
+
+    if (test?.length > 0) {
+      setFilteredExercise(test);
+    }
+  }, []);
 
   return (
     <WorkoutContext.Provider

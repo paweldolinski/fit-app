@@ -5,6 +5,18 @@ $white: map-get($palette-base, white);
 
 .workout-item {
   margin-bottom: 40px;
+   &.hidden {
+     .workout-item__icon {
+         background-color: $secondary;
+     }
+     .workout-item__sets-wrapper {
+       display: none;
+     }
+
+     .btn {
+       display: none;
+     }
+   }
 
   &__info {
     display: flex;
@@ -14,11 +26,24 @@ $white: map-get($palette-base, white);
       text-align: left;
       font-weight: 700;
       font-size: 17px;
-      margin-bottom: 4px;
-
-      &:nth-child(2) {
-        margin-bottom: 9px;
-      }
     }
+  }
+
+  &__info &__exercise-name p, &__sets p {
+    margin-bottom: 0;
+  }
+
+  &__exercise-name {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  &__icon {
+    width: 20px;
+    margin-right: 10px;
+    border: solid 1px $secondary;
+    border-radius: 5px;
+    cursor: pointer;
   }
 }
