@@ -3,7 +3,11 @@ import { useContext, useEffect, useState } from "react";
 import WorkoutSetRow from "./WorkoutSetRow";
 import Button from "../Buttons/Button";
 import { WorkoutContext } from "../../context/workoutContext";
-import { getItemFromLocalstorage } from "../../utils/localStorage";
+import {
+  getItemFromLocalstorage,
+  setPreWorkoutsArrayToLocal,
+} from "../../utils/localStorage";
+import Icon from "../../assets/svg/checked2.svg";
 
 const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   const { name, sets } = exercise;
@@ -11,6 +15,7 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
     useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
+  const [isExerciseHidden, setIsExerciseHidden] = useState(false);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
@@ -61,6 +66,8 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
 
     updateExercise(setValues, name);
     checkIsEmptySetInAllSets();
+
+    setPreWorkoutsArrayToLocal(filteredExercise);
   };
 
   const checkPrev = () => {
@@ -91,6 +98,10 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
     return previousSet;
   };
 
+  const hideFinishedExercise = () => {
+    setIsExerciseHidden(!isExerciseHidden);
+  };
+
   useEffect(() => {
     checkPrev();
   }, []);
@@ -101,13 +112,19 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
   }, [setsArr]);
 
   return (
-    <div className="workout-item">
+    <div className={isExerciseHidden ? "workout-item hidden" : "workout-item"}>
       <div className="workout-item__wrapper">
         <div className="workout-item__info">
-          <div>
+          <div className="workout-item__exercise-name">
+            <img
+              onClick={hideFinishedExercise}
+              alt="icon"
+              className="workout-item__icon"
+              src={Icon}
+            />
             <p className="workout-item__exercise">{name}</p>
           </div>
-          <div>
+          <div className="workout-item__sets">
             <p>Sets: {setsArr.length}</p>
           </div>
         </div>

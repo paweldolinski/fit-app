@@ -9,6 +9,10 @@ import WorkoutTemplatesPopup from "../components/Popups/WorkoutTemplatesPopup";
 import SaveWorkoutTemplatesPopup from "../components/Popups/SaveWorkoutTemplatesPopup";
 import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercises";
 import { TimerButton } from "../components/Buttons/TimerButton";
+import {
+  getPreWorkoutFromLocal,
+  setPreWorkoutsArrayToLocal,
+} from "../utils/localStorage";
 
 const Workout = () => {
   const {
@@ -29,6 +33,7 @@ const Workout = () => {
     isWorkoutStarted,
     isSavedTemplatesOpen,
     setIsSavedTemplatesOpen,
+    setIsWorkoutStarted,
   } = useContext(WorkoutContext);
 
   const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
@@ -55,6 +60,23 @@ const Workout = () => {
     checkIsEmptySetInAllSets();
   });
 
+  useEffect(() => {
+    setPreWorkoutsArrayToLocal(filteredExercise);
+  }, [filteredExercise]);
+
+  const checkPreWorkout = () => {
+    const isPreworkoutInLocal = !!getPreWorkoutFromLocal();
+
+    if (isPreworkoutInLocal) {
+      setIsWorkoutModalOpen(false);
+      setIsWorkoutStarted(true);
+    }
+  };
+
+  useEffect(() => {
+    checkPreWorkout();
+  }, []);
+
   if (isWorkoutFinished) {
     return <FinishedWorkout filteredExercise={filteredExercise} />;
   } else {
@@ -69,16 +91,14 @@ const Workout = () => {
           {isWorkoutModalOpen && <WorkoutExercises />}
           {isWorkoutStarted &&
             !isWorkoutModalOpen &&
-            filteredExercise
-              ?.sort()
-              .map((item, index) => (
-                <WorkoutItem
-                  key={index}
-                  index={index + 1}
-                  exercise={item}
-                  checkIsEmptySetInAllSets={checkIsEmptySetInAllSets}
-                />
-              ))}
+            filteredExercise?.map((item, index) => (
+              <WorkoutItem
+                key={index}
+                index={index + 1}
+                exercise={item}
+                checkIsEmptySetInAllSets={checkIsEmptySetInAllSets}
+              />
+            ))}
           {isWorkoutStarted && !isWorkoutModalOpen && (
             <>
               <Button title="Add exercise" onClick={handleOpenWorkout} />
