@@ -11,6 +11,7 @@ import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercise
 import { TimerButton } from "../components/Buttons/TimerButton";
 import {
   getPreWorkoutFromLocal,
+  getTokenFromLocalStorage,
   setPreWorkoutsArrayToLocal,
 } from "../utils/localStorage";
 
@@ -73,8 +74,32 @@ const Workout = () => {
     }
   };
 
+  const verify = async () => {
+    const token = getTokenFromLocalStorage();
+
+    try {
+      const response = await fetch("/verify", {
+        method: "GET",
+        headers: {
+          "x-access-token": token,
+        },
+      });
+
+      const json = await response.json();
+      console.log(json);
+
+      // if (json.status !== "ok") {
+      //   console.log("wrong token");
+      //   navigate("/login");
+      // }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useEffect(() => {
     checkPreWorkout();
+    verify();
   }, []);
 
   if (isWorkoutFinished) {

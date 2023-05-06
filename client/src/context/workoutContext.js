@@ -5,8 +5,6 @@ import {
   getUserInfoFromLocalStorage,
   setPreWorkoutsArrayToLocal,
   setUserInfoToLocalStorage,
-  setWorkoutsArrayToLocal,
-  updateWorkoutsArrayInLocal,
 } from "../utils/localStorage";
 
 export const WorkoutContext = createContext();
