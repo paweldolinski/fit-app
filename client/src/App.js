@@ -28,7 +28,7 @@ const App = () => {
             }
           />
           <Route
-            path="/workout"
+            path="/workout-page"
             element={
               <div className="wrapper">
                 <Workout />
