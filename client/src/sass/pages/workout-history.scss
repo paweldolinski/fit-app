@@ -44,4 +44,23 @@
       flex: 1;
     }
   }
+
+  &__btns-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .btn__btn {
+      opacity: 0.5;
+    }
+
+    .btn {
+      &.active {
+        .btn__btn {
+          border-color: $secondary;
+          opacity: 1;
+        }
+      }
+    }
+  }
 }

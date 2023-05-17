@@ -1,6 +1,6 @@
-const Button = ({ title, onClick, name }) => {
+const Button = ({ title, onClick, name, active }) => {
   return (
-    <div className="btn">
+    <div className={active ? "btn active" : "btn"}>
       <button className="btn__btn" name={name} onClick={onClick}>
         {title}
       </button>

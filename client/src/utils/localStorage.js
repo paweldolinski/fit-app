@@ -24,3 +24,12 @@ export const getTokenFromLocalStorage = () => getItemFromLocalstorage("token");
 
 export const setTokenToLocalStorage = (token) =>
   setItemToLocalstorage("token", token);
+
+export const setTimestampToLocalStorage = (timestamp) =>
+  setItemToLocalstorage("start timestamp", timestamp);
+
+export const getTimestampToLocalStorage = () =>
+  getItemFromLocalstorage("start timestamp");
+
+export const resetTimestampToLocalStorage = () =>
+  setItemToLocalstorage("start timestamp", 0);

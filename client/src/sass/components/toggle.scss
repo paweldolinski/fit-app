@@ -1,0 +1,55 @@
+$white: map-get($palette-base,white);
+$quaternary: map-get($palette-base,quaternary);
+$secondary: map-get($palette-base, secondary);
+
+.toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  &.active {
+    .toggle__btn {
+      transform: translateX(26px);
+    }
+
+    .right {
+      color: $secondary;
+      opacity: 1;
+    }
+    .left {
+      color: inherit;
+      opacity: 0.3;
+    }
+  }
+
+  &__box {
+    width: 50px;
+    background-color: $quaternary;
+    height: 25px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 0 8px;
+  }
+
+  &__label {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.3;
+
+    &.left {
+      color: $secondary;
+      opacity: 1;
+    }
+  }
+
+  &__btn {
+    background-color: $secondary;
+    width: 25px;
+    border-radius: 50%;
+
+    height: 100%;
+    transition: 0.2s;
+    box-sizing: border-box;
+  }
+}

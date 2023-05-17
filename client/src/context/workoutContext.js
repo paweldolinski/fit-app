@@ -1,8 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 import {
   getPreWorkoutFromLocal,
+  getTimestampToLocalStorage,
   getTokenFromLocalStorage,
   getUserInfoFromLocalStorage,
+  resetTimestampToLocalStorage,
   setPreWorkoutsArrayToLocal,
   setUserInfoToLocalStorage,
 } from "../utils/localStorage";
@@ -24,6 +26,8 @@ const exercisesArr = [
   "Squat",
   "Seated Cable Row",
   "Sumo Deadlift",
+  "Shoulders Press (Dumbbell)",
+  "Military Press",
   "Deadlift (Barbell)",
   "Deadlift (Trap Bar)",
   "Leg Press",
@@ -49,7 +53,7 @@ const exercisesArr = [
 ];
 
 const WorkoutProvider = (props) => {
-  const [exercises] = useState(exercisesArr.sort());
+  const [exercises, setExercises] = useState(exercisesArr.sort());
   const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
   const [isEmptySet, setIsEmptySet] = useState(false);
   const [isEmptySetModalOpen, setIsEmptySetModalOpen] = useState(false);
@@ -60,6 +64,7 @@ const WorkoutProvider = (props) => {
     useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const [isSavedTemplatesOpen, setIsSavedTemplatesOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [startWorkoutTimestamp, setStartWorkoutTimestamp] = useState(0);
   const [bestResult, setBestResult] = useState(0);
   const [workoutTimeMs, setWorkoutTimeMs] = useState(0);
@@ -97,7 +102,8 @@ const WorkoutProvider = (props) => {
 
   const setWorkoutObj = (filteredExercise) => {
     const timestamp = Date.now();
-    const workoutTimeMs = timestamp - startWorkoutTimestamp;
+    const startTimestamp = getTimestampToLocalStorage();
+    const workoutTimeMs = timestamp - startTimestamp;
     const today = new Date(timestamp).toLocaleDateString();
 
     setWorkoutTimeMs(workoutTimeMs);
@@ -149,22 +155,23 @@ const WorkoutProvider = (props) => {
         "x-access-token": token,
       },
     };
+    setIsLoading(true);
 
     try {
       const data = await fetch("/workout/addWorkout", options);
 
       if (data.status === 200) {
-        // await fetch("/workout/addWorkout", options);
-        console.log("data.status === 200");
         existingStorage.workoutsArr.push(finishedWorkout);
         setUserInfoToLocalStorage(existingStorage);
         setIsFinishWorkoutPopupOpen(false);
         setIsWorkoutFinished(true);
         setStartWorkoutTimestamp(0);
         setPreWorkoutsArrayToLocal(false);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e, "error from post addWorkout");
+      setIsLoading(false);
     }
   };
 
@@ -174,6 +181,7 @@ const WorkoutProvider = (props) => {
     setStartWorkoutTimestamp(0);
     setIsWorkoutStarted(false);
     setPreWorkoutsArrayToLocal(false);
+    resetTimestampToLocalStorage();
   };
 
   const handleClickDialog = (exercise) => {
@@ -204,6 +212,8 @@ const WorkoutProvider = (props) => {
         isWorkoutModalOpen,
         isEmptySetModalOpen,
         isFinishWorkoutPopupOpen,
+        isLoading,
+        setIsLoading: setIsLoading,
         isWorkoutFinished,
         isCancelWorkoutPopupOpen,
         allExercises,
@@ -218,6 +228,7 @@ const WorkoutProvider = (props) => {
         setWorkoutsFromDb: setWorkoutsFromDb,
         setIsCancelWorkoutPopupOpen,
         setWorkoutObj: setWorkoutObj,
+        setExercises: setExercises,
         setIsWorkoutStarted: setIsWorkoutStarted,
         setStartWorkoutTimestamp: setStartWorkoutTimestamp,
         setIsWorkoutModalOpen: setIsWorkoutModalOpen,

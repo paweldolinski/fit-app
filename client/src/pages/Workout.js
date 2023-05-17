@@ -11,9 +11,9 @@ import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercise
 import { TimerButton } from "../components/Buttons/TimerButton";
 import {
   getPreWorkoutFromLocal,
-  getTokenFromLocalStorage,
   setPreWorkoutsArrayToLocal,
 } from "../utils/localStorage";
+import { Loader } from "../components/Loader";
 
 const Workout = () => {
   const {
@@ -35,6 +35,7 @@ const Workout = () => {
     isSavedTemplatesOpen,
     setIsSavedTemplatesOpen,
     setIsWorkoutStarted,
+    isLoading,
   } = useContext(WorkoutContext);
 
   const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
@@ -61,10 +62,6 @@ const Workout = () => {
     checkIsEmptySetInAllSets();
   });
 
-  useEffect(() => {
-    setPreWorkoutsArrayToLocal(filteredExercise);
-  }, [filteredExercise]);
-
   const checkPreWorkout = () => {
     const isPreworkoutInLocal = !!getPreWorkoutFromLocal();
 
@@ -75,14 +72,21 @@ const Workout = () => {
   };
 
   useEffect(() => {
+    setPreWorkoutsArrayToLocal(filteredExercise);
+  }, [filteredExercise]);
+
+  useEffect(() => {
     checkPreWorkout();
   }, []);
+
+  console.log(isLoading, "isloading");
 
   if (isWorkoutFinished) {
     return <FinishedWorkout filteredExercise={filteredExercise} />;
   } else {
     return (
       <div className="workout">
+        {isLoading && <Loader />}
         <div className="workout__wrapper">
           {isWorkoutStarted && (
             <div className="workout__top">
