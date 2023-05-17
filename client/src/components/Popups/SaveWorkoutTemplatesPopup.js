@@ -10,7 +10,7 @@ import { WorkoutContext } from "../../context/workoutContext";
 
 const SaveWorkoutTemplatesPopup = ({ setIsSaveWorkoutPopupOpen }) => {
   const [savedWorkoutTitle, setSavedWorkoutTitle] = useState("");
-  const { filteredExercise } = useContext(WorkoutContext);
+  const { filteredExercise, setIsLoading } = useContext(WorkoutContext);
 
   const setTitleForSavedWorkout = ({ target: { value } }) => {
     setSavedWorkoutTitle(value);
@@ -34,14 +34,15 @@ const SaveWorkoutTemplatesPopup = ({ setIsSaveWorkoutPopupOpen }) => {
         "x-access-token": token,
       },
     };
-
-    existingStorage.workoutTemplates.push(template);
-    setUserInfoToLocalStorage(existingStorage);
-
+    setIsLoading(true);
     try {
       await fetch("/workout/saveTemplate", options);
+      existingStorage.workoutTemplates.push(template);
+      setUserInfoToLocalStorage(existingStorage);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
 
     setIsSaveWorkoutPopupOpen(false);

@@ -46,6 +46,12 @@ const UserProfile = () => {
     }
   };
 
+  // const time = userObj.workoutsArr.map((item, index) => ({
+  //   time: convertMsToHM(item.timeSpent),
+  //   index,
+  // }));
+  // console.log(time);
+
   useEffect(() => {
     const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
     setLastWorkoutDate(lastWorkoutDate);

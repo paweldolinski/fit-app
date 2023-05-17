@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "../../context/workoutContext";
 
 const WorkoutTemplatesPopup = ({ onClose }) => {
-  const { setWorkoutFromTemplate } = useContext(WorkoutContext);
+  const { setWorkoutFromTemplate, setIsLoading } = useContext(WorkoutContext);
   const [workoutTemplatesFromStorage, setWorkoutTemplatesFromStorage] =
     useState([]);
 
@@ -33,6 +33,7 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
       },
     };
 
+    setIsLoading(true);
     try {
       const removeTemplate = await fetch("/workout/removeTemplate", options);
 
@@ -40,9 +41,11 @@ const WorkoutTemplatesPopup = ({ onClose }) => {
         existingStorage.workoutTemplates = result;
         setWorkoutTemplatesFromStorage(result);
         setUserInfoToLocalStorage(existingStorage);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);
+      setIsLoading(false);
     }
   };
 

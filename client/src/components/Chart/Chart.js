@@ -1,48 +1,38 @@
-import { useState } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { CustomTooltip } from "./CustomTooltip";
+import Button from "../Buttons/Button";
+import * as React from "react";
 
-const data = [
-  { name: "day1", uv: 401, pv: 402, amt: 2400 },
-  { name: "day2", uv: 200, pv: 2000, amt: 2000 },
-  { name: "day3", uv: 200, pv: 2000, amt: 2000 },
-];
 export const Chart = ({ sets }) => {
-  // const [data, setData] = useState([]);
-  const [allReps, setAllReps] = useState([]);
-
-  const t2 = () => {
-    const res = {};
-
-    sets.forEach((item) => {
-      const { date, kg, reps } = item;
-      if (res[date]) {
-        res[date].push({ kg, reps });
-      } else {
-        res[date] = [{ kg, reps }];
-      }
-    });
-
-    const t = [];
-
-    for (const property in res) {
-      t.push({ date: property, sets: res[property] });
-    }
-
-    console.log(t, "t");
-
-    const test = t.map(({ sets }) => sets.map(({ reps }) => reps));
-
-    console.log(test, "test");
-
-    // setData(t);
-  };
-
   return (
-    <LineChart width={300} height={300} data={data}>
-      <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-      <CartesianGrid stroke="#ccc" />
-      <XAxis dataKey="name" />
-      <YAxis />
-    </LineChart>
+    <ResponsiveContainer width="100%" height="60%">
+      <LineChart
+        width={500}
+        height={300}
+        data={sets}
+        margin={{
+          top: 5,
+          right: 10,
+          left: 0,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis tickCount={55} minTickGap={1} />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+        <Line type="monotone" dataKey="kg" stroke="#82ca9d" />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };

@@ -2,8 +2,12 @@ import Button from "./Button";
 import * as React from "react";
 import { useContext } from "react";
 import { WorkoutContext } from "../../context/workoutContext";
+import {
+  setItemToLocalstorage,
+  setTimestampToLocalStorage,
+} from "../../utils/localStorage";
 
-const SaveWorkoutTemplateButton = () => {
+const StartWorkoutButton = () => {
   const {
     filteredExercise,
     setIsWorkoutModalOpen,
@@ -22,6 +26,7 @@ const SaveWorkoutTemplateButton = () => {
 
     const timeStamp = Date.now();
     setStartWorkoutTimestamp(timeStamp);
+    setTimestampToLocalStorage(timeStamp);
   };
 
   return (
@@ -33,4 +38,4 @@ const SaveWorkoutTemplateButton = () => {
   );
 };
 
-export default SaveWorkoutTemplateButton;
+export default StartWorkoutButton;

@@ -4,7 +4,6 @@ $primary: map-get($palette-base, primary);
 .btn {
   &__btn {
     width: 100%;
-    border: none;
     height: 50px;
     background-color: $white;
     color: $primary;
@@ -13,5 +12,6 @@ $primary: map-get($palette-base, primary);
     font-size: 17px;
     outline: none;
     border-radius: 4px;
+    border: solid transparent 2px;
   }
 }

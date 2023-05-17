@@ -4,12 +4,18 @@ import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 import { getUserInfoFromLocalStorage } from "../utils/localStorage";
 import { getAllExercisesOptions } from "../utils/getAllExercisesOptions";
+import { Chart } from "../components/Chart/Chart";
+import Button from "../components/Buttons/Button";
+import { Toggle } from "../components/Toggle/Toggle";
 
 const WorkoutHistory = () => {
   const [workoutsFromStorage, setWorkoutsFromStorage] = useState([]);
   const [choseExercise, setChoseExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
+  const [filteredExerciseSets, setFilteredSetExerciseSets] = useState([]);
   const [bestResult, setBestResult] = useState();
+  const [buttonName, setButtonName] = useState("all");
+  const [isTable, setIsTable] = useState(false);
   const allExercisesArr = getAllExercisesOptions();
 
   const getUserData = () => {
@@ -42,6 +48,7 @@ const WorkoutHistory = () => {
 
     getBestResult(setsArr || []);
     setExerciseSets(setsArr || []);
+    setFilteredSetExerciseSets(setsArr || []);
   };
 
   const handleExerciseChoose = ({ value }) => {
@@ -55,13 +62,34 @@ const WorkoutHistory = () => {
     setBestResult(max);
   };
 
+  const toggleChart = (bool) => {
+    setIsTable(bool);
+  };
+
+  const setActiveButton = ({ target: { name } }) => {
+    setButtonName(name);
+  };
+
+  const getLastWorkout = (num) => {
+    if (exerciseSets) {
+      const getSevenWorkoutsDates = exerciseSets
+        .map(({ date }) => date)
+        .filter((v, i, a) => a.indexOf(v) === i)
+        .slice(-num);
+
+      const getWorkoutsByDates = exerciseSets.filter(({ date }) =>
+        getSevenWorkoutsDates.includes(date)
+      );
+      setFilteredSetExerciseSets(getWorkoutsByDates || []);
+    }
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
 
   useEffect(() => {
     getExerciseHistory(workoutsFromStorage);
-    console.log("test1");
   }, [choseExercise]);
 
   return (
@@ -73,8 +101,16 @@ const WorkoutHistory = () => {
         onChange={handleExerciseChoose}
         className="workout-history__select"
       />
-
       {choseExercise && (
+        <Toggle
+          leftLabel="CHART"
+          rightLabel="TABLE"
+          toggle={isTable}
+          onToggle={toggleChart}
+        />
+      )}
+
+      {isTable && choseExercise && (
         <>
           <div className="workout-history__best-wrapper">
             <h2>{choseExercise}</h2>
@@ -94,7 +130,41 @@ const WorkoutHistory = () => {
           </div>
         </>
       )}
-      {/*<Chart sets={exerciseSets} />*/}
+      {!isTable && choseExercise && (
+        <>
+          <div className="workout-history__btns-wrapper">
+            <Button
+              title="All workouts"
+              name="all"
+              onClick={(e) => {
+                setActiveButton(e);
+                getExerciseHistory(workoutsFromStorage);
+              }}
+              active={buttonName === "all"}
+            />
+            <Button
+              title="Last 14 days"
+              name="fourteen"
+              onClick={(e) => {
+                setActiveButton(e);
+                getLastWorkout(14);
+              }}
+              active={buttonName === "fourteen"}
+            />
+            <Button
+              title="Last 7 days"
+              name="seven"
+              onClick={(e) => {
+                setActiveButton(e);
+                getLastWorkout(7);
+              }}
+              active={buttonName === "seven"}
+            />
+          </div>
+          <h2>{choseExercise}</h2>
+          <Chart sets={filteredExerciseSets} />
+        </>
+      )}
     </div>
   );
 };

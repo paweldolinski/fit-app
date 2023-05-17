@@ -24,6 +24,8 @@
 @import "components/finished-workout";
 @import "components/loader";
 @import "components/timer";
+@import "components/chart";
+@import "components/toggle";
 
 
 .best-wrapper {
@@ -31,6 +33,5 @@
 
   h1, h3 {
     text-align: left;
-
   }
 }
