@@ -12,8 +12,10 @@ const WorkoutHistory = () => {
   const [workoutsFromStorage, setWorkoutsFromStorage] = useState([]);
   const [choseExercise, setChoseExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
+  const [reversedExerciseSets, setReversedExerciseSets] = useState([]);
   const [filteredExerciseSets, setFilteredSetExerciseSets] = useState([]);
-  const [bestResult, setBestResult] = useState();
+  const [bestResult, setBestResult] = useState(0);
+  const [worstResult, setWorstResult] = useState(0);
   const [buttonName, setButtonName] = useState("all");
   const [isTable, setIsTable] = useState(false);
   const allExercisesArr = getAllExercisesOptions();
@@ -47,8 +49,10 @@ const WorkoutHistory = () => {
     });
 
     getBestResult(setsArr || []);
+    getWorst(setsArr || []);
     setExerciseSets(setsArr || []);
     setFilteredSetExerciseSets(setsArr || []);
+    setReversedExerciseSets(setsArr.map(setsArr.pop, [...setsArr]) || []);
   };
 
   const handleExerciseChoose = ({ value }) => {
@@ -60,6 +64,11 @@ const WorkoutHistory = () => {
   const getBestResult = (exerciseSets) => {
     const max = exerciseSets.reduce((a, b) => (a.kg > b.kg ? a : b), [0]).kg;
     setBestResult(max);
+  };
+
+  const getWorst = (exerciseSets) => {
+    const min = exerciseSets.reduce((a, b) => (a.kg < b.kg ? a : b), [0]).kg;
+    setWorstResult(min);
   };
 
   const toggleChart = (bool) => {
@@ -102,20 +111,22 @@ const WorkoutHistory = () => {
         className="workout-history__select"
       />
       {choseExercise && (
-        <Toggle
-          leftLabel="CHART"
-          rightLabel="TABLE"
-          toggle={isTable}
-          onToggle={toggleChart}
-        />
-      )}
-
-      {isTable && choseExercise && (
         <>
+          <Toggle
+            leftLabel="CHART"
+            rightLabel="TABLE"
+            toggle={isTable}
+            onToggle={toggleChart}
+          />
           <div className="workout-history__best-wrapper">
             <h2>{choseExercise}</h2>
             <p className="workout-history__best">Best: {bestResult}</p>
           </div>
+        </>
+      )}
+
+      {isTable && choseExercise && (
+        <>
           <div className="workout-history__results-wrapper">
             <div className="workout-history__results-header">
               <span>Date</span>
@@ -123,8 +134,13 @@ const WorkoutHistory = () => {
               <span>Reps</span>
             </div>
             <div className="workout-history__results-table">
-              {exerciseSets?.map((props, index) => (
-                <WorkoutHistorySetRow {...props} key={index} />
+              {reversedExerciseSets?.map((props, index) => (
+                <WorkoutHistorySetRow
+                  {...props}
+                  key={index}
+                  min={worstResult}
+                  max={bestResult}
+                />
               ))}
             </div>
           </div>
@@ -161,7 +177,6 @@ const WorkoutHistory = () => {
               active={buttonName === "seven"}
             />
           </div>
-          <h2>{choseExercise}</h2>
           <Chart sets={filteredExerciseSets} />
         </>
       )}
