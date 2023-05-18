@@ -12,6 +12,17 @@
     margin-bottom: 20px;
   }
 
+  &__best-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    h2,p {
+      margin-bottom: 0;
+    }
+  }
+
   &__best {
     margin-bottom: 5px;
   }
@@ -30,12 +41,14 @@
   }
 
   &__result-row {
-    background-color: white;
+    //background-color: white;
     padding: 10px;
     border-radius: 5px;
     border-bottom: 2px solid black;
     display: flex;
     justify-content: space-between;
+    //background-color: hsl(79, 100%, 64%);
+
 
     span {
       flex: 1;
