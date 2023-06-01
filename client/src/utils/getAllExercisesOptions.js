@@ -8,11 +8,12 @@ export const getAllExercisesOptions = () => {
     finishedExercises.forEach(({ name }) => result.push(name))
   );
 
-  //remove duplicates and set option object
+  //remove duplicates, set option object and sort
   return result
     .filter((v, i, a) => a.indexOf(v) === i)
     .map((exercise) => ({
       value: exercise,
       label: exercise,
-    }));
+    }))
+    .sort((a, b) => a.value.localeCompare(b.value));
 };

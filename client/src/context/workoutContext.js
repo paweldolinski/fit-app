@@ -75,12 +75,16 @@ const WorkoutProvider = (props) => {
   const [workoutsHistory, setWorkoutHistory] = useState([]);
 
   const addExercise = (exercise) => {
+    const preworkout = getPreWorkoutFromLocal();
     const exerciseObj = {
       name: exercise,
+      isDone: false,
       sets: [{ id: 0, kg: "", reps: "" }],
     };
 
-    setFilteredExercise([...filteredExercise, exerciseObj]);
+    preworkout
+      ? setFilteredExercise([...preworkout, exerciseObj])
+      : setFilteredExercise([...filteredExercise, exerciseObj]);
   };
 
   const removeExercise = (exercise) => {
@@ -139,7 +143,10 @@ const WorkoutProvider = (props) => {
   };
 
   const finishWorkout = async () => {
-    const finishedWorkout = setWorkoutObj(filteredExercise);
+    const finishedWorkoutWithoutIsDone = filteredExercise.map(
+      ({ isDone, ...rest }) => rest
+    );
+    const finishedWorkout = setWorkoutObj(finishedWorkoutWithoutIsDone);
     const userInfo = getUserInfoFromLocalStorage();
     const token = getTokenFromLocalStorage();
     const { name, email, workoutsArr, workoutTemplates } = userInfo;

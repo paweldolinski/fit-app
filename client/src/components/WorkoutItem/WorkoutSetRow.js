@@ -17,7 +17,7 @@ const WorkoutSetRow = ({
     return index + 1;
   };
 
-  const toggleIsOpenOption = (e) => {
+  const toggleIsOpenOption = () => {
     setIsOptionOpen(!isOptionOpen);
   };
 
@@ -49,9 +49,8 @@ const WorkoutSetRow = ({
             onChange={onChange}
             name="kg"
             data-id={index}
-            type="text"
+            type="number"
             value={kg}
-            maxLength="4"
           />
           <span>kg</span>
         </div>
@@ -63,8 +62,7 @@ const WorkoutSetRow = ({
             onChange={onChange}
             name="reps"
             data-id={index}
-            type="text"
-            maxLength="2"
+            type="number"
             value={reps}
           />
         </div>

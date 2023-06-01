@@ -5,17 +5,18 @@ import Button from "../Buttons/Button";
 import { WorkoutContext } from "../../context/workoutContext";
 import {
   getItemFromLocalstorage,
+  getPreWorkoutFromLocal,
   setPreWorkoutsArrayToLocal,
 } from "../../utils/localStorage";
 import Icon from "../../assets/svg/checked2.svg";
 
 const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
-  const { name, sets } = exercise;
+  const { name, sets, isDone } = exercise;
   const { updateExercise, filteredExercise, setFilteredExercise } =
     useContext(WorkoutContext);
   const [setsArr, setSetsArr] = useState(sets);
   const [prevSets, setPrevSets] = useState([]);
-  const [isExerciseHidden, setIsExerciseHidden] = useState(false);
+  const [isExerciseHidden, setIsExerciseHidden] = useState(isDone);
 
   const addSet = () => {
     setSetsArr([...setsArr, { id: setsArr.length, kg: "", reps: "" }]);
@@ -48,12 +49,17 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
     setSetsArr([...setsArr, obj]);
   };
 
-  const onChange = (e) => {
-    const {
+  const changeCommaforDot = (num) => {};
+
+  const onChange = ({
+    target: {
       value,
       name,
       dataset: { id },
-    } = e.target;
+    },
+  }) => {
+    if (value.length > 5) return;
+
     const unit = name;
     const parsedId = parseInt(id);
 
@@ -98,9 +104,23 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
     return previousSet;
   };
 
-  const hideFinishedExercise = () => {
+  const updateIsDoneExerciseInPreWorkout = () => {
+    const existing = getPreWorkoutFromLocal().map((item) => {
+      if (item.name === name) item.isDone = isExerciseHidden;
+
+      return item;
+    });
+
+    setPreWorkoutsArrayToLocal(existing);
+  };
+
+  const toggleFinishedExercise = () => {
     setIsExerciseHidden(!isExerciseHidden);
   };
+
+  useEffect(() => {
+    updateIsDoneExerciseInPreWorkout();
+  }, [isExerciseHidden]);
 
   useEffect(() => {
     checkPrev();
@@ -117,7 +137,7 @@ const WorkoutItem = ({ exercise, checkIsEmptySetInAllSets }) => {
         <div className="workout-item__info">
           <div className="workout-item__exercise-name">
             <img
-              onClick={hideFinishedExercise}
+              onClick={toggleFinishedExercise}
               alt="icon"
               className="workout-item__icon"
               src={Icon}
