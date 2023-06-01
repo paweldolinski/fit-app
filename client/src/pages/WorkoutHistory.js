@@ -29,6 +29,7 @@ const WorkoutHistory = () => {
 
   const getExerciseHistory = (workoutsFromStorage) => {
     let setsArr = [];
+    console.log("workoutsFromStorage", workoutsFromStorage);
 
     workoutsFromStorage.forEach((item) => {
       const { timestamp } = item;
@@ -39,10 +40,8 @@ const WorkoutHistory = () => {
       if (sets) {
         sets.forEach((set) => {
           const { kg, reps } = set;
-          const setObj = { date, kg: "", reps: "" };
+          const setObj = { date, kg: parseFloat(kg), reps: parseFloat(reps) };
 
-          setObj.kg = parseInt(kg);
-          setObj.reps = parseInt(reps);
           setsArr.push(setObj);
         });
       }

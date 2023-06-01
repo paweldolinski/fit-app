@@ -13,7 +13,6 @@ const UserProfile = () => {
   const { logOut } = useContext(UserContext);
   const [userObj] = useState(getItemFromLocalstorage("userInfo"));
   const [lastWorkoutDate, setLastWorkoutDate] = useState();
-  const navigate = useNavigate();
 
   const getAllWorkoutTimeSpent = useMemo(
     () =>
@@ -45,12 +44,6 @@ const UserProfile = () => {
       console.log(e);
     }
   };
-
-  // const time = userObj.workoutsArr.map((item, index) => ({
-  //   time: convertMsToHM(item.timeSpent),
-  //   index,
-  // }));
-  // console.log(time);
 
   useEffect(() => {
     const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;

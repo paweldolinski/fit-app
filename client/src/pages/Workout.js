@@ -79,8 +79,6 @@ const Workout = () => {
     checkPreWorkout();
   }, []);
 
-  console.log(isLoading, "isloading");
-
   if (isWorkoutFinished) {
     return <FinishedWorkout filteredExercise={filteredExercise} />;
   } else {

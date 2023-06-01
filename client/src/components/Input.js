@@ -2,7 +2,7 @@ import { useState } from "react";
 import Eye from "../assets/svg/eye.svg";
 import CrossedEye from "../assets/svg/crossed-eye.svg";
 
-const Input = ({ placeholder, onChange, name, icon }) => {
+const Input = ({ placeholder, onChange, name, icon, type }) => {
   const [passwordShown, setPasswordShown] = useState(false);
   const showPassword = () => {
     setPasswordShown(!passwordShown);

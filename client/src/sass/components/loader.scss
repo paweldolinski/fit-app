@@ -14,14 +14,23 @@
     border: 5px solid #f3f3f3;
     border-radius: 50%;
     width: 50px;
-    animation: spin 1s linear infinite;
+    height: 50px;
+    animation: rotate 1s linear infinite;
     background-color: white;
   }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes rotate {
+  0% {
+    transform-origin: center center;
+    transform: rotate(-360deg) scale(1);
+  }
+  50% {
+    transform-origin: center center;
+    transform: rotate(-180deg) scale(0.8);
+  }
+  100% {
+    transform-origin: center center;
+    transform: rotate(0) scale(1);
+  }
 }
-
-
