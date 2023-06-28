@@ -43,7 +43,7 @@ export const WorkoutExercises = () => {
       <StartWorkoutButton />
       <Button
         onClick={() => setIsWorkoutModalOpen(false)}
-        name="cancel starting new workout with exercises"
+        name="cancel"
         title="Cancel"
       />
     </>

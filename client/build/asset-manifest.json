@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.c2a4439f.css",
-    "main.js": "/static/js/main.76a75b40.js",
+    "main.css": "/static/css/main.be7ed5b3.css",
+    "main.js": "/static/js/main.ef8554d4.js",
     "static/media/arni.png": "/static/media/arni.ea550b487f0a04f7828f.png",
     "static/media/alarm.mp3": "/static/media/alarm.4c2a7475d79dc076c5c6.mp3",
     "static/media/left-chevron-svgrepo-com.svg": "/static/media/left-chevron-svgrepo-com.80017cfd53dfecd9efbd20fad8f61194.svg",
     "static/media/dumbbell.svg": "/static/media/dumbbell.b0b6506382a542e3afaf04c58dad8807.svg",
     "static/media/eye.svg": "/static/media/eye.e615cf2668e0f498b33cb88ff2741b0c.svg",
     "static/media/crossed-eye.svg": "/static/media/crossed-eye.78ce634e5ec08931ad64d39b65144741.svg",
+    "static/media/award-icon.svg": "/static/media/award-icon.dbb0fd01757efbc4b46060f1efc69e87.svg",
     "index.html": "/index.html",
     "static/media/checked.svg": "/static/media/checked.2a63582e86867bc41781ccbc9fc03b45.svg",
     "static/media/checked2.svg": "/static/media/checked2.4cc0330f2f195f7842256367a9daf825.svg",
@@ -15,11 +16,11 @@
     "static/media/copy.svg": "/static/media/copy.69e87e603420c443eae92822146b4436.svg",
     "static/media/bottom-chevron.svg": "/static/media/bottom-chevron.1771ae2d86b7e676b65294c178bd1df4.svg",
     "static/media/bin.svg": "/static/media/bin.94d2c4499db890ea1d22bdc6e6e7c91b.svg",
-    "main.c2a4439f.css.map": "/static/css/main.c2a4439f.css.map",
-    "main.76a75b40.js.map": "/static/js/main.76a75b40.js.map"
+    "main.be7ed5b3.css.map": "/static/css/main.be7ed5b3.css.map",
+    "main.ef8554d4.js.map": "/static/js/main.ef8554d4.js.map"
   },
   "entrypoints": [
-    "static/css/main.c2a4439f.css",
-    "static/js/main.76a75b40.js"
+    "static/css/main.be7ed5b3.css",
+    "static/js/main.ef8554d4.js"
   ]
 }

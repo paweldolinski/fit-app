@@ -1,0 +1,52 @@
+$white: map-get($palette-base,white);
+$primary: map-get($palette-base, primary);
+$secondary: map-get($palette-base, secondary);
+$danger: map-get($palette-base, danger);
+
+.best-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+
+  &__tile {
+    box-sizing: border-box;
+    width: 44%;
+    margin: 2%;
+    padding: 20px;
+    border: solid 3px $secondary;
+    border-radius: 5px;
+    position: relative;
+    background-color: $white;
+
+    p {
+      text-align: left;
+      color: $primary;
+    }
+  }
+
+  &__label {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  &__date {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  &__best {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  &__close {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+  }
+}

@@ -45,6 +45,8 @@ const UserProvider = (props) => {
       if (response.status === 200) {
         const { user, token } = json;
 
+        console.log(user);
+
         setIsLoading(false);
         setTokenToLocalStorage(token);
         setUserInfoToLocalStorage(user);
