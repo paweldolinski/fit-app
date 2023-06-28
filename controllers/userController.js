@@ -151,7 +151,29 @@ const removeSavedTemplate = async (req, res, next) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    next(e);
+  }
+};
+
+const addToBestResult = async (req, res, next) => {
+  const { exercises, email } = req.body;
+  console.log(exercises, email);
+
+  try {
+    const userUpdate = User.findOneAndUpdate(
+      { email },
+      { $set: { bestResults: exercises } }
+    );
+    const data = await userUpdate;
+
+    if (data) {
+      console.log(data);
+      return res.status(200).json({
+        message: `Exercises have been added`,
+      });
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -163,4 +185,5 @@ module.exports = {
   addToWorkout,
   saveWorkoutTemplate,
   removeSavedTemplate,
+  addToBestResult,
 };

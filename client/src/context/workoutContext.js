@@ -12,12 +12,17 @@ import {
 export const WorkoutContext = createContext();
 
 const exercisesArr = [
+  //chest
   "Bench Press (Barbell)",
+  "Bench Press Close Grip (Barbell)",
   "Bench Press (Dumbbell)",
   "Bench Press Inclined (Dumbbell)",
   "Bench Press Inclined (Barbell)",
   "Bench Press Decline (Dumbbell)",
   "Bench Press Decline (Barbell)",
+  "Dumbbell Chest Fly",
+  "Cable Chest Press",
+  "Dumbbell Pullover",
   "Bicep Curl Standing (Barbell)",
   "Bicep Curl Standing (Dumbbell)",
   "Bicep Curl Sitting (Dumbbell)",
@@ -50,6 +55,8 @@ const exercisesArr = [
   "Preacher Curl (Machine)",
   "Preacher Curl (Dumbbell)",
   "Preacher Curl (Barbell)",
+  "Pull Ups",
+  "Pull Ups Revert",
 ];
 
 const WorkoutProvider = (props) => {
@@ -149,8 +156,15 @@ const WorkoutProvider = (props) => {
     const finishedWorkout = setWorkoutObj(finishedWorkoutWithoutIsDone);
     const userInfo = getUserInfoFromLocalStorage();
     const token = getTokenFromLocalStorage();
-    const { name, email, workoutsArr, workoutTemplates } = userInfo;
-    const existingStorage = { name, email, workoutsArr, workoutTemplates };
+    const { name, email, workoutsArr, workoutTemplates, bestResults } =
+      userInfo;
+    const existingStorage = {
+      name,
+      email,
+      workoutsArr,
+      workoutTemplates,
+      bestResults,
+    };
     const options = {
       method: "POST",
       body: JSON.stringify({

@@ -13,7 +13,7 @@ const WorkoutHistory = () => {
   const [choseExercise, setChoseExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
   const [reversedExerciseSets, setReversedExerciseSets] = useState([]);
-  const [filteredExerciseSets, setFilteredSetExerciseSets] = useState([]);
+  const [filteredExerciseSets, setFilteredExerciseSets] = useState([]);
   const [bestResult, setBestResult] = useState(0);
   const [worstResult, setWorstResult] = useState(0);
   const [buttonName, setButtonName] = useState("all");
@@ -29,11 +29,9 @@ const WorkoutHistory = () => {
 
   const getExerciseHistory = (workoutsFromStorage) => {
     let setsArr = [];
-    console.log("workoutsFromStorage", workoutsFromStorage);
 
     workoutsFromStorage.forEach((item) => {
-      const { timestamp } = item;
-      const date = new Date(timestamp).toLocaleDateString();
+      const { date } = item;
       const { sets } =
         item.finishedExercises.find(({ name }) => name === choseExercise) || {};
 
@@ -50,7 +48,7 @@ const WorkoutHistory = () => {
     getBestResult(setsArr || []);
     getWorst(setsArr || []);
     setExerciseSets(setsArr || []);
-    setFilteredSetExerciseSets(setsArr || []);
+    setFilteredExerciseSets(setsArr || []);
     setReversedExerciseSets(setsArr.map(setsArr.pop, [...setsArr]) || []);
   };
 
@@ -88,7 +86,7 @@ const WorkoutHistory = () => {
       const getWorkoutsByDates = exerciseSets.filter(({ date }) =>
         getSevenWorkoutsDates.includes(date)
       );
-      setFilteredSetExerciseSets(getWorkoutsByDates || []);
+      setFilteredExerciseSets(getWorkoutsByDates || []);
     }
   };
 

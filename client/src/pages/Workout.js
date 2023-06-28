@@ -37,8 +37,9 @@ const Workout = () => {
     setIsWorkoutStarted,
     isLoading,
   } = useContext(WorkoutContext);
-
   const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
+
+  const setBestResultsOfExercises = (workoutsFromStorage) => {};
 
   const handleOpenWorkout = () => {
     setIsWorkoutModalOpen(true);
