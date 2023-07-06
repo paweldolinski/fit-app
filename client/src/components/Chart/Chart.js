@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
-import Button from "../Buttons/Button";
 import * as React from "react";
 
 export const Chart = ({ sets }) => {

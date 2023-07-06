@@ -11,8 +11,9 @@ import {
 } from "../utils/localStorage";
 import Select from "react-select";
 import * as React from "react";
-import { BestRecordTile } from "../components/userProfile/BestRecordTile";
+import { BestRecordRow } from "../components/userProfile/BestRecordRow";
 import AwardIcon from "../assets/svg/award-icon.svg";
+import { setExercisesDataArray } from "../utils/setExercisesData";
 
 const selectStyles = {
   clearIndicator: () => ({
@@ -22,54 +23,23 @@ const selectStyles = {
 
 const UserProfile = () => {
   const { logOut } = useContext(UserContext);
-  const [userObj] = useState(getItemFromLocalstorage("userInfo"));
+  const userObj = getItemFromLocalstorage("userInfo");
+  const exercisesData = setExercisesDataArray(userObj.workoutsArr);
   const [lastWorkoutDate, setLastWorkoutDate] = useState();
-  const [choseExercises, setChoseExercises] = useState(userObj.bestResults);
+  const [choseExercises, setChoseExercises] = useState(
+    exercisesData.filter(({ label }) => userObj.bestResults.includes(label))
+  );
   const [isDropdownHidden, setIsDropdownHidden] = useState(true);
-  const [allExercisesArr, setAllExercisesArr] = useState([]);
 
   const removeFromChoseExercise = ({
     target: {
       dataset: { name },
     },
   }) => {
-    const result = choseExercises.filter(({ value }) => value !== name);
-    setChoseExercises(result);
-  };
-
-  const setBestResultOfExercise = (result) =>
-    result.forEach(
-      (item) =>
-        (item.bestResult = item.kg.reduce((a, b) => (a > b ? a : b), [0]))
+    const bestExercisesArray = choseExercises.filter(
+      ({ value }) => value !== name
     );
-
-  const setKilogramsOfExercises = (workoutsFromStorage) => {
-    let result = [];
-
-    workoutsFromStorage.forEach((workout) => {
-      const date = workout.date;
-
-      workout.finishedExercises.forEach(({ name, sets }) => {
-        const isExerciseExist = result.some(({ label }) => label === name);
-        //array of kgs for first iteration
-        const kilograms = sets.map(({ kg }) => parseFloat(kg));
-
-        if (isExerciseExist) {
-          result.forEach((item) => {
-            if (item.label === name) {
-              sets.forEach(({ kg }) => item.kg.push(parseFloat(kg)));
-            }
-          });
-
-          return;
-        }
-        result.push({ label: name, date: date, value: name, kg: kilograms });
-      });
-    });
-
-    setBestResultOfExercise(result);
-
-    setAllExercisesArr(result);
+    setChoseExercises(bestExercisesArray);
   };
 
   const getAllWorkoutTimeSpent = useMemo(
@@ -106,7 +76,7 @@ const UserProfile = () => {
     }
   };
 
-  const updateBestExercises = async () => {
+  const updateBestExercisesDb = async () => {
     const token = getTokenFromLocalStorage();
     const userInfo = getUserInfoFromLocalStorage();
     const { name, email, workoutsArr, workoutTemplates, bestResults } =
@@ -118,6 +88,7 @@ const UserProfile = () => {
       workoutTemplates,
       bestResults,
     };
+    const exercises = choseExercises.map((item) => item.label);
 
     try {
       const response = await fetch("/workout/addToBestResult", {
@@ -127,7 +98,7 @@ const UserProfile = () => {
           "x-access-token": token,
         },
         body: JSON.stringify({
-          exercises: choseExercises,
+          exercises,
           email: userObj.email,
         }),
       });
@@ -135,7 +106,7 @@ const UserProfile = () => {
       const json = await response.json();
 
       if (json) {
-        existingStorage.bestResults = choseExercises;
+        existingStorage.bestResults = exercises;
         setUserInfoToLocalStorage(existingStorage);
       }
     } catch (e) {
@@ -143,16 +114,16 @@ const UserProfile = () => {
     }
   };
 
+  const setWorkoutDate = () =>
+    setLastWorkoutDate(userObj.workoutsArr.slice(-1)[0]?.date);
+
   useEffect(() => {
-    const lastWorkoutDate = userObj.workoutsArr.slice(-1)[0]?.date;
-    setLastWorkoutDate(lastWorkoutDate);
+    setWorkoutDate();
     verify();
-    console.log("1");
-    setKilogramsOfExercises(userObj.workoutsArr);
   }, []);
 
   useEffect(() => {
-    updateBestExercises();
+    updateBestExercisesDb();
   }, [choseExercises]);
 
   return (
@@ -176,7 +147,7 @@ const UserProfile = () => {
         />
         <Select
           value={choseExercises}
-          options={allExercisesArr}
+          options={exercisesData}
           defaultValue={choseExercises}
           placeholder="Choose exercise"
           onChange={handleBestResultExercises}
@@ -192,14 +163,14 @@ const UserProfile = () => {
         />
       </div>
 
-      <div className="best-tiles">
-        {choseExercises?.map(({ label, value, bestResult, date }) => (
-          <BestRecordTile
+      <div className="best-row">
+        {choseExercises?.map(({ label, value, bestResult: { date, kg } }) => (
+          <BestRecordRow
             key={label}
             value={value}
             label={label}
             date={date}
-            bestResult={bestResult}
+            bestResult={kg}
             onClose={removeFromChoseExercise}
           />
         ))}
