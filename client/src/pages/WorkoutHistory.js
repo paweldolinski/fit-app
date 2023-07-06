@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import WorkoutHistorySetRow from "../components/WorkoutHistorySetRow";
 import { getUserInfoFromLocalStorage } from "../utils/localStorage";
-import { getAllExercisesOptions } from "../utils/getAllExercisesOptions";
 import { Chart } from "../components/Chart/Chart";
 import Button from "../components/Buttons/Button";
 import { Toggle } from "../components/Toggle/Toggle";
+import { setExercisesDataArray } from "../utils/setExercisesData";
 
 const WorkoutHistory = () => {
-  const [workoutsFromStorage, setWorkoutsFromStorage] = useState([]);
   const [choseExercise, setChoseExercise] = useState("");
   const [exerciseSets, setExerciseSets] = useState([]);
   const [reversedExerciseSets, setReversedExerciseSets] = useState([]);
@@ -18,49 +17,26 @@ const WorkoutHistory = () => {
   const [worstResult, setWorstResult] = useState(0);
   const [buttonName, setButtonName] = useState("all");
   const [isTable, setIsTable] = useState(false);
-  const allExercisesArr = getAllExercisesOptions();
+  const { workoutsArr } = getUserInfoFromLocalStorage();
+  const exercisesData = setExercisesDataArray(workoutsArr);
 
-  const getUserData = () => {
-    const getData = getUserInfoFromLocalStorage();
-    const { workoutsArr } = getData;
+  const getAllExercisesSets = () => {
+    const {
+      sets,
+      bestResult: { kg, date },
+    } = exercisesData.find(({ label }) => label === choseExercise) || {};
 
-    setWorkoutsFromStorage(workoutsArr);
-  };
-
-  const getExerciseHistory = (workoutsFromStorage) => {
-    let setsArr = [];
-
-    workoutsFromStorage.forEach((item) => {
-      const { date } = item;
-      const { sets } =
-        item.finishedExercises.find(({ name }) => name === choseExercise) || {};
-
-      if (sets) {
-        sets.forEach((set) => {
-          const { kg, reps } = set;
-          const setObj = { date, kg: parseFloat(kg), reps: parseFloat(reps) };
-
-          setsArr.push(setObj);
-        });
-      }
-    });
-
-    getBestResult(setsArr || []);
-    getWorst(setsArr || []);
-    setExerciseSets(setsArr || []);
-    setFilteredExerciseSets(setsArr || []);
-    setReversedExerciseSets(setsArr.map(setsArr.pop, [...setsArr]) || []);
+    setBestResult(kg || 0);
+    getWorst(sets);
+    setExerciseSets(sets || []);
+    setFilteredExerciseSets(sets || []);
+    setReversedExerciseSets(sets.map(sets.pop, [...sets]) || []);
   };
 
   const handleExerciseChoose = ({ value }) => {
     if (value === choseExercise) return;
 
     setChoseExercise(value);
-  };
-
-  const getBestResult = (exerciseSets) => {
-    const max = exerciseSets.reduce((a, b) => (a.kg > b.kg ? a : b), [0]).kg;
-    setBestResult(max);
   };
 
   const getWorst = (exerciseSets) => {
@@ -91,18 +67,16 @@ const WorkoutHistory = () => {
   };
 
   useEffect(() => {
-    getUserData();
-  }, []);
-
-  useEffect(() => {
-    getExerciseHistory(workoutsFromStorage);
+    //dlaczego useEffect wykonuje sie podczas pierwszego renderowania (choseExercise się nie zmienia)
+    if (choseExercise.length === 0) return;
+    getAllExercisesSets();
   }, [choseExercise]);
 
   return (
     <div className="workout-history">
       <h1>History</h1>
       <Select
-        options={allExercisesArr}
+        options={exercisesData}
         placeholder="Choose exercise"
         onChange={handleExerciseChoose}
         className="workout-history__select"
@@ -151,12 +125,12 @@ const WorkoutHistory = () => {
               name="all"
               onClick={(e) => {
                 setActiveButton(e);
-                getExerciseHistory(workoutsFromStorage);
+                getAllExercisesSets();
               }}
               active={buttonName === "all"}
             />
             <Button
-              title="Last 14 days"
+              title="Last 14 workouts"
               name="fourteen"
               onClick={(e) => {
                 setActiveButton(e);
@@ -165,7 +139,7 @@ const WorkoutHistory = () => {
               active={buttonName === "fourteen"}
             />
             <Button
-              title="Last 7 days"
+              title="Last 7 workouts"
               name="seven"
               onClick={(e) => {
                 setActiveButton(e);

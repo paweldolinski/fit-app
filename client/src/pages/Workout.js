@@ -11,6 +11,7 @@ import { WorkoutExercises } from "../components/WorkoutExercises/WorkoutExercise
 import { TimerButton } from "../components/Buttons/TimerButton";
 import {
   getPreWorkoutFromLocal,
+  getUserInfoFromLocalStorage,
   setPreWorkoutsArrayToLocal,
 } from "../utils/localStorage";
 import { Loader } from "../components/Loader";
@@ -77,7 +78,9 @@ const Workout = () => {
   }, [filteredExercise]);
 
   useEffect(() => {
+    const user = getUserInfoFromLocalStorage().workoutsArr;
     checkPreWorkout();
+    setBestResultsOfExercises(user);
   }, []);
 
   if (isWorkoutFinished) {

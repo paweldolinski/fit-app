@@ -62,9 +62,21 @@
 
     .btn__btn {
       opacity: 0.5;
+      font-size: 14px;
     }
 
     .btn {
+      flex: 1 1 0;
+      margin: 0 5px;
+
+      &:nth-child(1) {
+        margin-left: 0;
+      }
+
+      &:nth-child(3) {
+       margin-right: 0;
+      }
+
       &.active {
         .btn__btn {
           border-color: $secondary;
