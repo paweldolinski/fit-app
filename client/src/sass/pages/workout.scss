@@ -66,6 +66,7 @@ $danger: map-get($palette-base, danger);
     max-height: 360px;
     overflow: scroll;
   }
+
   &__exercise-item {
     display: flex;
     position: relative;
@@ -84,7 +85,16 @@ $danger: map-get($palette-base, danger);
       position: absolute;
       right: 10px;
       bottom: 12px;
+    }
+  }
 
+  &__exercise-category{
+    div.category {
+      padding: 17px 10px 17px 20px;
+      background-color: lightgray;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 20px;
     }
   }
 }

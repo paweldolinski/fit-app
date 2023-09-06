@@ -17,13 +17,27 @@ export const WorkoutExercises = () => {
 
   const onSearchCb = useCallback(
     ({ target: { value } }) => {
-      const result = exercises.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
+      const result = exercises.filter(
+        (item) =>
+          item.label.toLowerCase().includes(value.toLowerCase()) ||
+          item.category.toLowerCase().includes(value.toLowerCase())
       );
       setResults(result);
     },
     [results]
   );
+
+  const groupByCategory = results.reduce((group, product) => {
+    const { category } = product;
+
+    group[category] = group[category] ?? [];
+    group[category].push(product);
+
+    return group;
+  }, {});
+
+  console.log(debounceResult, "de");
+  console.log(groupByCategory);
 
   return (
     <>
@@ -32,12 +46,26 @@ export const WorkoutExercises = () => {
         <Input name="search" onChange={onSearchCb} placeholder="Search" />
       </div>
       <ul className="workout__exercises-wrapper">
-        {debounceResult?.map((exercise) => (
-          <Exercise
-            key={exercise}
-            exercise={exercise}
-            isExerciseChose={isExerciseChose(exercise)}
-          />
+        {/*{debounceResult?.map((exercise) => (*/}
+        {/*  <Exercise*/}
+        {/*    key={exercise}*/}
+        {/*    exercise={exercise}*/}
+        {/*    isExerciseChose={isExerciseChose(exercise)}*/}
+        {/*  />*/}
+        {/*))}*/}
+        {Object.keys(groupByCategory).map((keyName, i) => (
+          <li className="workout__exercise-category">
+            <div className="category">{keyName} :</div>
+            <ul>
+              {groupByCategory[keyName].map(({ value, label }) => (
+                <Exercise
+                  key={value}
+                  exercise={label}
+                  isExerciseChose={isExerciseChose(value)}
+                />
+              ))}
+            </ul>
+          </li>
         ))}
       </ul>
       <StartWorkoutButton />

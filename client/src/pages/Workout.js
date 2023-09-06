@@ -39,6 +39,7 @@ const Workout = () => {
     isLoading,
   } = useContext(WorkoutContext);
   const [isSaveWorkoutPopupOpen, setIsSaveWorkoutPopupOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const setBestResultsOfExercises = (workoutsFromStorage) => {};
 
@@ -131,7 +132,7 @@ const Workout = () => {
           )}
           {isEmptySetModalOpen && (
             <Popup
-              text="You cant finish workout with empty sets! "
+              text="You can't finish workout with empty sets! "
               onApprove={() => setIsEmptySetModalOpen(false)}
             />
           )}
